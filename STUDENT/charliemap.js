@@ -17,7 +17,7 @@ function MyMapUti(){
       map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
       
       google.maps.event.addListener(map, 'click', function(event) {
-        $("#eventPos").text(event.latLng.toString());
+        $("#eventPos").val(event.latLng.toString());
         //infowindow.close();
         //mark.setMap(null);
       });
