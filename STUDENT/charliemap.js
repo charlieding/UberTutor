@@ -18,6 +18,8 @@ function MyMapUti(){
       
       google.maps.event.addListener(map, 'click', function(event) {
         $("#eventPos").val(event.latLng.toString());
+        //markerApptment.setMap(map);
+        markerApptment.setOptions({map:map,position:event.latLng});
         //infowindow.close();
         //mark.setMap(null);
       });
@@ -50,7 +52,7 @@ function MyMapUti(){
 
         //img
         var pinIcon = new google.maps.MarkerImage(
-            "map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00",
+            "../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00",
             null, /* size is determined at runtime */
             null, /* origin is 0,0 */
             null, /* anchor is bottom center of the scaled image */
@@ -63,6 +65,24 @@ function MyMapUti(){
           animation: google.maps.Animation.DROP,
           position: centerLatLng,
           icon: pinIcon,
+
+        });
+
+        ////
+        var pinIcon2 = new google.maps.MarkerImage(
+            "../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00",
+            null, /* size is determined at runtime */
+            null, /* origin is 0,0 */
+            null, /* anchor is bottom center of the scaled image */
+            new google.maps.Size(32, 32)
+        );
+        markerApptment = new google.maps.Marker({
+          //map:map,
+          draggable:false,
+          optimized:false, // <-- required for animated gif
+          animation: google.maps.Animation.DROP,
+          //position: centerLatLng,
+          icon: pinIcon2,
 
         });
 
