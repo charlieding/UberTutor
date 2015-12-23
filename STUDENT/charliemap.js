@@ -6,6 +6,7 @@ function MyMapUti(){
     var infowindow=null;
     var map=null;
     var centerLatLng=null;
+    var draggableCursor=null;
     
     this.initialize=function(lat,lng, labeltxt) {
       centerLatLng = new google.maps.LatLng(lat, lng);
@@ -19,7 +20,11 @@ function MyMapUti(){
       google.maps.event.addListener(map, 'click', function(event) {
         $("#eventPos").val(event.latLng.toString());
         //markerApptment.setMap(map);
-        markerApptment.setOptions({map:map,position:event.latLng});
+        if(null!=draggableCursor){
+          draggableCursor=null;
+          map.setOptions({draggableCursor:null});
+          markerApptment.setOptions({map:map,position:event.latLng});
+        }
         //infowindow.close();
         //mark.setMap(null);
       });
@@ -91,6 +96,13 @@ function MyMapUti(){
       map.setOptions({center: centerLatLng});
 
     };
+    this.getMap=function(){
+      return map;
+    };
+    this.setMeetingPlace=function(){
+       draggableCursor='crosshair';
+       map.setOptions({draggableCursor:draggableCursor});
+    };
 };//
 
 var mmu=new MyMapUti();
@@ -129,7 +141,9 @@ getLocation();
     $("#resetMap").click(function(){
       mmu.resetMap();
     });  
-    $("#tables_container").append();
+    $("#cursorChange").click(function () {
+       mmu.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
+    });
     //$("#tables_container").append(archinfo01.GetTable());  
     //$("#tables_container").append(archinfo01.GetFreqTable({scale:10}));
   });
