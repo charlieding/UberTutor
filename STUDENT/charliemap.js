@@ -1,12 +1,14 @@
 
 
 function MyMapUti(){
-    var marker=null;
+    var markerCentr=null;
+    var markerApptment=null;
     var infowindow=null;
     var map=null;
+    var centerLatLng=null;
     
     this.initialize=function(lat,lng, labeltxt) {
-        var centerLatLng = new google.maps.LatLng(lat, lng);
+      centerLatLng = new google.maps.LatLng(lat, lng);
       var mapProp = {
         center:centerLatLng,
         zoom:15,
@@ -15,25 +17,25 @@ function MyMapUti(){
       map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
       
       google.maps.event.addListener(map, 'click', function(event) {
-        $("#posit").text(event.latLng.toString());
-        infowindow.close();
-        marker.setMap(null);
+        $("#eventPos").text(event.latLng.toString());
+        //infowindow.close();
+        //mark.setMap(null);
       });
       
       
-      //center marker
-      // marker=new google.maps.Marker({
+      //center mark
+      // mark=new google.maps.Marker({
          //position:centerLatLng,
       // });
-      // marker.setMap(map);
+      // mark.setMap(map);
       // infowindow = new google.maps.InfoWindow({
          //  content:labeltxt
          //  });
-      // infowindow.open(map,marker);
+      // infowindow.open(map,mark);
       
       
       
-        //
+        //circle
         var myCity = new google.maps.Circle({
             center:centerLatLng,
             radius:20,
@@ -48,13 +50,13 @@ function MyMapUti(){
 
         //img
         var pinIcon = new google.maps.MarkerImage(
-            "../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00",
+            "map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00",
             null, /* size is determined at runtime */
             null, /* origin is 0,0 */
             null, /* anchor is bottom center of the scaled image */
             new google.maps.Size(32, 32)
         );
-        marker = new google.maps.Marker({
+        markerCentr = new google.maps.Marker({
           map:map,
           draggable:false,
           optimized:false, // <-- required for animated gif
@@ -64,7 +66,11 @@ function MyMapUti(){
 
         });
 
-    }
+    };
+    this.resetMap=function(){
+      map.setOptions({center: centerLatLng});
+
+    };
 };//
 
 var mmu=new MyMapUti();
@@ -92,6 +98,21 @@ function cleanmap() {
 }
 
 getLocation();
+
+
+
+
+
+  
+  
+  $(document).ready(function(){ 
+    $("#resetMap").click(function(){
+      mmu.resetMap();
+    });  
+    $("#tables_container").append();
+    //$("#tables_container").append(archinfo01.GetTable());  
+    //$("#tables_container").append(archinfo01.GetFreqTable({scale:10}));
+  });
   
   
 
