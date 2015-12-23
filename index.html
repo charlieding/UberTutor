@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>UberTutor - 1:1 Tutoring</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+
+    <!-- Custom Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="css/animate.min.css" type="text/css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/creative.css" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+<style>
+    .btnfb {
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        line-height: 1.428571429;
+        font-size: 1.15rem;
+        padding: .6em 2em;
+        font-weight: 700;
+        color: #fff;
+        background-color: #3B5998;
+        border-color: #3B5998;
+        margin: 0;
+        vertical-align: middle;
+
+
+        width: 220px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .cta-text::before {
+        content: '';
+        background-image: url("https://www.lyft.com/images/vendor-lyft/icons/facebook-icon.b867728f.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        display: block;
+        width: 1.25em;
+        height: 1.25em;
+        position: absolute;
+        margin-top: 0.1em;
+        margin-left:1.0em;
+        box-sizing: border-box;
+    }
+    .cta-text {
+        padding-left: 2.5em;
+    }
+</style>
+
+</head>
+
+<body id="page-top">
+
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">Uber Tutor</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="page-scroll" data-toggle="modal" href="#login">Login</a>
+                    </li>
+                                        <li>
+                        <a class="page-scroll" data-toggle="modal" href="#register">Sign Up</a>
+                    </li>
+                    <!--
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#portfolio">Portfolio</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                    -->
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <h1>Private On Demand 1:1 Tutoring</h1>
+                <hr>
+                <p>Procrastination? No problem. Get all the help you need from tutors now or some time in the future, whether it's for homework or upcoming Exam.</p>
+                <a class="btn btn-primary btn-xl page-scroll" data-toggle="modal" href="#register">Sign Up Now</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-primary" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Tutors Avaiable at Your Fingertips</h2>
+                    <hr class="light">
+                    <p class="text-faded">Whatever your academic needs, count on UberTutor for tutors in minutes. The UberTutor app matches you with the smartest classmates that have took or are taking your class at the tap of a button. Just request and go.</p>
+                    <a class="btn btn-default btn-xl" data-toggle="modal" href="#register">Get Started!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">At Your Service</h2>
+                    <hr class="primary">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-diamond wow bounceIn text-primary"></i>
+                        <h3>Absolute Smartest Tutors</h3>
+                        <p class="text-muted">Our tutors go through vigourous screening process to provide you with the smartest academic help that you need.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-paper-plane wow bounceIn text-primary" data-wow-delay=".1s"></i>
+                        <h3>Flexible Schedules</h3>
+                        <p class="text-muted">Schedule for Tutors now or into the future, whenever you need them, even if it's right before an upcoming exam.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-newspaper-o wow bounceIn text-primary" data-wow-delay=".2s"></i>
+                        <h3>Procrastination?</h3>
+                        <p class="text-muted">No problem.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-heart wow bounceIn text-primary" data-wow-delay=".3s"></i>
+                        <h3>Made by Students like Yourself</h3>
+                        <p class="text-muted">Time is important to you. We understand that but our school's tutoring service offerings don't. We want to provide a hassle free alternative thats as convenient as possible.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="no-padding" id="portfolio">
+        <div class="container-fluid">
+            <div class="row no-gutter">
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/portfolio/1.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+                                    Calculus
+                                </div>
+                                <div class="project-name">
+                                    Exams and Homeworks
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/portfolio/2.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+                                    Computer Science
+                                </div>
+                                <div class="project-name">
+                                    Exams and Homeworks
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/portfolio/3.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+                                    Bioengineering
+                                </div>
+                                <div class="project-name">
+                                    Exams and Homeworks
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/portfolio/4.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+                                    Electrical Engineering
+                                </div>
+                                <div class="project-name">
+                                    Exams and Homeworks
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/portfolio/5.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+                                    Psychology
+                                </div>
+                                <div class="project-name">
+                                    Exams and Homeworks
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/portfolio/6.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+                                    Business
+                                </div>
+                                <div class="project-name">
+                                    Exams and Homeworks
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <aside class="bg-dark">
+        <div class="container text-center">
+            <div class="call-to-action">
+                <h2>Sign Up Today!</h2>
+                <a class="btn btn-default btn-xl wow tada" data-toggle="modal" href="#register">Sign Up!</a>
+            </div>
+        </div>
+    </aside>
+
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Let's Get In Touch!</h2>
+                    <hr class="primary">
+                    <p>Have questions? Give us a call or send us an email and we will get back to you as soon as possible!</p>
+                </div>
+                <div class="col-lg-4 col-lg-offset-2 text-center">
+                    <i class="fa fa-phone fa-3x wow bounceIn"></i>
+                    <p>678-577-0937</p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fa fa-envelope-o fa-3x wow bounceIn" data-wow-delay=".1s"></i>
+                    <p><a href="mailto:your-email@your-domain.com">thinkbigcd@gmail.com</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+<!--
+    <div class="modal fade in" id="myModal" aria-hidden="false" style="display: block;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+
+          </div>
+          <div class="modal-body" style="padding-bottom: 0px;">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" onclick="alert('Username and Password not Recognized. Please check and try again.')" class="btn btn-primary">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>  -->
+
+    <!-- Modals
+    ===================================================== -->
+    <!--Login Modal -->
+    <div class="modal fade" id="login">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"><strong style="color: black">Login</strong> <small>to <strong style="color: grey">Uber</strong>Tutor</small></h4>
+          </div>
+          <div class="modal-body" style="padding-bottom: 0px;">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="inputEmail" class="col-lg-2 control-label">Username</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="inputEmail" placeholder="Username">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                <div class="col-lg-10">
+                  <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> Remember me
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <hr>
+            <button class="btn btn-primary btnfb" type="button">
+                <span class="cta-text">Sign in with Facebook</span> 
+            </button>
+          </div>
+          <br>
+          <div class="modal-footer">
+            <a id="forgotPassword">Forgot Password?</a>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" onclick="window.location = 'STUDENT/index.html';" class="btn btn-primary">Login</button>
+            <div id="result">
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+      
+    <!--Register Modal -->
+    <div class="modal fade" id="register">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"><strong style="color: black">Register</strong> <small>for <strong style="color: grey">Uber</strong>Tutor</small></h4>
+          </div>
+          <div class="modal-body" style="padding-bottom: 0px;">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="inputName" class="col-lg-2 control-label">Username</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="Text3" placeholder="create a username for your organization">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputSchool" class="col-lg-2 control-label">School</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="Text2" placeholder="Eg: Georgia Tech, Harvard">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="Text1" placeholder="Email">
+                </div>
+              </div>
+              <div class = "form-group">
+                 <label for="inputUserType" class="col-lg-2 control-label">User Type</label>
+                 <input type="radio" name="colors" id="blue" checked="true"> Student
+                 <input type="radio" name="colors" id="green"> Tutor
+              </div>
+              <div class="form-group">
+                <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                <div class="col-lg-10">
+                  <input type="password" class="form-control" id="Password1" placeholder="Password">
+                  <input type="password" class="form-control" id="Password2" placeholder="Re-type Password">
+                  <div class="checkbox">
+                  </div>
+                </div>
+              </div>
+            </form>
+            <hr>
+            <button class="btn btn-primary btnfb" type="button">
+                <span class="cta-text">Sign up with Facebook</span> 
+            </button>
+          </div>
+          <br>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" onclick="window.location = 'STUDENT/index.html';" class="btn btn-primary">Register</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+              
+    </div><!-- /.modal -->
+    
+    <!--Terms of Agreement Modal -->
+  <div class="modal fade" id="toa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">UberTutor's Terms of Agreement</h4>
+        </div>
+        <div class="modal-body">
+            <dl style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; color:black;">
+                <dt>Welcome to UberTutor!</dt>
+                <br/>
+                <dd>Thanks for using our products and services (“Services”). The Services are provided by UberTutor Inc. (“UberTutor”), located at <span itemprop="contentLocation">332386 Georgia Tech Station, Atlanta, GA 30332, United States</span>.</dd>
+                <br/>
+                <dd>By using our Services, you are agreeing to these terms. Please read them carefully.</dd>
+                <br/>
+                <dd>Our Services are very diverse, so sometimes additional terms or product requirements (including age requirements) may apply. Additional terms will be available with the relevant Services, and those additional terms become part of your agreement with us if you use those Services.</dd>
+                <br/>
+                <dt>Using our Services</dt>
+                <br/>
+                <dd>You must follow any policies made available to you within the Services.</dd>
+                <br/>
+                <dd>Don’t misuse our Services. For example, don’t interfere with our Services or try to access them using a method other than the interface and the instructions that we provide. You may use our Services only as permitted by law, including applicable export and re-export control laws and regulations. We may suspend or stop providing our Services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct.</dd>
+                <br/>
+                <dd>Using our Services does not give you ownership of any intellectual property rights in our Services or the content you access. You may not use content from our Services unless you obtain permission from its owner or are otherwise permitted by law. These terms do not grant you the right to use any branding or logos used in our Services. Don’t remove, obscure, or alter any legal notices displayed in or along with our Services.</dd>
+                <br/>
+                <dd>Our Services display some content that is not UberTutor's. This content is the sole responsibility of the entity that makes it available. We may review content to determine whether it is illegal or violates our policies, and we may remove or refuse to display content that we reasonably believe violates our policies or the law. But that does not necessarily mean that we review content, so please don’t assume that we do.</dd>
+                <br/>
+                <dd>In connection with your use of the Services, we may send you service announcements, administrative messages, and other information. You may opt out of some of those communications.</dd>
+                <br/>
+                <dt>Modifying and Terminating our Services</dt>
+                <br/>
+                <dd>We are constantly changing and improving our Services. We may add or remove functionalities or features, and we may suspend or stop a Service altogether.</dd>  
+                <br/>
+                <dd>You can stop using our Services at any time, although we’ll be sorry to see you go. UberTutor may also stop providing Services to you, or add or create new limits to our Services at any time.</dd>  
+                <br/>
+                <dd>We believe that you own your data and preserving your access to such data is important. If we discontinue a Service, where reasonably possible, we will give you reasonable advance notice and a chance to get information out of that Service.</dd>    
+                <br/>
+                <dt>Our Warranties and Disclaimers</dt>
+                <br/>
+                <dd>We provide our Services using a commercially reasonable level of skill and care and we hope that you will enjoy using them. But there are certain things that we don’t promise about our Services.</dd>
+                <br/>
+                <dd>OTHER THAN AS EXPRESSLY SET OUT IN THESE TERMS OR ADDITIONAL TERMS, NEITHER UberTutor NOR ITS SUPPLIERS OR DISTRIBUTORS MAKE ANY SPECIFIC PROMISES ABOUT THE SERVICES. FOR EXAMPLE, WE DON’T MAKE ANY COMMITMENTS ABOUT THE CONTENT WITHIN THE SERVICES, THE SPECIFIC FUNCTION OF THE SERVICES, OR THEIR RELIABILITY, AVAILABILITY, OR ABILITY TO MEET YOUR NEEDS. WE PROVIDE THE SERVICES “AS IS”.</dd>
+                <br/>
+                <dd>SOME JURISDICTIONS PROVIDE FOR CERTAIN WARRANTIES, LIKE THE IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. TO THE EXTENT PERMITTED BY LAW, WE EXCLUDE ALL WARRANTIES.</dd>
+                <br/>
+                <dt>Business uses of our Services</dt>
+                <br/>
+                <dd>If you are using our Services on behalf of a business, that business accepts these terms. It will hold harmless and indemnify Google and its affiliates, officers, agents, and employees from any claim, suit or action arising from or related to the use of the Services or violation of these terms, including any liability or expense arising from claims, losses, damages, suits, judgments, litigation costs and attorneys’ fees.</dd>
+                <br/>
+                <dt>About these Terms</dt>
+                <br/>
+                <dd>We may modify these terms or any additional terms that apply to a Service to, for example, reflect changes to the law or changes to our Services. You should look at the terms regularly. We’ll post notice of modifications to these terms on this page. We’ll post notice of modified additional terms in the applicable Service. Changes will not apply retroactively and will become effective no sooner than fourteen days after they are posted. However, changes addressing new functions for a Service or changes made for legal reasons will be effective immediately. If you do not agree to the modified terms for a Service, you should discontinue your use of that Service.</dd>
+                <br/>
+                <dd>If there is a conflict between these terms and the additional terms, the additional terms will control for that conflict.</dd>
+                <br/>
+                <dd>These terms control the relationship between UberTutor and you. They do not create any third party beneficiary rights</dd>
+                <br/>
+                <dd>If you do not comply with these terms, and we don’t take action right away, this doesn’t mean that we are giving up any rights that we may have (such as taking action in the future).</dd>
+                <br/>
+                <dd>If it turns out that a particular term is not enforceable, this will not affect any other terms.</dd>
+                <br/>
+                <dd>The laws of Georgia, U.S.A., will apply to any disputes arising out of or relating to these terms or the Services.</dd>
+                <br/>
+                <dd>For information, please send email out to cding9@gatech.edu</dd>
+                <br/>
+            </dl>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+ 
+  <!--Privacy Modal -->
+  <div class="modal fade" id="privacy" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">UberTutor's Privacy</h4>
+        </div>
+        <div class="modal-body">
+            <dl style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; color:black;">
+                <dt>Privacy and Copyright Protection</dt>
+                <br/>
+                <dd>UberTutor's privacy policies explain how we treat your personal data and protect your privacy when you use our Services. By using our Services, you agree that UberTutor can use such data in accordance with our privacy policies.</dd>
+                <br/>
+                <dd>We respond to notices of alleged copyright infringement and terminate accounts of repeat infringers according to the process set out in the U.S. Digital Millennium Copyright Act.</dd>
+                <br/>
+                <dd>This is not for commercial use. All ideas are property of UberTutor. Pictures and Images obtained from Google Images Search Engine, with sole exception of our Logo. We reserve all rights to our ideas and logo.</dd>
+                <br/>
+            </dl>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+    <!-- FOOTER -->
+    <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; <meta itemprop="DatePublished" content="2015-03-14">2018 UberTutor, Inc. &middot; <a data-toggle="modal" href="#privacy">Privacy</a> &middot; <a data-toggle="modal" href="#toa">Terms of Agreement</a></p>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/jquery.fittext.js"></script>
+    <script src="js/wow.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/creative.js"></script>
+
+</body>
+
+</html>
