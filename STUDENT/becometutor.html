@@ -37,35 +37,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
   <style>
-    #mainbox {
-      position:absolute; 
-      bottom:0px; 
-      width:calc(100% - 30px);
-      background: rgb(255, 255, 255); /* Fall-back for browsers that don't support rgba */
-      background: rgba(255, 255, 255, .8);
-    }
     #classSelection {
       top:8px;
       left:50px;
       right:60px;
     }
     @media screen and (min-width: 768px) {
-        #mainbox {
-          position:absolute; 
-          bottom:0px; 
-          width:calc(100% - 260px);
-          background: rgb(255, 255, 255); /* Fall-back for browsers that don't support rgba */
-          background: rgba(255, 255, 255, .8);
-        }
         #classSelection {
           top:8px;
           right:170px;
           left:50px;
         }
-    }
-    .mainbox-footer {
-      background: rgb(255, 255, 255); /* Fall-back for browsers that don't support rgba */
-      background: rgba(255, 255, 255, 0);
     }
   </style>
   </head>
@@ -198,14 +180,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Sidebar Menu -->
           <ul class="sidebar-menu">
-            <li class="header">HEADER</li>
+            <li class="header">MENU</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><i class="fa fa-home"></i> <span>Home</span></a></li>
+            <li><a href="index.html"><i class="fa fa-home"></i> <span>Home</span></a></li>
             <li><a href="tutorhistory.html"><i class="fa fa-history"></i> <span>Tutor History</span></a></li>
             <li><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
             <li><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
             <li><a href="setting.html"><i class="fa fa-gear"></i> <span>Settings</span></a></li>
-            <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
+            <li class="active"><a href="#"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
 
             <li class="header" style="position:absolute; bottom:0px; width:100%; font-size: 9.5px; text-align: center;"> <!-- To the right -->
               <!-- Default to the left -->
@@ -218,56 +200,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </aside>
 
       <!-- Content Wrapper. Contains page content -->
-      <div id="maincontentwrapper" class="content-wrapper")>
-        <div id="googleMap" style="width:100%;height:634px;"></div>
-        <!-- Content Header (Page header) -- NOT NEEDED -- 
+      <div id="maincontentwrapper" class="content-wrapper">
+        <!-- Content Header (Page header) -->
         <section class="content-header">
-          <h1>
-            <small></small>
+          <h1> Become a Tutor
+            <small>Accepting Applications</small>
           </h1>
           <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-            <li class="active">Here</li>
+            <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="active">Become a Tutor</li>
           </ol>
-        </section>-->
+        </section>
 
         <!-- Main content -->
-        <section class="content" style="margin-top:-400px;">
+        <section class="content">
           <!-- Your Page Content Here -->
-          <div style="position:absolute; right:15px; bottom:200px; z-index:9001">
-            <div class="btn-group-vertical">
-              <button type="button" id='resetMap' class="btn btn-primary"><i class="fa fa-location-arrow"></i></button>
-            </div>
-          </div>
-          <div id="mainbox" class="box box-primary" style="z-index:9000"> <!--
+          <div class="row">
+            <div class="col-md-12">
+              <div class="box box-solid">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Header</h3>
-                </div> -->
-                <!-- form start -->
-                <form role="form">
-                  <div class="box-body">
-                    <!-- text input -->
-                    <div class="form-group">
-                      <input type="text" class="form-control" placeholder="[OPTIONAL] General Topic/Question   Eg:Calculus Matrix Multiplications">
-                    </div>
-                    <div style="float:left; width:60%;">
-                      <div class="input-group">
-                        <input type="text" id='eventPos' class="form-control" placeholder="Where to meet? Eg: Library">
-                        <span style="cursor:pointer" id="cursorChange" class="input-group-addon"><i class="fa fa-map-pin"></i></span>
-                      </div>
-                    </div>
-                    <div style="float:right; width:35%; text-align:center;">
-                      <input id="ex6" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="5" data-slider-step="1" data-slider-value="1"/>
-                      <span id="ex6CurrentSliderValLabel" class="text-black" style="font-weight: bold;">Meet <span id="ex6SliderVal">1</span> Hour(s)</span>
-                    </div>
-                  </div><!-- /.box-body -->
-                  <div class="box-footer mainbox-footer">
-                    <button type="submit" class="btn btn-warning" style="float: left; width:73%;" >Request Tutor</button>
-                    <button type="submit" class="btn btn-primary disabled" style="float: right; width:25%;" onclick="alert('Coming Soon!');" >Schedule</button>
-                  </div>
-                </form>
-              </div>
-
+                  <i class="fa fa-book"></i>
+                  <h3 class="box-title">Want to become a Tutor? Apply Today!</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <dl>
+                    <dt>Call or Email Us</dt>
+                    <dd>We are in our Alpha Stages, so shoot us an email or call and we will work personally with you in the application process.</dd>
+                    <hr>
+                    <dt>Phone Number</dt>
+                    <dd>678-577-0937</dd>
+                    <dt>Email</dt>
+                    <dd>thinkbigcd@gmail.com</dd>
+                  </dl>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- ./col -->
+          </div>
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
 
@@ -288,9 +256,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
     <!-- Select2 -->
     <script src="plugins/select2/select2.full.min.js"></script>
-    <!--Google Maps-->
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script src="charliemap.js"></script>
     <script>
       $(function () {
         /* BOOTSTRAP SLIDER */
@@ -303,11 +268,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
 
       $( document ).ready(function() {
-        fixMapSize();
       });
-      function fixMapSize(){
-        $('#googleMap').height($('#maincontentwrapper').height());
-      }
+
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
