@@ -18,12 +18,12 @@ function MyMapUti(){
       map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
       
       google.maps.event.addListener(map, 'click', function(event) {
-        $("#eventPos").val(event.latLng.toString());
         //markerApptment.setMap(map);
         if(null!=draggableCursor){
-          draggableCursor=null;
-          map.setOptions({draggableCursor:null});
-          markerApptment.setOptions({map:map,position:event.latLng});
+           draggableCursor=null;
+           map.setOptions({draggableCursor:null});
+           markerApptment.setOptions({map:map,position:event.latLng});
+           $("#eventPos").val(event.latLng.toString());
         }
         //infowindow.close();
         //mark.setMap(null);
