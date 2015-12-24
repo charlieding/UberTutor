@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>UberTutor | 1:1 Tutoring</title>
+    <title>AsapTutor | 1:1 Tutoring</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -22,11 +22,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="plugins/bootstrap-slider/slider.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-          page. However, you can choose any other skin. Make sure you
-          apply the skin class to the body tag so the changes take effect.
-    -->
-    <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+             <!--   <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css"> -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,11 +37,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <style>
     #mainbox {
-      position:absolute; 
-      bottom:0px; 
-      width:calc(100% - 30px);
+      //position:absolute; 
+      //bottom:0px; 
+      //width:calc(100% - 30px);
       background: rgb(255, 255, 255); /* Fall-back for browsers that don't support rgba */
-      background: rgba(255, 255, 255, .8);
+      background: rgba(255, 255, 255, 0.8);
     }
     #classSelection {
       top:8px;
@@ -51,11 +50,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     }
     @media screen and (min-width: 768px) {
         #mainbox {
-          position:absolute; 
-          bottom:0px; 
-          width:calc(100% - 260px);
+          //margin-top:100px;
+          //position:absolute; 
+          //bottom:0px; 
+          //width:calc(100% - 260px);
           background: rgb(255, 255, 255); /* Fall-back for browsers that don't support rgba */
-          background: rgba(255, 255, 255, .8);
+          background: rgba(255, 255, 255, 0.8);
         }
         #classSelection {
           top:8px;
@@ -90,7 +90,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   |---------------------------------------------------------|
   -->
   <body class="hold-transition skin-blue sidebar-mini">
-    <div class="wrapper">
+    <div id="globalwrapper" class="wrapper">
 
       <!-- Main Header -->
       <header class="main-header">
@@ -98,9 +98,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Logo -->
         <a href="index2.html" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>U</b>T</span>
+          <span class="logo-mini"><b>A</b>T</span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>Uber</b>Tutor</span>
+          <span class="logo-lg"><small>ASAP</small><b>Tutor</b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -168,58 +168,60 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </nav>
       </header>
       <!-- Left side column. contains the logo and sidebar -->
-      <aside class="main-sidebar">
+      <aside id="mainleftsidebar" class="main-sidebar">
+        <div id="mainleftsidebardiv">
+          <!-- sidebar: style can be found in sidebar.less -->
+          <section class="sidebar">
 
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-
-          <!-- Sidebar user panel (optional) -->
-          <div class="user-panel">
-            <div class="pull-left image">
-              <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel">
+              <div class="pull-left image">
+                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+              </div>
+              <div class="pull-left info">
+                <p>(Student's Name)</p>
+                <!-- Status -->
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+              </div>
             </div>
-            <div class="pull-left info">
-              <p>(Student's Name)</p>
-              <!-- Status -->
-              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-            </div>
-          </div>
 
-          <!-- search form (Optional) -->
-          <form action="#" method="get" class="sidebar-form">
-            <div class="input-group">
-              <input type="text" name="q" class="form-control" placeholder="Search...">
-              <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-              </span>
-            </div>
-          </form>
-          <!-- /.search form -->
+            <!-- search form (Optional) -->
+            <form action="#" method="get" class="sidebar-form">
+              <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                </span>
+              </div>
+            </form>
+            <!-- /.search form -->
 
-          <!-- Sidebar Menu -->
-          <ul class="sidebar-menu">
-            <li class="header">HEADER</li>
-            <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><i class="fa fa-home"></i> <span>Home</span></a></li>
-            <li><a href="tutorhistory.html"><i class="fa fa-history"></i> <span>Tutor History</span></a></li>
-            <li><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
-            <li><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
-            <li><a href="setting.html"><i class="fa fa-gear"></i> <span>Settings</span></a></li>
-            <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+              <li class="header">MENU</li>
+              <!-- Optionally, you can add icons to the links -->
+              <li class="active"><a href="#"><i class="fa fa-home"></i> <span>Home</span></a></li>
+              <li><a href="tutorhistory.html"><i class="fa fa-history"></i> <span>Tutor History</span></a></li>
+              <li><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
+              <li><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
+              <li><a href="setting.html"><i class="fa fa-gear"></i> <span>Settings</span></a></li>
+              <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
+              <br>
 
-            <li class="header" style="position:absolute; bottom:0px; width:100%; font-size: 9.5px; text-align: center;"> <!-- To the right -->
-              <!-- Default to the left -->
-              <strong>Copyright &copy; 2015 <a href="#">UberTutor</a>.</strong> All rights reserved.
-            </li>
+              <li class="header" style="position:fixed; bottom:0px; width:230px; font-size: 9.5px; text-align: center;"> <!-- To the right -->
+                <!-- Default to the left -->
+                <strong>Copyright &copy; 2015 <a href="#">AsapTutor</a>.</strong> All rights reserved.
+              </li>
 
-          </ul><!-- /.sidebar-menu -->
-        </section>
+            </ul><!-- /.sidebar-menu -->
+          </section>
+        </div>
         <!-- /.sidebar -->
       </aside>
 
       <!-- Content Wrapper. Contains page content -->
       <div id="maincontentwrapper" class="content-wrapper")>
-        <div id="googleMap" style="width:100%;height:634px;"></div>
+        <div id="googleMap" style="position:absolute; width:100%;height:134px;"></div>
         <!-- Content Header (Page header) -- NOT NEEDED -- 
         <section class="content-header">
           <h1>
@@ -232,14 +234,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </section>-->
 
         <!-- Main content -->
-        <section class="content" style="margin-top:-400px;">
+        <section class="content">
           <!-- Your Page Content Here -->
-          <div style="position:absolute; right:15px; bottom:200px; z-index:9001">
+          <div id="paddingTop"></div>
+          <div style="float:right;">
             <div class="btn-group-vertical">
               <button type="button" id='resetMap' class="btn btn-primary"><i class="fa fa-location-arrow"></i></button>
             </div>
           </div>
-          <div id="mainbox" class="box box-primary" style="z-index:9000"> <!--
+          <br><br>
+          <div id="mainbox" class="box box-primary col-md-12"> <!--
                 <div class="box-header with-border">
                   <h3 class="box-title">Header</h3>
                 </div> -->
@@ -262,18 +266,120 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                   </div><!-- /.box-body -->
                   <div class="box-footer mainbox-footer">
-                    <button type="submit" class="btn btn-warning" style="float: left; width:73%;" >Request Tutor</button>
-                    <button type="submit" class="btn btn-primary disabled" style="float: right; width:25%;" onclick="alert('Coming Soon!');" >Schedule</button>
+                    <button type="submit" href="#control-sidebar-home-tab" data-toggle="tab" class="btn btn-primary" style="float: right; width:73%;" onclick="$.AdminLTE.controlSidebar.open();">Find Tutors!</button>
+                    <button type="submit" href="#" class="btn btn-danger" style="float: left; width:25%;" > <b><i>ASAP</i></b> <i class="fa fa-bolt"></i></button>
                   </div>
                 </form>
               </div>
 
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
+<!-- Control Sidebar -->
+      <aside id="rightsidebaraside" class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+          <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-bolt"></i></a></li>
 
+          <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div id="righttabcontent" class="tab-content" style="padding-left:10px; padding-right:20px;">
+          <!-- Home tab content -->
+          <div class="tab-pane" id="control-sidebar-home-tab">
+            <h3 class="control-sidebar-heading">Recent Activity</h3>
+            <ul class="control-sidebar-menu">
+              <li>
+                <a href="javascript::;">
+                  <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                  <div class="menu-info">
+                    <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                    <p>Will be 23 on April 24th</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript::;">
+                  <i class="menu-icon fa fa-user bg-yellow"></i>
+                  <div class="menu-info">
+                    <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
+                    <p>New phone +1(800)555-1234</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript::;">
+                  <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+                  <div class="menu-info">
+                    <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
+                    <p>nora@example.com</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript::;">
+                  <i class="menu-icon fa fa-file-code-o bg-green"></i>
+                  <div class="menu-info">
+                    <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
+                    <p>Execution time 5 seconds</p>
+                  </div>
+                </a>
+              </li>
+            </ul><!-- /.control-sidebar-menu -->
+
+            <h3 class="control-sidebar-heading">Tasks Progress</h3>
+            <ul class="control-sidebar-menu">
+              <li>
+                <a href="javascript::;">
+                  <h4 class="control-sidebar-subheading">
+                    Custom Template Design
+                    <span class="label label-danger pull-right">70%</span>
+                  </h4>
+                  <div class="progress progress-xxs">
+                    <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript::;">
+                  <h4 class="control-sidebar-subheading">
+                    Update Resume
+                    <span class="label label-success pull-right">95%</span>
+                  </h4>
+                  <div class="progress progress-xxs">
+                    <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript::;">
+                  <h4 class="control-sidebar-subheading">
+                    Laravel Integration
+                    <span class="label label-warning pull-right">50%</span>
+                  </h4>
+                  <div class="progress progress-xxs">
+                    <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript::;">
+                  <h4 class="control-sidebar-subheading">
+                    Back End Framework
+                    <span class="label label-primary pull-right">68%</span>
+                  </h4>
+                  <div class="progress progress-xxs">
+                    <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+                  </div>
+                </a>
+              </li>
+            </ul><!-- /.control-sidebar-menu -->
+
+          </div><!-- /.tab-pane -->
+        </div>
+      </aside><!-- /.control-sidebar -->
       <!-- Add the sidebar's background. This div must be placed
            immediately after the control sidebar -->
-      <div class="control-sidebar-bg"></div>
+      <div id="controlsidebarbg" class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
 
     <!-- REQUIRED JS SCRIPTS -->
@@ -283,7 +389,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Bootstrap 3.3.5 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="dist/js/app.min.js"></script>
+    <script src="dist/js/app.js"></script>
     <!-- Bootstrap slider -->
     <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
     <!-- Select2 -->
@@ -291,6 +397,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!--Google Maps-->
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="charliemap.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="dist/js/demoNoInject.js"></script>
+    <!-- SlimScroll -->
+    <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="plugins/fastclick/fastclick.min.js"></script>
     <script>
       $(function () {
         /* BOOTSTRAP SLIDER */
@@ -303,10 +415,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
 
       $( document ).ready(function() {
-        fixMapSize();
+        init();
       });
+      function init(){
+        fixMapSize();
+        fixSideBars();
+        $( window ).resize(function() {
+          fixMapSize();
+          fixSideBars();
+        });
+        $('#righttabcontent').slimScroll({
+          height: 'auto'
+        });
+      }
+
       function fixMapSize(){
-        $('#googleMap').height($('#maincontentwrapper').height());
+        $('#googleMap').height($('#mainleftsidebar').height());
+      }
+      function fixSideBars(){
+        $('#righttabcontent').parent().height('auto');
+        $('#rightsidebaraside').height(($(window).height()-100));
+        $('#righttabcontent').height($(window).height()-100);
+        /* Bottom Menu */
+        $('#paddingTop').height($(window).height()-280);
+        /*Bug where Screen initailly has tall white spaces*/
+        $('#globalwrapper').height($(window).height());
       }
     </script>
 

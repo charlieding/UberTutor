@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>UberTutor | 1:1 Tutoring</title>
+    <title>AsapTutor | 1:1 Tutoring</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -22,11 +22,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="plugins/bootstrap-slider/slider.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-          page. However, you can choose any other skin. Make sure you
-          apply the skin class to the body tag so the changes take effect.
-    -->
-    <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+             <!--   <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css"> -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -80,9 +79,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Logo -->
         <a href="index2.html" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>U</b>T</span>
+          <span class="logo-mini"><b>A</b>T</span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>Uber</b>Tutor</span>
+          <span class="logo-lg"><small>ASAP</small><b>Tutor</b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -191,7 +190,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <li class="header" style="position:absolute; bottom:0px; width:100%; font-size: 9.5px; text-align: center;"> <!-- To the right -->
               <!-- Default to the left -->
-              <strong>Copyright &copy; 2015 <a href="#">UberTutor</a>.</strong> All rights reserved.
+              <strong>Copyright &copy; 2015 <a href="#">AsapTutor</a>.</strong> All rights reserved.
             </li>
 
           </ul><!-- /.sidebar-menu -->
@@ -238,10 +237,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div>
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
-
-      <!-- Add the sidebar's background. This div must be placed
-           immediately after the control sidebar -->
-      <div class="control-sidebar-bg"></div>
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 2.3.0
+        </div>
+        <strong>Follow Us!</strong>&nbsp;&nbsp;&nbsp;<i class="fa fa-facebook-official"> Facebook</i>&nbsp;&nbsp;&nbsp;<i class="fa fa-twitter-square"></i> Twitter&nbsp;&nbsp;&nbsp;<i class="fa fa-instagram"> Instagram</i>
+      </footer>
     </div><!-- ./wrapper -->
 
     <!-- REQUIRED JS SCRIPTS -->
@@ -256,6 +257,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/bootstrap-slider/bootstrap-slider.js"></script>
     <!-- Select2 -->
     <script src="plugins/select2/select2.full.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="dist/js/demo.js"></script>
+    <!-- SlimScroll -->
+    <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="plugins/fastclick/fastclick.min.js"></script>
     <script>
       $(function () {
         /* BOOTSTRAP SLIDER */
