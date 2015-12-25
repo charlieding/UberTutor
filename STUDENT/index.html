@@ -20,6 +20,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="plugins/select2/select2.min.css">
      <!-- bootstrap slider -->
     <link rel="stylesheet" href="plugins/bootstrap-slider/slider.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker-bs3.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="plugins/timepicker/bootstrap-timepicker.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -274,106 +278,73 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
-<!-- Control Sidebar -->
+      <!-- Control Sidebar -->
       <aside id="rightsidebaraside" class="control-sidebar control-sidebar-dark">
         <!-- Create the tabs -->
         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-          <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-bolt"></i></a></li>
-
+          <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-search"></i></a></li>
           <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
         </ul>
+        <!-- Date and time range & time Picker-->
+        <div class="bootstrap-timepicker">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input id="tutorDay" type="text" name="birthdate" value="" class="form-control pull-right" id="reservationtime"/>
+            </div><!-- /.input group -->
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="fa fa-clock-o"></i>
+              </div>
+              <input id="tutorTime" type="text" class="form-control timepicker">
+            </div><!-- /.input group -->
+          </div><!-- /.form group -->
+        </div>
         <!-- Tab panes -->
         <div id="righttabcontent" class="tab-content" style="padding-left:10px; padding-right:20px;">
           <!-- Home tab content -->
           <div class="tab-pane" id="control-sidebar-home-tab">
-            <h3 class="control-sidebar-heading">Recent Activity</h3>
+            <h3 class="control-sidebar-heading">Tutors Near You</h3>
             <ul class="control-sidebar-menu">
               <li>
                 <a href="javascript::;">
-                  <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                  <img src="dist/img/user1-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-                    <p>Will be 23 on April 24th</p>
+                    <h4 class="control-sidebar-subheading">Langdon Chen</h4>
+                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> (13)</p>
                   </div>
                 </a>
               </li>
               <li>
                 <a href="javascript::;">
-                  <i class="menu-icon fa fa-user bg-yellow"></i>
+                  <img src="dist/img/user3-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-                    <p>New phone +1(800)555-1234</p>
+                    <h4 class="control-sidebar-subheading">Frodo Urlo</h4>
+                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"> (8)</i></p>
                   </div>
                 </a>
               </li>
               <li>
                 <a href="javascript::;">
-                  <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+                  <img src="dist/img/user4-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-                    <p>nora@example.com</p>
+                    <h4 class="control-sidebar-subheading">Nora Park</h4>
+                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"> (5)</i></p>
                   </div>
                 </a>
               </li>
               <li>
                 <a href="javascript::;">
-                  <i class="menu-icon fa fa-file-code-o bg-green"></i>
+                  <img src="dist/img/user5-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-                    <p>Execution time 5 seconds</p>
+                    <h4 class="control-sidebar-subheading">Cron Balmer</h4>
+                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o">(2)</i></p>
                   </div>
                 </a>
               </li>
             </ul><!-- /.control-sidebar-menu -->
-
-            <h3 class="control-sidebar-heading">Tasks Progress</h3>
-            <ul class="control-sidebar-menu">
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Custom Template Design
-                    <span class="label label-danger pull-right">70%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Update Resume
-                    <span class="label label-success pull-right">95%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Laravel Integration
-                    <span class="label label-warning pull-right">50%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <h4 class="control-sidebar-subheading">
-                    Back End Framework
-                    <span class="label label-primary pull-right">68%</span>
-                  </h4>
-                  <div class="progress progress-xxs">
-                    <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-                  </div>
-                </a>
-              </li>
-            </ul><!-- /.control-sidebar-menu -->
-
           </div><!-- /.tab-pane -->
         </div>
       </aside><!-- /.control-sidebar -->
@@ -403,7 +374,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <!-- FastClick -->
     <script src="plugins/fastclick/fastclick.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+    <script src="plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- bootstrap time picker -->
+    <script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
     <script>
+      $(function() {
+
+      });
       $(function () {
         /* BOOTSTRAP SLIDER */
         $("#ex6").slider();
@@ -412,6 +391,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
         /*Initialize Select2 Elements */
         $(".select2").select2();
+        //Timepicker
+        $("#tutorTime").val(moment().format("hh:mm A"));
+        $(".timepicker").timepicker({
+          showInputs: false,
+          timePickerIncrement: 5,
+        });
+        //Single Date Selector
+        $('input[name="birthdate"]').val(moment().format("MM/DD/YYYY"));
+        $('input[name="birthdate"]').daterangepicker({
+          startDate: moment(),
+          minDate: moment(),
+          endDate: moment(),
+          singleDatePicker: true,
+          showDropdowns: true
+        }, 
+        function(start, end, label) {
+          var years = moment().diff(start, 'years');
+          alert("You are " + years + " years old.");
+        });
       });
 
       $( document ).ready(function() {
