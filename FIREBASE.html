@@ -391,27 +391,27 @@
           <div class="modal-body" style="padding-bottom: 0px;">
             <form class="form-horizontal">
               <div class="form-group">
-                <label for="inputName" class="col-lg-2 control-label">Username</label>
+                <label for="inputName" class="col-lg-2 control-label">Full Name</label>
                 <div class="col-lg-10">
-                  <input type="text" class="form-control" id="Text3" placeholder="create a username for your organization">
+                  <input type="text" class="form-control" id="fullname" placeholder="Enter Your First and Last Name">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputSchool" class="col-lg-2 control-label">School</label>
                 <div class="col-lg-10">
-                  <input type="text" class="form-control" id="Text2" placeholder="Eg: Georgia Tech, Harvard">
+                  <input type="text" class="form-control" id="schoolName" placeholder="Eg: Georgia Tech, Harvard">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputEmail" class="col-lg-2 control-label">Email</label>
                 <div class="col-lg-10">
-                  <input type="text" class="form-control" id="Text1" placeholder="Email">
+                  <input type="text" class="form-control" id="registerEmail" placeholder="Email">
                 </div>
               </div>
               <div class = "form-group">
                  <label for="inputUserType" id="userType" class="col-lg-2 control-label">User Type</label>
-                 <input type="radio" name="colors" id="blue" checked="true"> Student
-                 <input type="radio" name="colors" id="green"> Tutor
+                 <input type="radio" name="colors" id="studentRadio" checked="true"> Student
+                 <input type="radio" name="colors" id="tutorRadio"> Tutor
               </div>
               <div class="form-group">
                 <label for="inputPassword" class="col-lg-2 control-label">Password</label>
@@ -615,24 +615,15 @@
             ref.authWithOAuthPopup("facebook", registerAuthHandler);
         }
         function register(){
-
-            var name = $('#Text3').val();
-            var organizationName = $('#Text2').val();
-            var email = $('#Text1').val();
-            var check = document.getElementById("blue").checked;
+            /*Get UI Values*/
+            var email = $('#registerEmail').val();
             var pass1 = $('#Password1').val();
             var pass2 = $('#Password2').val();
             if(pass1 != pass2){
                 alert("Passwords Do Not Match")
                 return;
             }
-            if (check) {
-                type = "Student";
-            }
-            else {
-                type = "Tutor";
-            }
-
+            /*Authenticate First To see if user exists before registering*/
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.authWithPassword({
               email    : email,
@@ -701,26 +692,12 @@
             if (authData == "traditionalEmailPassword"){
 
                 var userObj = {};
-                userObj.name = $('#Text3').val();
-                userObj.organizationName = $('#Text2').val();
-                userObj.email = $('#Text1').val();
-                userObj.check = document.getElementById("blue").checked;
-                userObj.pass1 = $('#Password1').val();
-                userObj.pass2 = $('#Password2').val();
-                if(userObj.pass1 != userObj.pass2){
-                    alert("Passwords Do Not Match")
-                    return;
-                }
-                if (userObj.check) {
-                    userObj.type = "Student";
-                }
-                else {
-                    userObj.type = "Tutor";
-                }
+                userObj.email = $('#registerEmail').val();
+                userObj.pass = $('#Password1').val();
 
                 ref.createUser({
                   email: userObj.email,
-                  password: userObj.pass2
+                  password: userObj.pass
                 }, function(error, userData) {
                   if (error) {
                     switch (error.code) {
@@ -753,7 +730,7 @@
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.authWithPassword({
               email    : userObj.email,
-              password : userObj.pass2
+              password : userObj.pass
             }, loginAndPersistAuthHandler);
         }
         // Create a callback to handle the result of the authentication
@@ -764,9 +741,30 @@
             alert(error);
           } else {
             console.log("Successfully Created and Logged in. Payload:",authData);
+
+            /**UI Values**/
+            var userObj = {};
+            userObj.fullname = $('#fullname').val();
+            userObj.schoolName = $('#schoolName').val();
+            userObj.email = $('#registerEmail').val();
+            userObj.check = document.getElementById("studentRadio").checked;
+            userObj.pass1 = $('#Password1').val();
+            userObj.pass2 = $('#Password2').val();
+            if (userObj.check) {
+                userObj.type = "Student";
+            }
+            else {
+                userObj.type = "Tutor";
+            }
+
             ref.child("users").child(authData.uid).set({
             provider: authData.provider,
-            name: getName(authData)
+            name: getName(authData),
+            fullname: userObj.fullname,
+            password: userObj.pass2,
+            school: userObj.schoolName,
+            email: userObj.email,
+            userType: userObj.type 
             //todo add more fields
             });
           }
