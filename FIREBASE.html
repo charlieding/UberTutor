@@ -96,8 +96,11 @@
                     <li>
                         <a class="page-scroll" data-toggle="modal" href="#login">Login</a>
                     </li>
-                                        <li>
+                    <li>
                         <a class="page-scroll" data-toggle="modal" href="#register">Sign Up</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="var ref = new Firebase('https://ubertutoralpha.firebaseio.com');ref.unauth();" >Log Out</a>
                     </li>
                     <!--
                     <li>
@@ -343,15 +346,15 @@
           <div class="modal-body" style="padding-bottom: 0px;">
             <form class="form-horizontal">
               <div class="form-group">
-                <label for="inputEmail" class="col-lg-2 control-label">Username</label>
+                <label for="inputEmail" class="col-lg-2 control-label">Email</label>
                 <div class="col-lg-10">
-                  <input type="text" class="form-control" id="inputEmail" placeholder="Username">
+                  <input type="text" class="form-control" id="inputEmailLogin" placeholder="Email Address">
                 </div>
               </div>
               <div class="form-group">
                 <label for="inputPassword" class="col-lg-2 control-label">Password</label>
                 <div class="col-lg-10">
-                  <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                  <input type="password" class="form-control" id="inputPasswordLogin" placeholder="Password">
                   <div class="checkbox">
                     <label>
                       <input type="checkbox"> Remember me
@@ -362,7 +365,7 @@
             </form>
             <hr>
             <button class="btn btn-primary btnfb" type="button">
-                <span class="cta-text">Sign in with Facebook</span> 
+                <span class="cta-text" onclick="fblogin();">Sign in with Facebook</span> 
             </button>
           </div>
           <br>
@@ -406,7 +409,7 @@
                 </div>
               </div>
               <div class = "form-group">
-                 <label for="inputUserType" class="col-lg-2 control-label">User Type</label>
+                 <label for="inputUserType" id="userType" class="col-lg-2 control-label">User Type</label>
                  <input type="radio" name="colors" id="blue" checked="true"> Student
                  <input type="radio" name="colors" id="green"> Tutor
               </div>
@@ -422,13 +425,13 @@
             </form>
             <hr>
             <button class="btn btn-primary btnfb" type="button">
-                <span class="cta-text">Sign up with Facebook</span> 
+                <span class="cta-text" onclick="fbregister();" >Sign up with Facebook</span> 
             </button>
           </div>
           <br>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" onclick="window.location = 'STUDENT/index.html';" class="btn btn-primary">Register</button>
+            <button type="button" onclick="register();" class="btn btn-primary">Register</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -560,20 +563,214 @@
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 
     <script>
-      $( document ).ready(function() {
-        //authenticate();
-      });
-      function login(){
-        alert("test");
-        var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
-        ref.authWithOAuthPopup("facebook", function(error, authData) {
+        $( document ).ready(function() {
+            // Register the callback to be fired every time auth state changes
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+            ref.onAuth(authDataCallback);
+        });
+        // Create a callback which logs the current auth state
+        function authDataCallback(authData) {
+          if (authData) {
+            console.log("User " + authData.uid + " is logged in with " + authData.provider);
+          } else {
+            console.log("User is logged out");
+          }
+        }
+
+        function fblogin(){
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+            ref.authWithOAuthPopup("facebook", loginAuthHandler);
+        }
+        function login(){
+            var email = $('#inputEmailLogin').val();
+            var pass = $('#inputPasswordLogin').val();
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+            ref.authWithPassword({
+              email    : email,
+              password : pass
+            }, loginAuthHandler);
+        }
+        // Create a callback to handle the result of the authentication
+        function loginAuthHandler(error, authData) {
           if (error) {
             console.log("Login Failed!", error);
+            alert(error);
           } else {
-            console.log("Authenticated successfully with payload:", authData);
+            checkIfUserExistsLogin(authData.uid, authData);
           }
+        }
+        function successLogin(authData){
+            console.log("Authenticated successfully with payload:", authData);
+            //TODO Go to Logged in home page
+        }
+        function failLogin(authData){
+            console.log("User: "+getName(authData)+" does not exist", authData);
+            var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+            ref.unauth();
+            alert("User: "+getName(authData)+" does not exist.");
+        }
+
+        function fbregister(){
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+            ref.authWithOAuthPopup("facebook", registerAuthHandler);
+        }
+        function register(){
+
+            var name = $('#Text3').val();
+            var organizationName = $('#Text2').val();
+            var email = $('#Text1').val();
+            var check = document.getElementById("blue").checked;
+            var pass1 = $('#Password1').val();
+            var pass2 = $('#Password2').val();
+            if(pass1 != pass2){
+                alert("Passwords Do Not Match")
+                return;
+            }
+            if (check) {
+                type = "Student";
+            }
+            else {
+                type = "Tutor";
+            }
+
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+            ref.authWithPassword({
+              email    : email,
+              password : pass2
+            }, registerAuthHandler);
+        }
+        // Create a callback to handle the result of the authentication
+        function registerAuthHandler(error, authData) {
+          if (authData){
+            console.log("User Already Exists!");
+            userExistRegister(authData);
+          } else if (error == "Error: The specified user does not exist."){
+            persistNewUserDB("traditionalEmailPassword");
+          } else if (error) {
+            alert(error);
+          }else {
+            console.log(error, authData);
+          }
+        }
+        function userExistRegister(authData){
+            console.log("User: "+getName(authData)+" already exists", authData);
+            var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+            ref.unauth();
+            alert("User: "+getName(authData)+" already exists.");
+        }
+
+        /** HELPER FUNCTIONS **/
+        // find a suitable name based on the meta info given by each provider
+        function getName(authData) {
+          switch(authData.provider) {
+             case 'password':
+               return authData.password.email.replace(/@.*/, '');
+             case 'twitter':
+               return authData.twitter.displayName;
+             case 'facebook':
+               return authData.facebook.displayName;
+          }
+        }
+
+        /** Check if User Exist **/
+        // Tests to see if /users/<userId> has any data. 
+        function checkIfUserExistsLogin(userId, authData) {
+            var usersRef = new Firebase('https://ubertutoralpha.firebaseio.com/users');
+            usersRef.child(userId).once('value', function(snapshot) {
+            var exists = (snapshot.val() !== null);
+            if(exists == true){
+                successLogin(authData);
+            }else{
+                failLogin(authData);
+            }
         });
-      }
+        }
+        function checkIfUserExistsRegister(userId, authData) {
+            var usersRef = new Firebase('https://ubertutoralpha.firebaseio.com/users');
+            usersRef.child(userId).once('value', function(snapshot) {
+            var exists = (snapshot.val() !== null);
+            if(exists == true){
+                userExistRegister(authData);
+            }else{
+                newUserRegister(authData);
+            }
+        });
+        }
+        function persistNewUserDB(authData){
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+            if (authData == "traditionalEmailPassword"){
+
+                var userObj = {};
+                userObj.name = $('#Text3').val();
+                userObj.organizationName = $('#Text2').val();
+                userObj.email = $('#Text1').val();
+                userObj.check = document.getElementById("blue").checked;
+                userObj.pass1 = $('#Password1').val();
+                userObj.pass2 = $('#Password2').val();
+                if(userObj.pass1 != userObj.pass2){
+                    alert("Passwords Do Not Match")
+                    return;
+                }
+                if (userObj.check) {
+                    userObj.type = "Student";
+                }
+                else {
+                    userObj.type = "Tutor";
+                }
+
+                ref.createUser({
+                  email: userObj.email,
+                  password: userObj.pass2
+                }, function(error, userData) {
+                  if (error) {
+                    switch (error.code) {
+                      case "EMAIL_TAKEN":
+                        console.log("The new user account cannot be created because the email is already in use.");
+                        break;
+                      case "INVALID_EMAIL":
+                        console.log("The specified email is not a valid email.");
+                        break;
+                      default:
+                        console.log("Error creating user:", error);
+                    }
+                  } else {
+                    console.log("Successfully created user account with uid:", userData.uid);
+                    //logs in newly created account
+                    loginAndPersist(userObj);
+                  }
+                });
+            } else if (authData) {
+                // save the user's profile into the database so we can list users,
+                // use them in Security and Firebase Rules, and show profiles
+                ref.child("users").child(authData.uid).set({
+                    provider: authData.provider,
+                    name: getName(authData)
+                    //todo add more fields
+                });
+            }
+        }
+        function loginAndPersist(userObj){
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+            ref.authWithPassword({
+              email    : userObj.email,
+              password : userObj.pass2
+            }, loginAndPersistAuthHandler);
+        }
+        // Create a callback to handle the result of the authentication
+        function loginAndPersistAuthHandler(error, authData) {
+          var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+          if (error) {
+            console.log("Login Failed!", error);
+            alert(error);
+          } else {
+            console.log("Successfully Created and Logged in. Payload:",authData);
+            ref.child("users").child(authData.uid).set({
+            provider: authData.provider,
+            name: getName(authData)
+            //todo add more fields
+            });
+          }
+        }
     </script>
 
 </body>
