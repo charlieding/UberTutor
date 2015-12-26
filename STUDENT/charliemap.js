@@ -103,6 +103,15 @@ function MyMapUti(){
        draggableCursor='crosshair';
        map.setOptions({draggableCursor:draggableCursor});
     };
+    this.cleanMap=function (callbackfunc) {
+        console.log("cleanMap");
+        $("a[target='_new']").text("");
+        $("a:contains('Terms')").text("");
+        $("span:contains('Map')").text("");
+        if(callbackfunc){
+          callbackfunc(centerLatLng);
+        }
+    }
 };//
 
 var mmu=new MyMapUti();
@@ -123,10 +132,7 @@ function showPosition(position) {
     setTimeout(cleanmap,8000);
 }    
 function cleanmap() {
-    console.log("cleanmap");
-    $("a[target='_new']").text("");
-    $("a:contains('Terms')").text("");
-    $("span:contains('Map')").text("");
+    mmu.cleanMap(null);
 }
 
 getLocation();
