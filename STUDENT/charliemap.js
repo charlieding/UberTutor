@@ -25,10 +25,11 @@ var MyMapUti={
       var dataType=typeof(slatlng);
       if( dataType==="string"){
         var arr=slatlng.split(",");
+        if(arr.length<2) return null;
         var latlng=new google.maps.LatLng(arr[0],arr[1]);
         return latlng;
       }
-      return null;
+      return slatlng;
   },
 };
 function FbaseUsers(map){
@@ -56,10 +57,11 @@ function FbaseUsers(map){
          console.log("op..");
          var mark=markImgArr[uid];
          mark.setMap(null);
-
+         var pos=MyMapUti.mapLatLng(latlng);       
+         if(null==pos) return;    
+ 
          if("child_changed"===ops)  {
-           var pos=MyMapUti.mapLatLng(latlng);           
-           mark.setOptions({position:pos,map:map}); 
+            mark.setOptions({position:pos,map:map}); 
            markImgArr[uid]=mark;                        
          }
     };
