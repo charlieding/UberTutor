@@ -1,10 +1,77 @@
+var MyMapUti={
+  getMarkImg:function(latlng,imgUrl){
+        var pinIcon = new google.maps.MarkerImage(
+            imgUrl,
+            null, /* size is determined at runtime */
+            null, /* origin is 0,0 */
+            null, /* anchor is bottom center of the scaled image */
+            new google.maps.Size(32, 32)
+        );
+        var markerimg = new google.maps.Marker({
+          //map:map,
+          draggable:false,
+          optimized:false, // <-- required for animated gif
+          animation: google.maps.Animation.DROP,
+          position: latlng,
+          icon: pinIcon,
+        });
+        return markerimg;
+  },
+  getCircle:function(latlng){
+  },
+};
+function FbaseUsers(map){
+
+    var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
+    var markImgArr=[];
+    ref.on("value",function(snapshot){
+          var usersObj = snapshot.val();
+          var dlt=0;
+          $.each(usersObj,function(uid,userObj){
+            console.log("uid="+uid);
+            console.log(userObj);
 
 
-function MyMapUti(){
+            var latlng=null;
+            if( !!userObj.latlng ){
+                latlng=new google.maps.LatLng(userObj.latlng);
+            }else{
+                latlng=new google.maps.LatLng(dlt+34.070044598142, -84.16012274947661);
+                dlt+=1.0;
+            };
+            var imgUrl=userObj.imgUrl;
+            if(!imgUrl || imgUrl.length===0){
+              imgUrl="../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00";
+            };
+            var markimg=MyMapUti.getMarkImg(latlng,imgUrl);
+            markimg.setMap(map);
+            markImgArr.push(markimg);
+
+
+            ref.child(uid).on("child_removed",function(snapshot){
+                  var users = snapshot.val();
+                  console.log(users);
+            });
+            ref.child(uid).on("child_changed",function(snapshot){
+                  var users = snapshot.val();
+                  console.log(users);
+            });
+
+          });
+
+
+
+    });
+
+
+ 
+};
+    
+function MyMapMgr(){
+    var map=null;
     var markerCentr=null;
     var markerApptment=null;
     var infowindow=null;
-    var map=null;
     var centerLatLng=null;
     var draggableCursor=null;
     
@@ -55,43 +122,19 @@ function MyMapUti(){
           });
         myCity.setMap(map);
 
-        //img
-        var pinIcon = new google.maps.MarkerImage(
-            "../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00",
-            null, /* size is determined at runtime */
-            null, /* origin is 0,0 */
-            null, /* anchor is bottom center of the scaled image */
-            new google.maps.Size(32, 32)
-        );
-        markerCentr = new google.maps.Marker({
-          map:map,
-          draggable:false,
-          optimized:false, // <-- required for animated gif
-          animation: google.maps.Animation.DROP,
-          position: centerLatLng,
-          icon: pinIcon,
+        //img marker
+        markerCentr=MyMapUti.getMarkImg(centerLatLng,"../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
+        markerCentr.setMap(map);
 
-        });
 
         ////
-        var pinIcon2 = new google.maps.MarkerImage(
-            "../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00",
-            null, /* size is determined at runtime */
-            null, /* origin is 0,0 */
-            null, /* anchor is bottom center of the scaled image */
-            new google.maps.Size(32, 32)
-        );
-        markerApptment = new google.maps.Marker({
-          //map:map,
-          draggable:false,
-          optimized:false, // <-- required for animated gif
-          animation: google.maps.Animation.DROP,
-          //position: centerLatLng,
-          icon: pinIcon2,
+        markerApptment=MyMapUti.getMarkImg(null,"../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
 
-        });
+        var fbu=new FbaseUsers(map);
+//fbu.showTutors();
 
     };
+
     this.resetMap=function(){
       map.setOptions({center: centerLatLng});
 
@@ -111,10 +154,18 @@ function MyMapUti(){
         if(callbackfunc){
           callbackfunc(centerLatLng);
         }
-    }
+    };
+
+
+
 };//
 
-var mmu=new MyMapUti();
+
+
+var mmm=new MyMapMgr();
+
+
+
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -128,11 +179,11 @@ function showPosition(position) {
     var ss = "" + position.coords.latitude + ", " + position.coords.longitude; 
     console.log("ok currentLatLng="+ss);
     
-    mmu.initialize(currentLatLng.coords.latitude,currentLatLng.coords.longitude,"default center");
+    mmm.initialize(currentLatLng.coords.latitude,currentLatLng.coords.longitude,"default center");
     setTimeout(cleanmap,8000);
 }    
 function cleanmap() {
-    mmu.cleanMap(null);
+    mmm.cleanMap(null);
 }
 
 getLocation();
@@ -145,10 +196,10 @@ getLocation();
   
   $(document).ready(function(){ 
     $("#resetMap").click(function(){
-      mmu.resetMap();
+      mmm.resetMap();
     });  
     $("#cursorChange").click(function () {
-       mmu.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
+       mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
     });
     //$("#tables_container").append(archinfo01.GetTable());  
     //$("#tables_container").append(archinfo01.GetFreqTable({scale:10}));
