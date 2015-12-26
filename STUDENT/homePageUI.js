@@ -34,8 +34,6 @@
         init();
       });
       function init(){
-        fixMapSize();
-        fixSideBars();
         $( window ).resize(function() {
           fixMapSize();
           fixSideBars();
@@ -43,6 +41,8 @@
         $('#righttabcontent').slimScroll({
           height: 'auto'
         });
+        fixMapSize();
+        fixSideBars();
       }
 
       function fixMapSize(){
@@ -50,8 +50,10 @@
       }
       function fixSideBars(){
         $('#righttabcontent').parent().height('auto');
+        
         $('#rightsidebaraside').height(($(window).height()-100));
-        $('#righttabcontent').height($(window).height()-100);
+        $('#righttabcontent').height($(window).height()-175);
+        //$('#righttabcontent').height('auto'); //NOT WORKING - MUST FIX
         /* Bottom Menu */
         if($(window).width() <= 767){
           $('#paddingTop').height($(window).height()-330);

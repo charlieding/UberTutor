@@ -99,9 +99,6 @@
                     <li>
                         <a class="page-scroll" data-toggle="modal" href="#register">Sign Up</a>
                     </li>
-                    <li>
-                        <a href="#" onclick="var ref = new Firebase('https://ubertutoralpha.firebaseio.com');ref.unauth();" >Log Out</a>
-                    </li>
                     <!--
                     <li>
                         <a class="page-scroll" href="#about">About</a>
@@ -424,8 +421,8 @@
               </div>
             </form>
             <hr>
-            <button class="btn btn-primary btnfb" type="button">
-                <span class="cta-text" onclick="fbregister();" >Sign up with Facebook</span> 
+            <button class="btn btn-primary btnfb"  onclick="fbregister();" type="button">
+                <span class="cta-text" >Sign up with Facebook</span> 
             </button>
           </div>
           <br>
@@ -744,8 +741,30 @@
                     reviewIDs: "",
                     tutorRequests: "",
                     messageIDs: "",
-                    freeScheduleID: "",
-                    userType: ""
+                    freeSchedule: {
+                      monday: {
+                        freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+                      },
+                      tuesday: {
+                        freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+                      },
+                      wednesday: {
+                        freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+                      },
+                      thursday: {
+                        freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+                      },
+                      friday: {
+                        freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+                      },
+                      saturday: {
+                        freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+                      },
+                      sunday: {
+                        freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+                      }
+                    },
+                    userType: "student"
 
                     //todo add more fields
                 });
