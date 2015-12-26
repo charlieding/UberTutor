@@ -213,6 +213,7 @@ function showPosition(position) {
     var currentLatLng=position;
     var ss = "" + position.coords.latitude + ", " + position.coords.longitude; 
     console.log("ok currentLatLng="+ss);
+
     
     mmm.initialize(currentLatLng.coords.latitude,currentLatLng.coords.longitude,"default center");
     setTimeout(cleanmap,8000);
@@ -223,6 +224,17 @@ function cleanmap() {
 
 getLocation();
 
+
+function updateLoginLatLng(uid){
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position){
+          var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
+          ref.child(uid).set({latlng:position.coords.toString()});          
+        });
+    } else {
+        alert("not support navigator.geolocation");
+    }  
+}
 
 
 
