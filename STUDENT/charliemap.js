@@ -36,8 +36,8 @@ function FbaseUsers(map){
             if( !!userObj.latlng ){
                 latlng=new google.maps.LatLng(userObj.latlng);
             }else{
-                latlng=new google.maps.LatLng(dlt+34.070044598142, -84.16012274947661);
-                dlt+=1.0;
+                latlng=new google.maps.LatLng(dlt+34.070044598142, dlt-84.16012274947661);
+                dlt+=0.0031;
             };
             var imgUrl=userObj.imgUrl;
             if(!imgUrl || imgUrl.length===0){
@@ -45,6 +45,7 @@ function FbaseUsers(map){
             };
             var markimg=MyMapUti.getMarkImg(latlng,imgUrl);
             markimg.setMap(map);
+            markimg.uid=uid;
             markImgArr.push(markimg);
 
 
