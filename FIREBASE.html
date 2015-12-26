@@ -672,6 +672,7 @@
             usersRef.child(userId).once('value', function(snapshot) {
             var exists = (snapshot.val() !== null);
             if(exists == true){
+                updateLoginLatLng(userId);
                 successLogin(authData);
             }else{
                 failLogin(authData);
@@ -691,6 +692,18 @@
                 persistNewUserDB(authData);
             }
         });
+        }
+        function updateLoginLatLng(uid){
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position){
+                          var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
+                          var spos=position.coords.toString();
+                          console.log("login spos="+spos);
+                          ref.child(uid).set({latlng:spos});          
+                        });
+                    } else {
+                        alert("not support navigator.geolocation");
+                    }  
         }
         function persistNewUserDB(authData){
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -767,8 +780,14 @@
                     userType: "student"
 
                     //todo add more fields
+
+
+
                 });
                 console.log("Succesfully created user account via FB with Payload: ", authData)
+
+
+                updateLoginLatLng(authData.uid);
 
                 //Succesfully Registered and Logged In - Go to Logged in home page
                 window.location = 'STUDENT/firebaseHomePage.html';
