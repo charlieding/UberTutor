@@ -603,7 +603,8 @@
         }
         function successLogin(authData){
             console.log("Authenticated successfully with payload:", authData);
-            //TODO Go to Logged in home page
+            //Succesfully Logged In - Go to Logged in home page
+            window.location = 'STUDENT/firebaseHomePage.html';
         }
         function failLogin(authData){
             console.log("User: "+getName(authData)+" does not exist", authData);
@@ -727,11 +728,20 @@
                 ref.child("users").child(authData.uid).set({
                     provider: authData.provider,
                     name: getName(authData),
-                    imgUrl: authData.facebook.profileImageURL
+                    imgUrl: authData.facebook.profileImageURL,
+                    displayName: authData.facebook.displayName,
+                    firstName:authData.facebook.cachedUserProfile.first_name,
+                    lastName: authData.facebook.cachedUserProfile.last_name,
+                    gender: authData.facebook.cachedUserProfile.gender,
+                    locale: authData.facebook.cachedUserProfile.locale,
+                    age: authData.facebook.cachedUserProfile.age_range.min,
 
                     //todo add more fields
                 });
                 console.log("Succesfully created user account via FB with Payload: ", authData)
+
+                //Succesfully Registered and Logged In - Go to Logged in home page
+                window.location = 'STUDENT/firebaseHomePage.html';
             }
         }
         function loginAndPersist(userObj){
@@ -775,6 +785,8 @@
             userType: userObj.type 
             //add more fields
             });
+            //Succesfully Registered and Logged In - Go to Logged in home page
+            window.location = 'STUDENT/firebaseHomePage.html';
           }
         }
     </script>
