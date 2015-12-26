@@ -78,7 +78,7 @@ function FbaseUsers(map){
           });      
     };
 
-    var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+    var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
 
     ref.on("value",function(snapshot){
         //usersMarkImgs(snapshot);
