@@ -5,7 +5,7 @@
         /* BOOTSTRAP SLIDER */
         $("#ex6").slider();
         $("#ex6").on("slide", function(slideEvt) {
-          $("#ex6SliderVal").text(slideEvt.value);
+          $("#duration").text(slideEvt.value);
         });
         /*Initialize Select2 Elements */
         $(".select2").select2();
