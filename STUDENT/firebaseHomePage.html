@@ -134,16 +134,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->
-                  <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <img id="userImageNavbar" src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs">(Student's Name)</span>
+                  <span class="hidden-xs studentName">(Student's Name)</span>
                 </a>
                 <ul class="dropdown-menu" style="right:0px;">
                   <!-- The user image in the menu -->
                   <li class="user-header">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <img id="userImageHeader" src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                     <p>
-                      (Student's Name)
+                      <span class="studentName">(Student's Name)</span>
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
@@ -162,7 +162,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <a href="#" class="btn btn-default btn-flat">Profile</a>
                     </div>
                     <div class="pull-right">
-                      <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                      <a href="#" class="btn btn-default btn-flat" onclick="signOut();">Sign out</a>
                     </div>
                   </li>
                 </ul>
@@ -180,10 +180,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel">
               <div class="pull-left image">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img id="userImagePanel" src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
-                <p>(Student's Name)</p>
+                <p class="studentName">(Student's Name)</p>
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
               </div>
@@ -370,6 +370,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="charliemap.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="dist/js/demoNoInject.js"></script>
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
     <!-- SlimScroll -->
     <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <!-- FastClick -->
@@ -379,71 +383,63 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/daterangepicker/daterangepicker.js"></script>
     <!-- bootstrap time picker -->
     <script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
+    <!-- Firebase -->
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <!--UI Main Js -->
+    <script src="homePageUI.js"></script>
     <script>
-      $(function() {
-
-      });
-      $(function () {
-        /* BOOTSTRAP SLIDER */
-        $("#ex6").slider();
-        $("#ex6").on("slide", function(slideEvt) {
-          $("#ex6SliderVal").text(slideEvt.value);
-        });
-        /*Initialize Select2 Elements */
-        $(".select2").select2();
-        //Timepicker
-        $("#tutorTime").val(moment().format("hh:mm A"));
-        $(".timepicker").timepicker({
-          showInputs: false,
-          timePickerIncrement: 5,
-        });
-        //Single Date Selector
-        $('input[name="birthdate"]').val(moment().format("MM/DD/YYYY"));
-        $('input[name="birthdate"]').daterangepicker({
-          startDate: moment(),
-          minDate: moment(),
-          endDate: moment(),
-          singleDatePicker: true,
-          showDropdowns: true
-        }, 
-        function(start, end, label) {
-          var years = moment().diff(start, 'years');
-          alert("You are " + years + " years old.");
-        });
-      });
-
+    /******* FIREBASE CODE - MOVE TO JS FILE *******/
       $( document ).ready(function() {
-        init();
+          // Register the callback to be fired every time auth state changes
+          var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+          ref.onAuth(authDataCallback);
+
+          // Get a database reference to our posts
+          var authData = ref.getAuth();
+
+          if (authData) {
+            console.log("Authenticated user with uid:", authData.uid);
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
+
+            // Attach an asynchronous callback to read the data at our posts reference
+            ref.on("value", function(snapshot) {
+              console.log(snapshot.val());
+              updateUserImages(snapshot.val().imgUrl);
+              updateUserName(snapshot.val().displayName)
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+            });
+          }
+
+          // Create a callback which logs the current auth state
+          function authDataCallback(authData) {
+            if (authData) {
+              console.log("User " + authData.uid + " is logged in with " + authData.provider);
+            } else {
+              console.log("User is logged out");
+            }
+          }
       });
-      function init(){
-        fixMapSize();
-        fixSideBars();
-        $( window ).resize(function() {
-          fixMapSize();
-          fixSideBars();
-        });
-        $('#righttabcontent').slimScroll({
-          height: 'auto'
-        });
+      function updateUserImages(imgURL){
+        if (imgURL){
+          $("#userImagePanel").attr("src", imgURL);
+          $("#userImageNavbar").attr("src", imgURL);
+          $("#userImageHeader").attr("src", imgURL);
+        }
+      }
+      function updateUserName(userName){
+        if(userName){
+          $(".studentName").text(userName);
+        }
+      }
+      function signOut(){
+        var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+        ref.unauth();
+        window.location = '../FIREBASE.html';
       }
 
-      function fixMapSize(){
-        $('#googleMap').height($('#mainleftsidebar').height());
-      }
-      function fixSideBars(){
-        $('#righttabcontent').parent().height('auto');
-        $('#rightsidebaraside').height(($(window).height()-100));
-        $('#righttabcontent').height($(window).height()-100);
-        /* Bottom Menu */
-        $('#paddingTop').height($(window).height()-280);
-        /*Bug where Screen initailly has tall white spaces*/
-        $('#globalwrapper').height($(window).height());
-      }
     </script>
 
-    <!-- Optionally, you can add Slimscroll and FastClick plugins.
-         Both of these plugins are recommended to enhance the
-         user experience. Slimscroll is required when using the
-         fixed layout. -->
+
   </body>
 </html>

@@ -563,6 +563,7 @@
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 
     <script>
+    /******* FIREBASE CODE - MOVE TO JS FILE *******/
         $( document ).ready(function() {
             // Register the callback to be fired every time auth state changes
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -735,6 +736,7 @@
                     gender: authData.facebook.cachedUserProfile.gender,
                     locale: authData.facebook.cachedUserProfile.locale,
                     age: authData.facebook.cachedUserProfile.age_range.min,
+                    latlng: ""
 
                     //todo add more fields
                 });
