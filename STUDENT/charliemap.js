@@ -28,7 +28,7 @@ var MyMapUti={
         var latlng=new google.maps.LatLng(arr[0],arr[1]);
         return latlng;
       }
-      return slatlng;
+      return null;
   },
 };
 function FbaseUsers(map){
@@ -44,38 +44,50 @@ function FbaseUsers(map){
             return MyMapUti.getMarkImg(latlng,imgUrl);
     }; 
     var markImgArr={};
-    function userMarkImgUpdate(uid,userObj,ops){
-         console.log(uid);
+    function userMarkImgUpdate(uid,snapshot,ops){
+         console.log(uid+", ops="+ops);
+         var latlng = snapshot.val();
+         var key = snapshot.key();
+         console.log(key+" := "+latlng);
+
+         if(key!="latlng"){
+            return;
+         }
+         console.log("op..");
          var mark=markImgArr[uid];
          mark.setMap(null);
-         var userObj = snapshot.val();
-         console.log(userObj);
 
          if("child_changed"===ops)  {
-           mark=userMarkImg(userObj);
-           mark.setMap(map); 
-           markImgArr[uid]=markimg;                        
+           var pos=MyMapUti.mapLatLng(latlng);           
+           mark.setOptions({position:pos,map:map}); 
+           markImgArr[uid]=mark;                        
          }
     };
-    function usersMarkImgs(snapshot){
-          var usersObj = snapshot.val();
-          var dlt=0;
-          $.each(usersObj,function(uid,userObj){
+    function uerMarkImgAdd(snapshot){
+          var userObj = snapshot.val();
+          var uid=snapshot.key();
+          //$.each(usersObj,function(uid,userObj){
             console.log("uid="+uid);
             console.log(userObj);
+
+            if(userObj.type!="tutor"){
+              //return;
+            }
 
             var markimg=userMarkImg(userObj);
             markimg.setMap(map);
             markImgArr[uid]=markimg;
 
-            ref.child(uid).on("child_removed",function(snapshot){
+            ref.child(uid).on("child_removed",function(snapshot,prevKey){
+                console.log("prevKey="+prevKey);
                 userMarkImgUpdate(uid,snapshot,'child_removed');
             });
-            ref.child(uid).on("child_changed",function(snapshot){
-                  userMarkImgUpdate(uid,snapshot,'child_changed');
+            ref.child(uid).on("child_changed",function(snapshot,prevKey){
+                console.log("prevKey="+prevKey);
+                userMarkImgUpdate(uid,snapshot,'child_changed');
             });
 
-          });      
+          //});      
     };
 
     var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
@@ -84,7 +96,7 @@ function FbaseUsers(map){
         //usersMarkImgs(snapshot);
     });
     ref.on("child_added",function(snapshot){
-        usersMarkImgs(snapshot);
+        uerMarkImgAdd(snapshot);
     });
 
 
