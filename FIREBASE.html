@@ -600,6 +600,7 @@
           }
         }
         function successLogin(authData){
+            updateLoginLatLng(authData.uid);
             console.log("Authenticated successfully with payload:", authData);
             //Succesfully Logged In - Go to Logged in home page
             window.location = 'STUDENT/firebaseHomePage.html';
@@ -672,7 +673,6 @@
             usersRef.child(userId).once('value', function(snapshot) {
             var exists = (snapshot.val() !== null);
             if(exists == true){
-                updateLoginLatLng(userId);
                 successLogin(authData);
             }else{
                 failLogin(authData);
@@ -696,6 +696,7 @@
         function updateLoginLatLng(uid){
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(function(position){
+                          console.log(position);
                           var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
                           var spos=position.coords.toString();
                           console.log("login spos="+spos);
@@ -834,6 +835,8 @@
             userType: userObj.type 
             //add more fields
             });
+
+            updateLoginLatLng(authData.uid);
             //Succesfully Registered and Logged In - Go to Logged in home page
             window.location = 'STUDENT/firebaseHomePage.html';
           }
