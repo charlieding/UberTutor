@@ -361,8 +361,8 @@
               </div>
             </form>
             <hr>
-            <button class="btn btn-primary btnfb" type="button">
-                <span class="cta-text" onclick="fblogin();">Sign in with Facebook</span> 
+            <button class="btn btn-primary btnfb"  onclick="fblogin();" type="button">
+                <span class="cta-text">Sign in with Facebook</span> 
             </button>
           </div>
           <br>
@@ -735,6 +735,7 @@
                     locale: authData.facebook.cachedUserProfile.locale,
                     age: authData.facebook.cachedUserProfile.age_range.min,
                     //universal fields
+                    uid: authData.uid,
                     latlng: "",
                     phoneNumber: "",
                     appointmentIDs: "",

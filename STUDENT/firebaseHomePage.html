@@ -470,7 +470,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 //calculate distance from you to tutor
                   //dist(location, userObj.latlng)
                 //display this tutor onto the screen
-                  displayTutor(userObj, uid)
+                  $("#tutorsList").empty();
+                  addTutorToDisplay(userObj, uid)
               }
             }
           })
@@ -478,9 +479,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           console.log("The read failed: " + errorObject.code);
         });
       }
-      function displayTutor(userObj, uid){
-        $("#tutorsList").empty();
-
+      function addTutorToDisplay(userObj, uid){
+        
         //User Image Loaction
         var userImg = userObj.imgUrl;
         //Distance
