@@ -1,5 +1,10 @@
 var MyMapUti={
   getMarkImg:function(latlng,imgUrl){
+      var dataType=typeof(latlng);
+      if( dataType==="string"){
+        var arr=latlng.split(",");
+        latlng=new google.maps.LatLng(arr[0],arr[1]);
+      }
         var pinIcon = new google.maps.MarkerImage(
             imgUrl,
             null, /* size is determined at runtime */
@@ -32,16 +37,14 @@ function FbaseUsers(map){
             console.log(userObj);
 
 
-            var latlng=null;
-            if( !!userObj.latlng ){
-                latlng=new google.maps.LatLng(userObj.latlng);
-            }else{
+            var latlng=userObj.latlng;
+            if( !userObj.latlng || userObj.latlng.length===0){
                 latlng=new google.maps.LatLng(dlt+34.070044598142, dlt-84.16012274947661);
                 dlt+=0.0031;
             };
             var imgUrl=userObj.imgUrl;
             if(!imgUrl || imgUrl.length===0){
-              imgUrl="../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00";
+                imgUrl="../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00";
             };
             var markimg=MyMapUti.getMarkImg(latlng,imgUrl);
             markimg.setMap(map);
