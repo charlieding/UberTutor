@@ -50,9 +50,8 @@
       }
       function fixSideBars(){
         $('#righttabcontent').parent().height('auto');
-        
         $('#rightsidebaraside').height(($(window).height()-100));
-        $('#righttabcontent').height($(window).height()-175);
+        $('#righttabcontent').height($(window).height()-265);
         //$('#righttabcontent').height('auto'); //NOT WORKING - MUST FIX
         /* Bottom Menu */
         if($(window).width() <= 767){

@@ -283,6 +283,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Create the tabs -->
         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
           <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-search"></i></a></li>
+          <li><a href="##control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-user"></i></a></li>
           <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
         </ul>
         <!-- Date and time range & time Picker-->
@@ -302,11 +303,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div><!-- /.input group -->
           </div><!-- /.form group -->
         </div>
+        <h3 style="padding:0px 10px 0px 10px; text-align:center;" class="control-sidebar-heading">Tutors Near You</h3>
         <!-- Tab panes -->
-        <div id="righttabcontent" class="tab-content" style="padding-left:10px; padding-right:20px;">
+        <div id="righttabcontent" class="tab-content" style="padding-left:10px; padding-right:10px;">
           <!-- Home tab content -->
           <div class="tab-pane" id="control-sidebar-home-tab">
-            <h3 class="control-sidebar-heading">Tutors Near You</h3>
             <ul id="tutorsList" class="control-sidebar-menu">
               <li>
                 <a href="javascript::;">
@@ -346,6 +347,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
               </li>
             </ul><!-- /.control-sidebar-menu -->
+          </div><!-- /.tab-pane -->
+          <!-- Stats tab content -->
+          <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
+          <!-- Settings tab content -->
+          <div class="tab-pane" id="control-sidebar-settings-tab">
+                  <li style="text-align:center;">
+                    <img id="userImageHeader" src="dist/img/img.png" style="width:100%;" class="user-image img-circle" alt="User Image">
+                    <p>
+                      <h4 class="control-sidebar-subheading">Langdon Chen</h4>
+                      <p style="margin-top: -8px;"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> (13)</p>
+                      <p style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
+                    </p>
+                    <h4 class="control-sidebar-subheading">Biography</h4>
+                    <p style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
+                      I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
+                    </p>
+                    <div class="box-footer mainbox-footer">
+                      <button type="submit" href="#" class="btn btn-default" style="width:100%;">Confirm & Request!</button>
+                    </div>
+                  </li>
           </div><!-- /.tab-pane -->
         </div>
       </aside><!-- /.control-sidebar -->
@@ -451,11 +472,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         // Attach an asynchronous callback to read the data at our posts reference
         ref.on("value", function(snapshot) {
           var userArr = snapshot.val();
+
+          //Clear list before showing
+          $("#tutorsList").empty();
           //Go through every user, and if they are tutor, and if is available, show on map/search
           $.each(userArr, function(uid, userObj){
-            console.log("uid= "+uid);
-            console.log(userObj.freeSchedule[day].freehours);
-
             if(userObj.userType == "tutor"){
 
               var freeHoursArr = userObj.freeSchedule[day].freehours.split(",");
@@ -470,7 +491,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 //calculate distance from you to tutor
                   //dist(location, userObj.latlng)
                 //display this tutor onto the screen
-                  $("#tutorsList").empty();
                   addTutorToDisplay(userObj, uid)
               }
             }
@@ -541,6 +561,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           provider: authData.provider,
           freeScheduleID: ""
         });
+      }
+      function viewTutorProfile(){
+
       }
 
     </script>
