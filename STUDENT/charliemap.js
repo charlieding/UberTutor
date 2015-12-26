@@ -2,8 +2,7 @@ var MyMapUti={
   getMarkImg:function(latlng,imgUrl){
       var dataType=typeof(latlng);
       if( dataType==="string"){
-        var arr=latlng.split(",");
-        latlng=new google.maps.LatLng(arr[0],arr[1]);
+        latlng=MyMapUti.mapLatLng(latlng);
       }
         var pinIcon = new google.maps.MarkerImage(
             imgUrl,
@@ -22,49 +21,70 @@ var MyMapUti={
         });
         return markerimg;
   },
-  getCircle:function(latlng){
+  mapLatLng:function(slatlng){
+      var dataType=typeof(slatlng);
+      if( dataType==="string"){
+        var arr=slatlng.split(",");
+        var latlng=new google.maps.LatLng(arr[0],arr[1]);
+        return latlng;
+      }
+      return slatlng;
   },
 };
 function FbaseUsers(map){
+    function userMarkImg(userObj){
+            var latlng=userObj.latlng;
+            if( !userObj.latlng || userObj.latlng.length===0){
+                latlng=new google.maps.LatLng(+34.070044598142, -84.16012274947661);
+            };
+            var imgUrl=userObj.imgUrl;
+            if(!imgUrl || imgUrl.length===0){
+                imgUrl="../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00";
+            };
+            return MyMapUti.getMarkImg(latlng,imgUrl);
+    }; 
+    var markImgArr={};
+    function userMarkImgUpdate(uid,userObj,ops){
+         console.log(uid);
+         var mark=markImgArr[uid];
+         mark.setMap(null);
+         var userObj = snapshot.val();
+         console.log(userObj);
 
-    var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
-    var markImgArr=[];
-    ref.on("value",function(snapshot){
+         if("child_changed"===ops)  {
+           mark=userMarkImg(userObj);
+           mark.setMap(map); 
+           markImgArr[uid]=markimg;                        
+         }
+    };
+    function usersMarkImgs(snapshot){
           var usersObj = snapshot.val();
           var dlt=0;
           $.each(usersObj,function(uid,userObj){
             console.log("uid="+uid);
             console.log(userObj);
 
-
-            var latlng=userObj.latlng;
-            if( !userObj.latlng || userObj.latlng.length===0){
-                latlng=new google.maps.LatLng(dlt+34.070044598142, dlt-84.16012274947661);
-                dlt+=0.0031;
-            };
-            var imgUrl=userObj.imgUrl;
-            if(!imgUrl || imgUrl.length===0){
-                imgUrl="../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00";
-            };
-            var markimg=MyMapUti.getMarkImg(latlng,imgUrl);
+            var markimg=userMarkImg(userObj);
             markimg.setMap(map);
-            markimg.uid=uid;
-            markImgArr.push(markimg);
-
+            markImgArr[uid]=markimg;
 
             ref.child(uid).on("child_removed",function(snapshot){
-                  var users = snapshot.val();
-                  console.log(users);
+                userMarkImgUpdate(uid,snapshot,'child_removed');
             });
             ref.child(uid).on("child_changed",function(snapshot){
-                  var users = snapshot.val();
-                  console.log(users);
+                  userMarkImgUpdate(uid,snapshot,'child_changed');
             });
 
-          });
+          });      
+    };
 
+    var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
 
-
+    ref.on("value",function(snapshot){
+        //usersMarkImgs(snapshot);
+    });
+    ref.on("child_added",function(snapshot){
+        usersMarkImgs(snapshot);
     });
 
 
@@ -135,7 +155,6 @@ function MyMapMgr(){
         markerApptment=MyMapUti.getMarkImg(null,"../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
 
         var fbu=new FbaseUsers(map);
-//fbu.showTutors();
 
     };
 
