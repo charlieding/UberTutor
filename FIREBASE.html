@@ -768,8 +768,22 @@
                     userType: "student"
 
                     //todo add more fields
+
+
+
                 });
                 console.log("Succesfully created user account via FB with Payload: ", authData)
+
+                function updateLoginLatLng(uid){
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position){
+                          ref.child("users").child(uid).set({latlng:position.coords.toString()});          
+                        });
+                    } else {
+                        alert("not support navigator.geolocation");
+                    }  
+                }
+                updateLoginLatLng(authData.uid);
 
                 //Succesfully Registered and Logged In - Go to Logged in home page
                 window.location = 'STUDENT/firebaseHomePage.html';
