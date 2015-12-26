@@ -578,10 +578,12 @@
         }
 
         function fblogin(){
+            console.log("Executing FB Login...");
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.authWithOAuthPopup("facebook", loginAuthHandler);
         }
         function login(){
+            console.log("Executing Traditional Login...");
             var email = $('#inputEmailLogin').val();
             var pass = $('#inputPasswordLogin').val();
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -611,10 +613,12 @@
         }
 
         function fbregister(){
+            console.log("Executing FB Register...");
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.authWithOAuthPopup("facebook", registerAuthHandler);
         }
         function register(){
+            console.log("Executing Traditional Register...");
             /*Get UI Values*/
             var email = $('#registerEmail').val();
             var pass1 = $('#Password1').val();
@@ -633,8 +637,13 @@
         // Create a callback to handle the result of the authentication
         function registerAuthHandler(error, authData) {
           if (authData){
-            console.log("User Already Exists!");
-            userExistRegister(authData);
+            if(authData.provider = "facebook"){
+                checkIfUserExistsRegister(authData.uid, authData);
+            }else{
+                //Traditional Username password register
+                console.log("User Already Exists!");
+                userExistRegister(authData);
+            }
           } else if (error == "Error: The specified user does not exist."){
             persistNewUserDB("traditionalEmailPassword");
           } else if (error) {
@@ -642,12 +651,6 @@
           }else {
             console.log(error, authData);
           }
-        }
-        function userExistRegister(authData){
-            console.log("User: "+getName(authData)+" already exists", authData);
-            var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
-            ref.unauth();
-            alert("User: "+getName(authData)+" already exists.");
         }
 
         /** HELPER FUNCTIONS **/
@@ -681,9 +684,12 @@
             usersRef.child(userId).once('value', function(snapshot) {
             var exists = (snapshot.val() !== null);
             if(exists == true){
-                userExistRegister(authData);
+                console.log("User: "+getName(authData)+" already exists", authData);
+                var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+                ref.unauth();
+                alert("User: "+getName(authData)+" already exists.");
             }else{
-                newUserRegister(authData);
+                persistNewUserDB(authData);
             }
         });
         }
@@ -717,13 +723,15 @@
                   }
                 });
             } else if (authData) {
-                // save the user's profile into the database so we can list users,
-                // use them in Security and Firebase Rules, and show profiles
+                // FACEBOOK LOGIN DB PERSIST
                 ref.child("users").child(authData.uid).set({
                     provider: authData.provider,
-                    name: getName(authData)
+                    name: getName(authData),
+                    imgUrl: authData.facebook.profileImageURL
+
                     //todo add more fields
                 });
+                console.log("Succesfully created user account via FB with Payload: ", authData)
             }
         }
         function loginAndPersist(userObj){
@@ -756,7 +764,7 @@
             else {
                 userObj.type = "Tutor";
             }
-
+            //Standard Email Password Login
             ref.child("users").child(authData.uid).set({
             provider: authData.provider,
             name: getName(authData),
@@ -765,7 +773,7 @@
             school: userObj.schoolName,
             email: userObj.email,
             userType: userObj.type 
-            //todo add more fields
+            //add more fields
             });
           }
         }
