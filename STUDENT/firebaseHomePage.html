@@ -116,7 +116,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Class Selection -->
           <div id="classSelection" class="form-group" style="position:absolute;">
-            <select class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
+            <select id="select2ClassSelection" class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
               <option>CS 1001</option>
               <option>Psyc 1001</option>
               <option>Calc 2654</option>
@@ -412,6 +412,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
       var isTutorSelected = false;
       var loggedInUserLatLng = null;
+      var selectedTutorID = null;
+      var loggedInUserID = null;
       $( document ).ready(function() {
 
           $(".hideTutorProfileWhenNoTutorSelected").hide();
@@ -425,6 +427,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           if (authData) {
             console.log("Authenticated user with uid:", authData.uid);
+            loggedInUserID = authData.uid;
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
 
             // Attach an asynchronous callback to read the data at our posts reference
@@ -510,7 +513,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
       }
       function addTutorToDisplay(userObj, uid){
-        
+        selectedTutorID = uid;
         //User Image Loaction
         var userImg = userObj.imgUrl;
         //Distance
@@ -572,6 +575,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         //Finished Updating Tutor Profile, Show it Now
         $(".hideTutorProfileWhenNoTutorSelected").show();
+
+        //Hack - This supposes that everytime we update Tutor Profile, we want to display it as well.
+        setTutorProfileTabActive();
       }
 
       function updateFreeSchedule(){
@@ -609,17 +615,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
       }
       // --TODO--
       function requestAppointment(){ 
-        //get tutor ID
-
-        //get student ID
-
         //get Time, Day, latlng, duration, course, questionTopic
-        topicQuestion
+        var time = $("#tutorTime").val();
+        var day = $("#tutorDay").val();
+        var latlng = $("#eventPos").val().replace("(", "").replace(")","").replace(" ","");
+        var duration = $("#duration").text();
+        var courses = $("#select2ClassSelection").select2('val')+"";
+        var questionTopic = $("#topicQuestion").val();
+        
         //set status=AwaitingResponse, cost=null, declineMessage=null
-        ref.child("users").child(authData.uid).set({
-          provider: authData.provider,
-          freeScheduleID: ""
+        var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+        var appointment = ref.child("appointments").push({
+          studentID: loggedInUserID,
+          tutorID: selectedTutorID,
+          time: time,
+          day: day,
+          latlng: latlng,
+          duration: duration,
+          cost: "null",
+          status: "Awaiting Response",
+          courses: courses,
+          declineMessage: "null",
+          questionTopic:  ""
         });
+        var appointmentID = appointment.key();
       }
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
       //:::                                                                         :::
