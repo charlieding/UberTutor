@@ -362,7 +362,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
                     </p>
                     <div class="box-footer mainbox-footer">
-                      <button id="confirmTutorButton" type="submit" href="#" class="btn btn-default" style="width:100%;">Confirm & Request!</button>
+                      <button id="confirmTutorButton" type="submit" href="#" class="btn btn-default" style="width:100%;" onclick="requestAppointment();">Confirm & Request!</button>
                     </div>
                   </div>
           </div><!-- /.tab-pane -->
@@ -513,7 +513,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
       }
       function addTutorToDisplay(userObj, uid){
-        selectedTutorID = uid;
         //User Image Loaction
         var userImg = userObj.imgUrl;
         //Distance
@@ -557,6 +556,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       }
       function updateTutorProfileByObject(usrObj){
+        selectedTutorID = usrObj.uid();
+
         //Update Tutor Profile
         $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
         $("#tutorProfileName").text(usrObj.displayName);
@@ -615,6 +616,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       }
       // --TODO--
       function requestAppointment(){ 
+        alert("trigger");
         //get Time, Day, latlng, duration, course, questionTopic
         var time = $("#tutorTime").val();
         var day = $("#tutorDay").val();
@@ -625,6 +627,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         
         //set status=AwaitingResponse, cost=null, declineMessage=null
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+
+        //Saves Appointment and Creates Appointment UID
         var appointment = ref.child("appointments").push({
           studentID: loggedInUserID,
           tutorID: selectedTutorID,
@@ -636,9 +640,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
           status: "Awaiting Response",
           courses: courses,
           declineMessage: "null",
-          questionTopic:  ""
+          questionTopic:  questionTopic
         });
         var appointmentID = appointment.key();
+
+        //Saves AppointmentUID for Student
+        ref.child("users").child(loggedInUserID).child("appointmentIDs").child(appointmentID).set({
+          tutorID: selectedTutorID
+        });
+
+        //Saves AppointmentUID for Tutor
+        ref.child("users").child(selectedTutorID).child("appointmentIDs").child(appointmentID).set({
+          studentID: loggedInUserID
+        });
       }
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
       //:::                                                                         :::
