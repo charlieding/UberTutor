@@ -537,9 +537,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
       }
       function updateTutorProfile(_this){
-
         var usrObj=JSON.parse($(_this).attr("userObj"));
         console.log(usrObj);
+        updateTutorProfileByObject(usrObj);
+
+      }
+      function updateTutorProfileByObject(usrObj){
         //Update Tutor Profile
         $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
         $("#tutorProfileName").text(usrObj.displayName);
@@ -558,7 +561,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         //Finished Updating Tutor Profile, Show it Now
         $(".hideTutorProfileWhenNoTutorSelected").show();
-
       }
 
       function updateFreeSchedule(){
