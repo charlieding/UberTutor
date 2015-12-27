@@ -640,7 +640,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           status: "Awaiting Response",
           courses: courses,
           declineMessage: "null",
-          questionTopic:  questionTopic
+          questionTopic:  questionTopic,
+          creationDate: moment().format("M/D/YYYY h:m:s a")
         });
         var appointmentID = appointment.key();
 
