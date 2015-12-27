@@ -265,8 +265,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </div>
                     </div>
                     <div style="float:right; width:35%; text-align:center;">
-                      <input id="ex6" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="5" data-slider-step="1" data-slider-value="1"/>
-                      <span id="ex6CurrentSliderValLabel" class="text-black" style="font-weight: bold;">Meet <span id="duration">1</span> Hour(s)</span>
+                      <input id="durationSlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="5" data-slider-step="1" data-slider-value="1"/>
+                      <span class="text-black" style="font-weight: bold;">Meet <span id="duration">1</span> Hour(s)</span>
                     </div>
                   </div><!-- /.box-body -->
                   <div class="box-footer mainbox-footer">
@@ -361,6 +361,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <p id="tutorBiography"  style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
                       I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
                     </p>
+                    <h4 class="control-sidebar-subheading">Flexiblity</h4>
+                    <div style="text-align:center; padding-left:30px; padding-right:30px;">
+                      <input id="flexibilitySlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="120" data-slider-step="1" data-slider-value="0"/>
+                      <p><span id="flexibility">0</span> Minutes(s)</p>
+                    </div>
                     <div class="box-footer mainbox-footer">
                       <button id="confirmTutorButton" type="submit" href="#" class="btn btn-default" style="width:100%;" onclick="requestAppointment();">Confirm & Request!</button>
                     </div>
@@ -547,6 +552,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
       function emptyTutorLogic(){
         if(isTutorSelected == false){
           $('#rightBarHeaderName').text('No Tutor Selected');
+        }else{
+          $('#rightBarHeaderName').hide();
         }
       }
       function updateTutorProfile(_this){

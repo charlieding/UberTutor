@@ -3,9 +3,14 @@
       });
       $(function () {
         /* BOOTSTRAP SLIDER */
-        $("#ex6").slider();
-        $("#ex6").on("slide", function(slideEvt) {
+        $("#durationSlider").slider();
+        $("#durationSlider").on("slide", function(slideEvt) {
           $("#duration").text(slideEvt.value);
+        });
+        
+        $("#flexibilitySlider").slider();
+        $("#flexibilitySlider").on("slide", function(slideEvt) {
+          $("#flexibility").text(slideEvt.value);
         });
         /*Initialize Select2 Elements */
         $(".select2").select2();
