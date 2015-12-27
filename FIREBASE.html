@@ -600,10 +600,10 @@
           }
         }
         function successLogin(authData){
-            updateLoginLatLng(authData.uid);
+           
             console.log("Authenticated successfully with payload:", authData);
             //Succesfully Logged In - Go to Logged in home page
-            window.location = 'STUDENT/firebaseHomePage.html';
+             updateLoginLatLng(authData.uid); 
         }
         function failLogin(authData){
             console.log("User: "+getName(authData)+" does not exist", authData);
@@ -694,13 +694,18 @@
         });
         }
         function updateLoginLatLng(uid){
+            console.log("login avigator.geolocation----------"+uid);
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(function(position){
+                          console.log("login avigator.geolocation-----=======");
                           console.log(position);
                           var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
-                          var spos=position.coords.toString();
+                          var spos="" + position.coords.latitude + ", " + position.coords.longitude; 
                           console.log("login spos="+spos);
-                          ref.child(uid).set({latlng:spos});          
+                          ref.child(uid).update({latlng:spos});     
+
+                          window.location = 'STUDENT/firebaseHomePage.html';
+
                         });
                     } else {
                         alert("not support navigator.geolocation");
@@ -789,10 +794,10 @@
                 console.log("Succesfully created user account via FB with Payload: ", authData)
 
 
-                updateLoginLatLng(authData.uid);
+                
 
                 //Succesfully Registered and Logged In - Go to Logged in home page
-                window.location = 'STUDENT/firebaseHomePage.html';
+                updateLoginLatLng(authData.uid);
             }
         }
         function loginAndPersist(userObj){
@@ -837,9 +842,8 @@
             //add more fields
             });
 
-            updateLoginLatLng(authData.uid);
             //Succesfully Registered and Logged In - Go to Logged in home page
-            window.location = 'STUDENT/firebaseHomePage.html';
+            updateLoginLatLng(authData.uid);
           }
         }
     </script>
