@@ -281,9 +281,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Control Sidebar -->
       <aside id="rightsidebaraside" class="control-sidebar control-sidebar-dark">
         <!-- Create the tabs -->
-        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-          <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-search"></i></a></li>
-          <li><a href="##control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-user"></i></a></li>
+        <ul id="rightsidetabs" class="nav nav-tabs nav-justified control-sidebar-tabs">
+          <li id="searchTutorsRightBar" class="active"><a href="#control-sidebar-home-tab" data-toggle="tab" onclick="findTutors();"><i class="fa fa-search"></i></a></li>
+          <li id="tutorProfileRightBar"><a href="#control-sidebar-settings-tab" data-toggle="tab" onclick="emptyTutorLogic();" ><i class="fa fa-user"></i></a></li>
           <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
         </ul>
         <!-- Date and time range & time Picker-->
@@ -303,7 +303,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div><!-- /.input group -->
           </div><!-- /.form group -->
         </div>
-        <h3 style="padding:0px 10px 0px 10px; text-align:center;" class="control-sidebar-heading">Tutors Near You</h3>
+        <h3 id="rightBarHeaderName" style="padding:0px 10px 0px 10px; text-align:center;" class="control-sidebar-heading">Tutors Near You</h3>
         <!-- Tab panes -->
         <div id="righttabcontent" class="tab-content" style="padding-left:10px; padding-right:10px;">
           <!-- Home tab content -->
@@ -348,25 +348,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul><!-- /.control-sidebar-menu -->
           </div><!-- /.tab-pane -->
-          <!-- Stats tab content -->
-          <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
           <!-- Settings tab content -->
           <div class="tab-pane" id="control-sidebar-settings-tab">
-                  <li style="text-align:center;">
-                    <img id="userImageHeader" src="dist/img/imgf.png" style="width:100%;" class="user-image img-circle" alt="User Image">
+                  <div class="hideTutorProfileWhenNoTutorSelected" style="text-align:center;">
+                    <img id="tutorProfileImageHeader" src="dist/img/photo1.png" style="width:70%;" class="user-image img-circle" alt="User Image">
                     <p>
-                      <h4 class="control-sidebar-subheading">Langdon Chen</h4>
-                      <p style="margin-top: -8px;"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> (13)</p>
-                      <p style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
+                      <h4 id="tutorProfileName" class="control-sidebar-subheading">Langdon Chen</h4>
+                      <p style="margin-top: -8px;"><i id="tutorProfileStar1" class="fa fa-star"></i><i id="tutorProfileStar2" class="fa fa-star"></i><i id="tutorProfileStar3" class="fa fa-star"></i><i id="tutorProfileStar4" class="fa fa-star"></i><i id="tutorProfileStar5" class="fa fa-star"></i><span id="tutorProfileNumOfReviews"> (13)</span></p>
+                      <p id="tutorProfileMembership" style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
                     </p>
                     <h4 class="control-sidebar-subheading">Biography</h4>
-                    <p style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
+                    <p id="tutorBiography"  style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
                       I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
                     </p>
                     <div class="box-footer mainbox-footer">
-                      <button type="submit" href="#" class="btn btn-default" style="width:100%;">Confirm & Request!</button>
+                      <button id="confirmTutorButton" type="submit" href="#" class="btn btn-default" style="width:100%;">Confirm & Request!</button>
                     </div>
-                  </li>
+                  </div>
           </div><!-- /.tab-pane -->
         </div>
       </aside><!-- /.control-sidebar -->
@@ -413,6 +411,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
       $( document ).ready(function() {
+
+          $(".hideTutorProfileWhenNoTutorSelected").hide();
+
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
           ref.onAuth(authDataCallback);
@@ -443,6 +444,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
           }
       });
+      var isTutorSelected = false;
       function updateUserImages(imgURL){
         if (imgURL){
           $("#userImagePanel").attr("src", imgURL);
@@ -461,7 +463,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
         window.location = '../FIREBASE.html';
       }
       function findTutors(){
+
+        // Show Find Tutor as Header
+        $("#rightBarHeaderName").text("Tutors Near You");
+        $("#rightBarHeaderName").show();
+        setSearchTutorsTabActive();
+
+        //Forces Open Right Bar
         $.AdminLTE.controlSidebar.open();
+        
         //get my location, duration, date, time, and match it with free schedule tutors
         var location = $("#eventPos").val();
         var duration = $("#duration").text();
@@ -511,9 +521,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
         //Stars -- TODO, get from reviews
         var stars = 3.5; 
         var numOfReview = 13;
-        var starsHtml = "<i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i>";
+        var starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i>";
 
-        $("#tutorsList").append("<li><a href='javascript::;'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+")</p></div></a></li>");
+        $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj)+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+")</p></div></a></li>");
+      }
+      function setTutorProfileTabActive(){
+        $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
+      }
+      function setSearchTutorsTabActive(){
+        $('#rightsidetabs a[href="#control-sidebar-home-tab"]').tab('show');
+      }
+      function emptyTutorLogic(){
+        if(isTutorSelected == false){
+          $('#rightBarHeaderName').text('No Tutor Selected');
+        }
+      }
+      function updateTutorProfile(_this){
+
+        var usrObj=JSON.parse($(_this).attr("userObj"));
+        console.log(usrObj);
+        //Update Tutor Profile
+        $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
+        $("#tutorProfileName").text(usrObj.displayName);
+        $("#tutorProfileNumOfReviews").text(" (13)");
+        $("#tutorProfileMembership").text("Tutor since Nov. 2012");
+        $("#tutorBiography").text(usrObj.biography);
+        $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+        $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+        $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+        $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-half-o" );
+        $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+
+        //Hide Find Tutor Header Name
+        isTutorSelected = true;
+        $("#rightBarHeaderName").hide();
+
+        //Finished Updating Tutor Profile, Show it Now
+        $(".hideTutorProfileWhenNoTutorSelected").show();
+
       }
 
       function updateFreeSchedule(){
