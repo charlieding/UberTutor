@@ -19,6 +19,17 @@ var MyMapUti={
           position: latlng,
           icon: pinIcon,
         });
+
+        google.maps.event.addListener(markerimg,'click',function(ev) {
+              console.log(ev.latLng, this.userObj,  this);
+              //ChinaArchMapUti.OnClick_Circle(ev.latLng.toString() , this );
+              //infowindow.setPosition(ev.latLng);
+              //infowindow.open(map);
+              if(this.userObj){
+                updateTutorProfileByObject(this.userObj);
+              }
+              
+        });
         return markerimg;
   },
   mapLatLng:function(slatlng){
@@ -42,7 +53,9 @@ function FbaseUsers(map){
             if(!imgUrl || imgUrl.length===0){
                 imgUrl="../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00";
             };
-            return MyMapUti.getMarkImg(latlng,imgUrl);
+            var obj=MyMapUti.getMarkImg(latlng,imgUrl);
+            obj.userObj=userObj;
+            return obj;
     }; 
     var markImgArr={};
     function userMarkImgUpdate(uid,snapshot,ops){
