@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
+SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
 -->
 <html>
   <head>
@@ -116,7 +115,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Class Selection -->
           <div id="classSelection" class="form-group" style="position:absolute;">
-            <select class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
+            <select id="select2ClassSelection" class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
               <option>CS 1001</option>
               <option>Psyc 1001</option>
               <option>Calc 2654</option>
@@ -134,16 +133,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->
-                  <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <img id="userImageNavbar" src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs">(Student's Name)</span>
+                  <span class="hidden-xs studentName">(Student's Name)</span>
                 </a>
                 <ul class="dropdown-menu" style="right:0px;">
                   <!-- The user image in the menu -->
                   <li class="user-header">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <img id="userImageHeader" src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                     <p>
-                      (Student's Name)
+                      <span class="studentName">(Student's Name)</span>
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
@@ -162,7 +161,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <a href="#" class="btn btn-default btn-flat">Profile</a>
                     </div>
                     <div class="pull-right">
-                      <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                      <a href="#" class="btn btn-default btn-flat" onclick="signOut();">Sign out</a>
                     </div>
                   </li>
                 </ul>
@@ -180,10 +179,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel">
               <div class="pull-left image">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img id="userImagePanel" src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
-                <p>(Student's Name)</p>
+                <p class="studentName">(Student's Name)</p>
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
               </div>
@@ -256,7 +255,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="box-body">
                     <!-- text input -->
                     <div class="form-group">
-                      <input type="text" class="form-control" placeholder="[OPTIONAL] General Topic/Question   Eg:Calculus Matrix Multiplications">
+                      <input id="topicQuestion" type="text" class="form-control" placeholder="[OPTIONAL] General Topic/Question   Eg:Calculus Matrix Multiplications">
                     </div>
                     <div style="float:left; width:60%;">
                       <div class="input-group">
@@ -265,12 +264,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </div>
                     </div>
                     <div style="float:right; width:35%; text-align:center;">
-                      <input id="ex6" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="5" data-slider-step="1" data-slider-value="1"/>
-                      <span id="ex6CurrentSliderValLabel" class="text-black" style="font-weight: bold;">Meet <span id="ex6SliderVal">1</span> Hour(s)</span>
+                      <input id="durationSlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="5" data-slider-step="1" data-slider-value="1"/>
+                      <span class="text-black" style="font-weight: bold;">Meet <span id="duration">1</span> Hour(s)</span>
                     </div>
                   </div><!-- /.box-body -->
                   <div class="box-footer mainbox-footer">
-                    <button type="submit" href="#control-sidebar-home-tab" data-toggle="tab" class="btn btn-primary" style="float: right; width:73%;" onclick="$.AdminLTE.controlSidebar.open();">Find Tutors!</button>
+                    <button type="submit" href="#control-sidebar-home-tab" data-toggle="tab" class="btn btn-primary" style="float: right; width:73%;" onclick="findTutors();">Find Tutors!</button>
                     <button type="submit" href="#" class="btn btn-danger" style="float: left; width:25%;" > <b><i>ASAP</i></b> <i class="fa fa-bolt"></i></button>
                   </div>
                 </form>
@@ -281,8 +280,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Control Sidebar -->
       <aside id="rightsidebaraside" class="control-sidebar control-sidebar-dark">
         <!-- Create the tabs -->
-        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-          <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-search"></i></a></li>
+        <ul id="rightsidetabs" class="nav nav-tabs nav-justified control-sidebar-tabs">
+          <li id="searchTutorsRightBar" class="active"><a href="#control-sidebar-home-tab" data-toggle="tab" onclick="findTutors();"><i class="fa fa-search"></i></a></li>
+          <li id="tutorProfileRightBar"><a href="#control-sidebar-settings-tab" data-toggle="tab" onclick="emptyTutorLogic();" ><i class="fa fa-user"></i></a></li>
           <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
         </ul>
         <!-- Date and time range & time Picker-->
@@ -302,67 +302,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div><!-- /.input group -->
           </div><!-- /.form group -->
         </div>
+        <h3 id="rightBarHeaderName" style="padding:0px 10px 0px 10px; text-align:center;" class="control-sidebar-heading">Tutors Near You</h3>
         <!-- Tab panes -->
         <div id="righttabcontent" class="tab-content" style="padding-left:10px; padding-right:10px;">
           <!-- Home tab content -->
-                      <h3 class="control-sidebar-heading" style="text-align:center;" > <i class="fa fa-arrow-circle-o-left" style="float:left;"></i><span style="text-align:center;">Tutor Profile</span></h3>
           <div class="tab-pane" id="control-sidebar-home-tab">
-
-            <ul class="control-sidebar-menu">
-
-
-                  <!-- The user image in the menu -->
-                  <li style="text-align:center;">
-                    <img id="userImageHeader" src="dist/img/photo1.png" style="width:100%;" class="user-image img-circle" alt="User Image">
-                    <p>
-                      <h4 class="control-sidebar-subheading">Langdon Chen</h4>
-                      <p style="margin-top: -8px;"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> (13)</p>
-                      <p style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
-                    </p>
-                    <h4 class="control-sidebar-subheading">Biography</h4>
-                    <p style="padding-left:10px; padding-right:20px; margin-top:-10px;"> 
-                      I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
-                    </p>
-                    <div class="box-footer mainbox-footer">
-                      <button type="submit" href="#" class="btn btn-default" style="width:100%;">Confirm & Request!</button>
-                    </div>
-                  </li>
-                  <!-- Menu Body -->
-                  <li class="user-body">
-                    <div class="col-xs-6 text-center">
-                      <a href="#">Followers</a>
-                    </div>
-                    <div class="col-xs-6 text-center">
-                      <a href="#">Friends</a>
-                    </div>
-
-
-                <a href="javascript::;">
-                  <img src="dist/img/user1-128x128.jpg" class="user-image menu-icon" alt="User Image">
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Langdon Chen</h4>
-                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> (13)</p>
-                  </div>
-                </a>
-
-                  </li>
-                  <!-- Menu Footer-->
-                  <li class="user-footer">
-                    <div class="pull-left">
-                      <a href="#" class="btn btn-default btn-flat">Profile</a>
-                    </div>
-                    <div class="pull-right">
-                      <a href="#" class="btn btn-default btn-flat" onclick="signOut();">Sign out</a>
-                    </div>
-                  </li>
-        
-
-              
+            <ul id="tutorsList" class="control-sidebar-menu">
               <li>
                 <a href="javascript::;">
                   <img src="dist/img/user1-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Langdon Chen</h4>
+                    <h4 class="control-sidebar-subheading">Langdon Chen <span style="font-size:10px; color:grey;"> &nbsp;<b>0.3</b> mile(s)</span></h4>
                     <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> (13)</p>
                   </div>
                 </a>
@@ -371,7 +321,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <a href="javascript::;">
                   <img src="dist/img/user3-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Frodo Urlo</h4>
+                    <h4 class="control-sidebar-subheading">Frodo Urlo <span style="font-size:10px; color:grey;"> &nbsp;<b>1.1</b> mile(s)</span></h4>
                     <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"> (8)</i></p>
                   </div>
                 </a>
@@ -380,7 +330,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <a href="javascript::;">
                   <img src="dist/img/user4-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Nora Park</h4>
+                    <h4 class="control-sidebar-subheading">Nora Park <span style="font-size:10px; color:grey;"> &nbsp;<b>1.9</b> mile(s)</span></h4>
                     <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"> (5)</i></p>
                   </div>
                 </a>
@@ -389,12 +339,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <a href="javascript::;">
                   <img src="dist/img/user5-128x128.jpg" class="user-image menu-icon" alt="User Image">
                   <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Cron Balmer</h4>
-                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o">(2)</i></p>
+                    <h4 class="control-sidebar-subheading">Cron Balmer <span style="font-size:10px; color:grey;"> &nbsp;<b>2.1</b> mile(s)</span></h4>
+                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o">(2)</i>
+                      </p>
                   </div>
                 </a>
               </li>
             </ul><!-- /.control-sidebar-menu -->
+          </div><!-- /.tab-pane -->
+          <!-- Settings tab content -->
+          <div class="tab-pane" id="control-sidebar-settings-tab">
+                  <div class="hideTutorProfileWhenNoTutorSelected" style="text-align:center;">
+                    <img id="tutorProfileImageHeader" src="dist/img/photo1.png" style="width:70%;" class="user-image img-circle" alt="User Image">
+                    <p>
+                      <h4 id="tutorProfileName" class="control-sidebar-subheading">Langdon Chen</h4>
+                      <p style="margin-top: -8px;"><i id="tutorProfileStar1" class="fa fa-star"></i><i id="tutorProfileStar2" class="fa fa-star"></i><i id="tutorProfileStar3" class="fa fa-star"></i><i id="tutorProfileStar4" class="fa fa-star"></i><i id="tutorProfileStar5" class="fa fa-star"></i><span id="tutorProfileNumOfReviews"> (13)</span></p>
+                      <p id="tutorProfileMembership" style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
+                    </p>
+                    <h4 class="control-sidebar-subheading">Biography</h4>
+                    <p id="tutorBiography"  style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
+                      I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
+                    </p>
+                    <h4 class="control-sidebar-subheading">Flexiblity</h4>
+                    <div style="text-align:center; padding-left:30px; padding-right:30px;">
+                      <input id="flexibilitySlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="120" data-slider-step="1" data-slider-value="0"/>
+                      <p><span id="flexibility">0</span> Minutes(s)</p>
+                    </div>
+                    <div class="box-footer mainbox-footer">
+                      <button id="confirmTutorButton" type="submit" href="#" class="btn btn-default" style="width:100%;" onclick="requestAppointment();">Confirm & Request!</button>
+                    </div>
+                  </div>
           </div><!-- /.tab-pane -->
         </div>
       </aside><!-- /.control-sidebar -->
@@ -417,9 +391,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/select2/select2.full.min.js"></script>
     <!--Google Maps-->
     <script src="http://maps.googleapis.com/maps/api/js"></script>
+     <!-- Firebase -->
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <!-- Dad's Map Implementation -->
     <script src="charliemap.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="dist/js/demoNoInject.js"></script>
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
     <!-- SlimScroll -->
     <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <!-- FastClick -->
@@ -429,71 +410,302 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/daterangepicker/daterangepicker.js"></script>
     <!-- bootstrap time picker -->
     <script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
+    <!--UI Main Js -->
+    <script src="homePageUI.js"></script>
     <script>
-      $(function() {
-
-      });
-      $(function () {
-        /* BOOTSTRAP SLIDER */
-        $("#ex6").slider();
-        $("#ex6").on("slide", function(slideEvt) {
-          $("#ex6SliderVal").text(slideEvt.value);
-        });
-        /*Initialize Select2 Elements */
-        $(".select2").select2();
-        //Timepicker
-        $("#tutorTime").val(moment().format("hh:mm A"));
-        $(".timepicker").timepicker({
-          showInputs: false,
-          timePickerIncrement: 5,
-        });
-        //Single Date Selector
-        $('input[name="birthdate"]').val(moment().format("MM/DD/YYYY"));
-        $('input[name="birthdate"]').daterangepicker({
-          startDate: moment(),
-          minDate: moment(),
-          endDate: moment(),
-          singleDatePicker: true,
-          showDropdowns: true
-        }, 
-        function(start, end, label) {
-          var years = moment().diff(start, 'years');
-          alert("You are " + years + " years old.");
-        });
-      });
-
+    /******* FIREBASE CODE - MOVE TO JS FILE *******/
+      var isTutorSelected = false;
+      var loggedInUserLatLng = null;
+      var selectedTutorID = null;
+      var loggedInUserID = null;
       $( document ).ready(function() {
-        init();
+
+          $(".hideTutorProfileWhenNoTutorSelected").hide();
+
+          // Register the callback to be fired every time auth state changes
+          var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+          ref.onAuth(authDataCallback);
+
+          // Get a database reference to our posts
+          var authData = ref.getAuth();
+
+          if (authData) {
+            console.log("Authenticated user with uid:", authData.uid);
+            loggedInUserID = authData.uid;
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
+
+            // Attach an asynchronous callback to read the data at our posts reference
+            ref.on("value", function(snapshot) {
+              console.log(snapshot.val());
+              updateUserImages(snapshot.val().imgUrl);
+              updateUserName(snapshot.val().displayName)
+              loggedInUserLatLng = snapshot.val().latlng;
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+            });
+          }
+
+          // Create a callback which logs the current auth state
+          function authDataCallback(authData) {
+            if (authData) {
+              console.log("User " + authData.uid + " is logged in with " + authData.provider);
+            } else {
+              console.log("User is logged out");
+            }
+          }
       });
-      function init(){
-        fixMapSize();
-        fixSideBars();
-        $( window ).resize(function() {
-          fixMapSize();
-          fixSideBars();
+      function updateUserImages(imgURL){
+        if (imgURL){
+          $("#userImagePanel").attr("src", imgURL);
+          $("#userImageNavbar").attr("src", imgURL);
+          $("#userImageHeader").attr("src", imgURL);
+        }
+      }
+      function updateUserName(userName){
+        if(userName){
+          $(".studentName").text(userName);
+        }
+      }
+      function signOut(){
+        var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+        ref.unauth();
+        window.location = '../FIREBASE.html';
+      }
+      function findTutors(){
+
+        // Show Find Tutor as Header
+        $("#rightBarHeaderName").text("Tutors Near You");
+        $("#rightBarHeaderName").show();
+        setSearchTutorsTabActive();
+
+        //Forces Open Right Bar
+        $.AdminLTE.controlSidebar.open();
+        
+        //get my location, duration, date, time, and match it with free schedule tutors
+        var location = $("#eventPos").val();
+        var duration = $("#duration").text();
+        var hour = parseInt(moment($("#tutorDay").val()+" "+$("#tutorTime").val()).format("H"));
+        var day = moment($("#tutorDay").val()+" "+$("#tutorTime").val()).format("dddd").toLowerCase();
+
+        var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
+
+        // Attach an asynchronous callback to read the data at our posts reference
+        ref.on("value", function(snapshot) {
+          var userArr = snapshot.val();
+
+          //Clear list before showing
+          $("#tutorsList").empty();
+          //Go through every user, and if they are tutor, and if is available, show on map/search
+          $.each(userArr, function(uid, userObj){
+            if(userObj.userType == "tutor"){
+
+              var freeHoursArr = userObj.freeSchedule[day].freehours.split(",");
+              var isTutorFree = true;
+              for(var a = 0; a<duration; a++){
+                if($.inArray(hour+a+"", freeHoursArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                  isTutorFree = false;
+                }
+              }
+
+              if(isTutorFree == true){
+                  addTutorToDisplay(userObj, uid)
+              }
+            }
+          })
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
         });
-        $('#righttabcontent').slimScroll({
-          height: 'auto'
-        });
+      }
+      function addTutorToDisplay(userObj, uid){
+        //User Image Loaction
+        var userImg = userObj.imgUrl;
+        //Distance
+        var distance = Math.floor(Math.random()*10)+"."+Math.floor(Math.random()*10);
+        if (loggedInUserLatLng && loggedInUserLatLng.split(",")[0]) {
+            var lat1 = loggedInUserLatLng.split(",")[0];
+            var lng1 = loggedInUserLatLng.split(",")[1];
+
+            if (userObj && userObj.latlng && userObj.latlng.split(",")[0]) {
+                var lat2 = userObj.latlng.split(",")[0];
+                var lng2 = userObj.latlng.split(",")[1];
+                distance = calcDistance(lat1,lng1,lat2,lng2,"M");
+                distance = Math.ceil(distance * 100) / 100;
+            }
+        }
+
+        //Display Name
+        var displayName = userObj.displayName;
+        //Stars -- TODO, get from reviews
+        var stars = 3.5; 
+        var numOfReview = 13;
+        var starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i>";
+
+        $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj)+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+")</p></div></a></li>");
+      }
+      function setTutorProfileTabActive(){
+        $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
+      }
+      function setSearchTutorsTabActive(){
+        $('#rightsidetabs a[href="#control-sidebar-home-tab"]').tab('show');
+      }
+      function emptyTutorLogic(){
+        if(isTutorSelected == false){
+          $('#rightBarHeaderName').text('No Tutor Selected');
+        }else{
+          $('#rightBarHeaderName').hide();
+        }
+      }
+      function updateTutorProfile(_this){
+        var usrObj=JSON.parse($(_this).attr("userObj"));
+        console.log(usrObj);
+        updateTutorProfileByObject(usrObj);
+
+      }
+      function updateTutorProfileByObject(usrObj){
+        selectedTutorID = usrObj.uid;
+
+        //Update Tutor Profile
+        $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
+        $("#tutorProfileName").text(usrObj.displayName);
+        $("#tutorProfileNumOfReviews").text(" (13)");
+        $("#tutorProfileMembership").text("Tutor since Nov. 2012");
+        $("#tutorBiography").text(usrObj.biography);
+        $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+        $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+        $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+        $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-half-o" );
+        $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+
+        //Hide Find Tutor Header Name
+        isTutorSelected = true;
+        $("#rightBarHeaderName").hide();
+
+        //Finished Updating Tutor Profile, Show it Now
+        $(".hideTutorProfileWhenNoTutorSelected").show();
+
+        //Hack - This supposes that everytime we update Tutor Profile, we want to display it as well.
+        setTutorProfileTabActive();
       }
 
-      function fixMapSize(){
-        $('#googleMap').height($('#mainleftsidebar').height());
+      function updateFreeSchedule(){
+        var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+        var authData = ref.getAuth();
+        //Todo, build hours free for tutors scheduling system.
+        ref.child("users").child(authData.uid).child("freeSchedule").set({
+          monday: {
+            freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+          },
+          tuesday: {
+            freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+          },
+          wednesday: {
+            freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+          },
+          thursday: {
+            freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+          },
+          friday: {
+            freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+          },
+          saturday: {
+            freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+          },
+          sunday: {
+            freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+          }
+        });
       }
-      function fixSideBars(){
-        $('#righttabcontent').parent().height('auto');
-        $('#rightsidebaraside').height(($(window).height()-100));
-        $('#righttabcontent').height($(window).height()-100);
-        /* Bottom Menu */
-        $('#paddingTop').height($(window).height()-280);
-        /*Bug where Screen initailly has tall white spaces*/
-        $('#globalwrapper').height($(window).height());
+      // --TODO--
+      function asap(){
+        //Contact all tutors, even offline tutors 
+
+      }
+      // --TODO--
+      function requestAppointment(){ 
+        alert("trigger");
+        //get Time, Day, latlng, duration, course, questionTopic
+        var time = $("#tutorTime").val();
+        var day = $("#tutorDay").val();
+        var latlng = $("#eventPos").val().replace("(", "").replace(")","").replace(" ","");
+        var duration = $("#duration").text();
+        var courses = $("#select2ClassSelection").select2('val')+"";
+        var questionTopic = $("#topicQuestion").val();
+        
+        //set status=AwaitingResponse, cost=null, declineMessage=null
+        var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+
+        //Saves Appointment and Creates Appointment UID
+        var appointment = ref.child("appointments").push({
+          studentID: loggedInUserID,
+          tutorID: selectedTutorID,
+          time: time,
+          day: day,
+          latlng: latlng,
+          duration: duration,
+          cost: "null",
+          status: "Awaiting Response",
+          courses: courses,
+          declineMessage: "null",
+          questionTopic:  questionTopic,
+          creationDate: moment().format("M/D/YYYY h:m:s a")
+        });
+        var appointmentID = appointment.key();
+
+        //Saves AppointmentUID for Student
+        ref.child("users").child(loggedInUserID).child("appointmentIDs").child(appointmentID).set({
+          tutorID: selectedTutorID
+        });
+
+        //Saves AppointmentUID for Tutor
+        ref.child("users").child(selectedTutorID).child("appointmentIDs").child(appointmentID).set({
+          studentID: loggedInUserID
+        });
+      }
+      //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+      //:::                                                                         :::
+      //:::  This routine calculates the distance between two points (given the     :::
+      //:::  latitude/longitude of those points). It is being used to calculate     :::
+      //:::  the distance between two locations using GeoDataSource (TM) prodducts  :::
+      //:::                                                                         :::
+      //:::  Definitions:                                                           :::
+      //:::    South latitudes are negative, east longitudes are positive           :::
+      //:::                                                                         :::
+      //:::  Passed to function:                                                    :::
+      //:::    lat1, lon1 = Latitude and Longitude of point 1 (in decimal degrees)  :::
+      //:::    lat2, lon2 = Latitude and Longitude of point 2 (in decimal degrees)  :::
+      //:::    unit = the unit you desire for results                               :::
+      //:::           where: 'M' is statute miles (default)                         :::
+      //:::                  'K' is kilometers                                      :::
+      //:::                  'N' is nautical miles                                  :::
+      //:::                                                                         :::
+      //:::  Worldwide cities and other features databases with latitude longitude  :::
+      //:::  are available at http://www.geodatasource.com                          :::
+      //:::                                                                         :::
+      //:::  For enquiries, please contact sales@geodatasource.com                  :::
+      //:::                                                                         :::
+      //:::  Official Web site: http://www.geodatasource.com                        :::
+      //:::                                                                         :::
+      //:::               GeoDataSource.com (C) All Rights Reserved 2015            :::
+      //:::                                                                         :::
+      //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+      function calcDistance(lat1, lon1, lat2, lon2, unit) {
+        var radlat1 = Math.PI * lat1/180;
+        var radlat2 = Math.PI * lat2/180;
+        var radlon1 = Math.PI * lon1/180;
+        var radlon2 = Math.PI * lon2/180;
+        var theta = lon1-lon2;
+        var radtheta = Math.PI * theta/180;
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        dist = Math.acos(dist);
+        dist = dist * 180/Math.PI;
+        dist = dist * 60 * 1.1515;
+        if (unit=="K") { dist = dist * 1.609344; }
+        if (unit=="N") { dist = dist * 0.8684; }
+        return dist;
       }
     </script>
 
-    <!-- Optionally, you can add Slimscroll and FastClick plugins.
-         Both of these plugins are recommended to enhance the
-         user experience. Slimscroll is required when using the
-         fixed layout. -->
+
   </body>
 </html>
