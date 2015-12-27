@@ -131,7 +131,8 @@ function MyMapMgr(){
       var mapProp = {
         center:centerLatLng,
         zoom:15,
-        mapTypeId:google.maps.MapTypeId.TERRAIN 
+        mapTypeId:google.maps.MapTypeId.TERRAIN,
+        mapTypeControl:false 
       };
       map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
       
