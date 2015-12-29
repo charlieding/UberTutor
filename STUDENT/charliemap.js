@@ -216,7 +216,15 @@ function MyMapMgr(){
 var mmm=new MyMapMgr();
 
 
+var mat=window.location.search.match(/curLatLng=([0-9\+\-\.]+)[\,]([0-9\+\-\.]+)/);
+console.log(mat);
 
+mmm.initialize(mat[1],mat[2],"default center");
+setTimeout(cleanmap,8000);
+
+function cleanmap() {
+    mmm.cleanMap(null);
+}
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -227,18 +235,16 @@ function getLocation() {
 }
 function showPosition(position) {
     var currentLatLng=position;
-    var ss = "" + position.coords.latitude + ", " + position.coords.longitude; 
+    var ss = "" + position.coords.latitude + "," + position.coords.longitude; 
     console.log("ok currentLatLng="+ss);
 
     
     mmm.initialize(currentLatLng.coords.latitude,currentLatLng.coords.longitude,"default center");
     setTimeout(cleanmap,8000);
 }    
-function cleanmap() {
-    mmm.cleanMap(null);
-}
 
-getLocation();
+
+//getLocation();
 
 
 function updateLoginLatLng(uid){
