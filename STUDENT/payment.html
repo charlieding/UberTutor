@@ -111,16 +111,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->
-                  <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <img src="dist/img/user2-160x160.jpg" class="user-image userImage" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs">(Student's Name)</span>
+                  <span class="hidden-xs userName">(Student's Name)</span>
                 </a>
                 <ul class="dropdown-menu" style="right:0px;">
                   <!-- The user image in the menu -->
                   <li class="user-header">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <img src="dist/img/user2-160x160.jpg" class="img-circle userImage" alt="User Image">
                     <p>
-                      (Student's Name)
+                      <span class="userName">(Student's Name)</span>
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
@@ -136,10 +136,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <!-- Menu Footer-->
                   <li class="user-footer">
                     <div class="pull-left">
-                      <a href="#" class="btn btn-default btn-flat">Profile</a>
+                      <a href="profile.html" class="btn btn-default btn-flat">Profile</a>
                     </div>
                     <div class="pull-right">
-                      <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                      <a onclick="signOut();" class="btn btn-default btn-flat">Sign out</a>
                     </div>
                   </li>
                 </ul>
@@ -157,10 +157,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+              <img src="dist/img/user2-160x160.jpg" class="img-circle userImage" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>(Student's Name)</p>
+              <p class="userName">(Student's Name)</p>
               <!-- Status -->
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -181,11 +181,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <ul class="sidebar-menu">
             <li class="header">MENU</li>
             <!-- Optionally, you can add icons to the links -->
-            <li><a href="index.html"><i class="fa fa-home"></i> <span>Home</span></a></li>
-            <li><a href="tutorhistory.html"><i class="fa fa-history"></i> <span>Tutor History</span></a></li>
-            <li class="active"><a href="#"><i class="fa fa-money"></i> <span>Payment</span></a></li>
+            <li><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
+            <li><a href="mybookings.html"><i class="fa fa-calendar"></i> <span>My Bookings</span></a></li>
+            <li class="active"><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
             <li><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
-            <li><a href="setting.html"><i class="fa fa-gear"></i> <span>Settings</span></a></li>
             <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
 
             <li class="header" style="position:absolute; bottom:0px; width:100%; font-size: 9.5px; text-align: center;"> <!-- To the right -->
@@ -215,6 +214,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <section class="content">
           <!-- Your Page Content Here -->
           <div class="row">
+            <div class="col-md-12">
+
+              <!-- Profile Image -->
+              <div class="box box-primary">
+                <div class="box-body box-profile">
+                  <img class="profile-user-img img-responsive img-circle userImage" src="dist/img/user4-128x128.jpg" alt="User profile picture">
+                  <h3 class="profile-username text-center userName">Nina Mcintire</h3>
+                  <p class="text-muted text-center">Software Engineer</p>
+
+                  <form id="checkout" method="post" action="/checkout">
+                      <div id="payment-form"></div>
+                      <input type="submit" value="Pay $10">
+                    </form>
+
+                  <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                      <b>Phone Number</b> <a class="pull-right">(678)-577-0937</a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Email</b> <a class="pull-right">thinkbigcd@gmail.com</a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Member Since</b> <a class="pull-right">December 7th, 2014</a>
+                    </li>
+                  </ul>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div>
             <div class="col-md-12">
 <!-- title row -->
           <div class="row">
@@ -370,6 +397,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!-- Firebase -->
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <!-- Braintree Payments-->
+    <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
     <!-- AdminLTE App -->
     <script src="dist/js/app.min.js"></script>
     <!-- Bootstrap slider -->
@@ -395,7 +426,140 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       $( document ).ready(function() {
       });
+    /******* FIREBASE CODE - MOVE TO JS FILE *******/
+      var loggedInUserLatLng = null;
+      var loggedInUserID = null;
+      $( document ).ready(function() {
+          // Register the callback to be fired every time auth state changes
+          var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+          ref.onAuth(authDataCallback);
 
+          // Get a database reference to our posts
+          var authData = ref.getAuth();
+
+          if (authData) {
+            console.log("Authenticated user with uid:", authData.uid);
+            loggedInUserID = authData.uid;
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
+
+            // Attach an asynchronous callback to read the data at our posts reference
+            ref.on("value", function(snapshot) {
+              console.log(snapshot.val());
+              updateUserImages(snapshot.val().imgUrl);
+              updateUserName(snapshot.val().displayName)
+              loggedInUserID = snapshot.key();
+              loggedInUserLatLng = snapshot.val().latlng;
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+            });
+          }
+
+          // Create a callback which logs the current auth state
+          function authDataCallback(authData) {
+            if (authData) {
+              console.log("User " + authData.uid + " is logged in with " + authData.provider);
+            } else {
+              console.log("User is logged out");
+            }
+          }
+      });
+      function updateUserImages(imgURL){
+        if (imgURL){
+          $(".userImage").attr("src", imgURL);
+        }
+      }
+      function updateUserName(userName){
+        if(userName){
+          $(".userName").text(userName);
+        }
+      }
+      function signOut(){
+        var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+        ref.unauth();
+        window.location = '../index.html';
+      }
+
+/*************** BRAINTREE SANDBOX CODE ************************/
+// We generated a client token for you so you can test out this code
+// immediately. In a production-ready integration, you will need to
+// generate a client token on your server (see section below).
+
+$.post( "http://52.23.157.36/api/v1/token")
+  .done(function( data ) {
+    console.log( "Data Loaded: ", data );
+
+    var clientToken = data.client_token;
+
+    braintree.setup(clientToken, "dropin", {
+      container: "payment-form",
+      paypal: {
+        singleUse: true,
+        amount: 10.00,
+        currency: 'USD'
+      },
+      paymentMethodNonceReceived: function (event, nonce) {
+        console.log(nonce);
+        $.post( "http://52.23.157.36/api/v1/process", {body:{amount: 10,payment_method_nonce: nonce }})
+          .done(function( data ) {
+            console.log( "Data Loaded: ", data );
+            console.log(data.success);
+          });
+
+      }
+    });
+
+  });
+
+// $http({
+//         method: 'POST',
+//         url: 'http://52.23.157.36/api/v1/token'
+//       }).success(function (data) {
+
+//         console.log(data.client_token);
+//         braintree.setup(data.client_token, 'dropin', {
+//           container: 'checkout',
+//           // Form is not submitted by default when paymentMethodNonceReceived is implemented
+//           paymentMethodNonceReceived: function (event, nonce) {
+
+//             //$scope.message = 'Processing your payment...';
+//             //$scope.showDropinContainer = false;
+
+//             $http({
+//               method: 'POST',
+//               url: 'http://52.23.157.36/api/v1/process',
+//               data: {
+//                 amount: "10",//$scope.amount,
+//                 payment_method_nonce: nonce
+//               }
+//             }).success(function (data) {
+
+//               console.log(data.success);
+
+//               if (data.success) {
+//                 // $scope.message = 'Payment authorized, thanks.';
+//                 // $scope.showDropinContainer = false;
+//                 // $scope.isError = false;
+//                 // $scope.isPaid = true;
+
+//               } else {
+//                 // implement your solution to handle payment failures
+//                 // $scope.message = 'Payment failed: ' + data.message + ' Please refresh the page and try again.';
+//                 // $scope.isError = true;
+//               }
+
+//             }).error(function (error) {
+//               // $scope.message = 'Error: cannot connect to server. Please make sure your server is running.';
+//               // $scope.showDropinContainer = false;
+//               // $scope.isError = true;
+//             });
+//           }
+//         });
+
+//       }).error(function (error) {
+//         // $scope.message = 'Error: cannot connect to server. Please make sure your server is running.';
+//         // $scope.showDropinContainer = false;
+//         // $scope.isError = true;
+//       });
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.

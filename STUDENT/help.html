@@ -111,16 +111,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->
-                  <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <img src="dist/img/user2-160x160.jpg" class="user-image userImage" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs">(Student's Name)</span>
+                  <span class="hidden-xs userName">(Student's Name)</span>
                 </a>
                 <ul class="dropdown-menu" style="right:0px;">
                   <!-- The user image in the menu -->
                   <li class="user-header">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <img src="dist/img/user2-160x160.jpg" class="img-circle userImage" alt="User Image">
                     <p>
-                      (Student's Name)
+                      <span class="userName">(Student's Name)</span>
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
@@ -136,10 +136,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <!-- Menu Footer-->
                   <li class="user-footer">
                     <div class="pull-left">
-                      <a href="#" class="btn btn-default btn-flat">Profile</a>
+                      <a href="profile.html" class="btn btn-default btn-flat">Profile</a>
                     </div>
                     <div class="pull-right">
-                      <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                      <a onclick="signOut();" class="btn btn-default btn-flat">Sign out</a>
                     </div>
                   </li>
                 </ul>
@@ -157,10 +157,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+              <img src="dist/img/user2-160x160.jpg" class="img-circle userImage" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>(Student's Name)</p>
+              <p class="userName">(Student's Name)</p>
               <!-- Status -->
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -181,11 +181,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <ul class="sidebar-menu">
             <li class="header">MENU</li>
             <!-- Optionally, you can add icons to the links -->
-            <li><a href="index.html"><i class="fa fa-home"></i> <span>Home</span></a></li>
-            <li><a href="tutorhistory.html"><i class="fa fa-history"></i> <span>Tutor History</span></a></li>
+            <li><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
+            <li><a href="mybookings.html"><i class="fa fa-calendar"></i> <span>My Bookings</span></a></li>
             <li><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
-            <li class="active"><a href="#"><i class="fa fa-question"></i> <span>Help</span></a></li>
-            <li><a href="setting.html"><i class="fa fa-gear"></i> <span>Settings</span></a></li>
+            <li class="active"><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
             <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
 
             <li class="header" style="position:absolute; bottom:0px; width:100%; font-size: 9.5px; text-align: center;"> <!-- To the right -->
@@ -255,6 +254,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!-- Firebase -->
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
     <!-- AdminLTE App -->
     <script src="dist/js/app.min.js"></script>
     <!-- Bootstrap slider -->
@@ -280,7 +281,58 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       $( document ).ready(function() {
       });
+    /******* FIREBASE CODE - MOVE TO JS FILE *******/
+      var loggedInUserLatLng = null;
+      var loggedInUserID = null;
+      $( document ).ready(function() {
+          // Register the callback to be fired every time auth state changes
+          var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+          ref.onAuth(authDataCallback);
 
+          // Get a database reference to our posts
+          var authData = ref.getAuth();
+
+          if (authData) {
+            console.log("Authenticated user with uid:", authData.uid);
+            loggedInUserID = authData.uid;
+            var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
+
+            // Attach an asynchronous callback to read the data at our posts reference
+            ref.on("value", function(snapshot) {
+              console.log(snapshot.val());
+              updateUserImages(snapshot.val().imgUrl);
+              updateUserName(snapshot.val().displayName)
+              loggedInUserID = snapshot.key();
+              loggedInUserLatLng = snapshot.val().latlng;
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+            });
+          }
+
+          // Create a callback which logs the current auth state
+          function authDataCallback(authData) {
+            if (authData) {
+              console.log("User " + authData.uid + " is logged in with " + authData.provider);
+            } else {
+              console.log("User is logged out");
+            }
+          }
+      });
+      function updateUserImages(imgURL){
+        if (imgURL){
+          $(".userImage").attr("src", imgURL);
+        }
+      }
+      function updateUserName(userName){
+        if(userName){
+          $(".userName").text(userName);
+        }
+      }
+      function signOut(){
+        var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+        ref.unauth();
+        window.location = '../index.html';
+      }
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)http://www.lauradhamilton.com/how-to-set-up-a-nodejs-web-server-on-amazon-ec2 -->
+<html lang="en-US" class="transition change"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+How to Set Up a Node.js Web Server on Amazon EC2 - Laura Diane Hamilton
+</title>
+<meta content="authenticity_token" name="csrf-param">
+<meta content="/OXpevpQTZ4MsPd6RA3PUGfobPSSQAw24eA9g/Y01so=" name="csrf-token"> <script data-rocketsrc="//www.google-analytics.com/ga.js" data-rocketoptimized="true"></script><script id="twitter-wjs" data-rocketsrc="//platform.twitter.com/widgets.js" data-rocketoptimized="true"></script><script type="text/javascript">
+//<![CDATA[
+try{if (!window.CloudFlare) {var CloudFlare=[{verbose:0,p:0,byc:0,owlid:"cf",bag2:1,mirage2:0,oracle:0,paths:{cloudflare:"/cdn-cgi/nexp/dok3v=1613a3a185/"},atok:"dbb944fcf8437b2d0a10ddf53eb4c114",petok:"1c84396d773697989558c3d87071c16a36d93eb7-1451277517-1800",zone:"lauradhamilton.com",rocket:"a",apps:{},sha2test:0}];document.write('<script type="text/javascript" src="//ajax.cloudflare.com/cdn-cgi/nexp/dok3v=38857570ac/cloudflare.min.js"><'+'\/script>');}}catch(e){};
+//]]>
+</script><script type="text/javascript" src="./How to Set Up a Node.js Web Server on Amazon EC2 - Laura Diane Hamilton_files/cloudflare.min.js"></script><style type="text/css"></style><style type="text/css">.cf-hidden { display: none; } .cf-invisible { visibility: hidden; }</style><script data-module="cloudflare/rocket" id="cfjs_block_bdf7e07d96" onload="CloudFlare.__cfjs_block_bdf7e07d96_load()" onerror="CloudFlare.__cfjs_block_bdf7e07d96_error()" onreadystatechange="CloudFlare.__cfjs_block_bdf7e07d96_readystatechange()" type="text/javascript" src="./How to Set Up a Node.js Web Server on Amazon EC2 - Laura Diane Hamilton_files/rocket.js"></script>
+<link href="./How to Set Up a Node.js Web Server on Amazon EC2 - Laura Diane Hamilton_files/application-39d4b25f387ce8ca05418e3b14ee2d74.css" media="screen" rel="stylesheet">
+<meta name="author" content="Laura Diane Hamilton">
+<link href="http://www.lauradhamilton.com/posts.rss" rel="alternate" title="RSS" type="application/rss+xml">
+<link href="./How to Set Up a Node.js Web Server on Amazon EC2 - Laura Diane Hamilton_files/css" rel="stylesheet" type="text/css">
+<script data-rocketsrc="/assets/application-308211cc687bb736ba939371ed784cfe.js" type="text/rocketscript" data-rocketoptimized="true"></script>
+</head>
+<body class="posts show not-logged-in avgrund-ready">
+<div id="sheet"></div>
+<div id="body">
+<a id="edit-button" href="http://www.lauradhamilton.com/22/edit" data-target="#modal-login" class="icon-edit" data-no-turbolink="true"></a>
+<header class="clearfix">
+<div id="header-content">
+<h1>
+<a href="http://www.lauradhamilton.com/">Laura Diane Hamilton</a>
+</h1>
+<p>
+Technical Product Manager at Groupon<br><br><a href="http://www.lauradhamilton.com/lauradhamilton_resume.pdf">Resumé</a>
+</p>
+<div class="twitter">
+<script type="text/rocketscript" data-rocketoptimized="true">
+              $('#twitter-wjs').remove();
+              !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+            </script>
+</div>
+<ul id="connect" class="clearfix">
+<li>
+<a class="icon-twitter" href="http://twitter.com/lauradhamilton" id="connect-twitter">@lauradhamilton</a>
+</li>
+<li>
+<a class="icon-linkedin" href="https://linkedin.com/in/lauradhamilton" id="connect-linkedin">linkedin</a>
+</li>
+<li>
+<a class="icon-github" href="https://github.com/lauradhamilton" id="connect-github">github</a>
+</li>
+<li>
+<a class="icon-google-plus-sign" href="https://plus.google.com/110556329633561103408" id="connect-googleplus" rel="author">googleplus</a>
+</li>
+<li class="right">
+<a class="icon-envelope" href="mailto:lauradhamilton@gmail.com" id="connect-email">email</a>
+</li>
+<li class="right">
+<a class="open-external icon-rss" href="http://www.lauradhamilton.com/posts.rss" id="connect-rss">rss</a>
+</li>
+</ul>
+</div>
+</header>
+<div id="content">
+<div class="inner"><article id="post-22" class="full">
+<h1>
+How to Set Up a Node.js Web Server on Amazon EC2
+</h1>
+<time>July 23, 2013</time>
+<div class="post"><p>If you've never done it before, it can be a bit tricky to navigate Amazon's "security groups," Linux's firewalls, and ip forwarding. I've created a tutorial to demonstrate, step-by-step, how to set up a skeleton Node.js app on Amazon EC2.
+</p>
+<p>
+First, create an account on <a href="http://aws.amazon.com/">aws.amazon.com</a> and <a href="https://aws.amazon.com/mfa/">set up two-factor authentication</a>.
+</p>
+<p>
+Next, click on EC2 - Virtual Servers in the Cloud. (EC2 stands for "Elastic Compute Cloud.") In the left-hand nav, click on "Instances." From the next screen, click the button "Launch Instance." If you are a new user, <a href="https://aws.amazon.com/free/">you can run a micro instance for free for a year</a>.
+</p>
+<p>
+Select the "Quick Launch Wizard," give your new server a name, and create a new key pair. Download your key. The key basically secures the server, so that only you can ssh onto it. Be sure to keep your key safe.
+<img src="./How to Set Up a Node.js Web Server on Amazon EC2 - Laura Diane Hamilton_files/amazon_ec2_quick_launch_wizard.png">
+For this demo, I chose to use Ubuntu 13.04, but any relatively recent Linux flavor should work fine.
+</p>
+<p>
+Next, move your ssh key from your Downloads folder to someplace more permanent:
+<code>
+mv key_for_nodejs_demo_server.pm ~/.ssh
+</code>
+Check it's in the new place:
+<code>
+cd ~/.ssh
+ls
+</code>
+</p>
+<p>
+Now, it's time to ssh onto your server. Check the tick-box next to your server name. You should see your server name — something like ec2-75-101-178-88.compute-1.amazonaws.com. You'll need this name to ssh on:
+<code>
+ssh -i ~/.ssh/key_for_nodejs_demo_server.pem ubuntu@ec2-75-101-178-88.compute-1.amazonaws.com
+</code>
+Oops! That didn't work. You need to restrict the permissions on your key_for_nodejs_demo_server.pem file so that only your user can access it — not anyone else on your computer.
+<code>
+chmod -R 700 ~/.ssh/key_for_nodejs_demo_server.pem
+</code>
+Now you can ssh.
+<code>
+ssh -i ~/.ssh/key_for_nodejs_demo_server.pem ubuntu@ec2-75-101-178-88.compute-1.amazonaws.com
+</code>
+Now, you should see that your command prompt changed, indicating you're now on the EC2 server. You should see something like this:
+<code>
+ubuntu@ip-10-164-108-235:-$
+</code>
+</p>
+<p>
+If you don't already have a github account, you should <a href="https://github.com/plans">sign up for a free one</a>.
+</p>
+<p>
+Next, it's time to install some programs we're going to need. First, install git (for version control):
+<code>
+sudo apt-get install git
+</code>
+Sudo, which stands for "superuser do," and will run a command as root. You need to use sudo in order to install programs.
+Now verify that git is installed:
+<code>
+which git
+</code>
+</p>
+<p>
+Next, let's fork the <a href="https://github.com/heroku/node-js-sample">heroku/node-js-sample</a> repository. Fork it via the github web interface; this will essentially make you a copy of the repository. Now clone the repository you just forked, so that you put a local copy of the source code on your EC2 machine:
+<code>
+git clone https://github.com/yourusername/node-js-sample.git
+</code>
+Now change directories into your new repo:
+<code>
+cd node-js-sample
+</code>
+And take a look at the files in your skeleton app:
+<code>
+ls
+</code>
+</p>
+<p>
+Let's try to run the app now.
+<code>
+node web.js
+</code>
+Oops! Looks like we need to install node first.
+<code>
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs
+</code>
+Make sure that you install the latest version. Sometimes ubuntu will install an older version, which you do NOT want.
+<code>
+node --version
+</code>
+Make sure that you see version 0.10.13 (current version at the time of this writing) or higher. You can <a href="http://nodejs.org/docs/latest/">find the current version of node.js here.</a>
+</p>
+<p>
+Let's try to run our app again:
+<code>
+node web.js
+</code>
+OK, a new error this time! That means we're making progress.
+<code>
+module.js:340
+throw err;
+Error: Cannot find module 'express'
+</code>
+This means we need to install a node package manager, and the required packages.
+<code>
+npm install express
+</code>
+</p>
+<p>
+Now, let's try our server again.
+<code>
+node web.js
+</code>
+You should see a message "Listening on 5000." The web server is up and running now!
+</p>
+<p>
+Try to visit your web server by pasting its url into your browser:
+<code>
+http://ec2-75-101-178-88.compute-1.amazonaws.com/
+</code>
+This won't work. We need to open the right ports first.
+</p>
+<p>
+Back in your AWS management console, select your instance, then in the "Network &amp; Security" section click on "Security Groups." Select your instance's security group (it will be something like "quicklaunch-1". Open up port 80 (http) to allow connections from all ip addresses. Be sure to apply your changes (doesn't happen automatically). Now, you should have three security groups, like this:
+<img src="./How to Set Up a Node.js Web Server on Amazon EC2 - Laura Diane Hamilton_files/security_groups_screenshot.png">
+</p>
+<p>
+Let's change the app to listen on port 8080:
+<code>
+vim web.js
+</code>
+Change the port from 5000 to 8080. For security reasons, we're not going to allow any connections on ports below 1024. Now, in order to allow requests on the standard HTTP port, 80, let's set up some port forwarding. First, run this command to see if you have ip forwarding enabled already:
+<code>
+cat /proc/sys/net/ipv4/ip_forward
+</code>
+If it returns 0, then ip forwarding is disabled. A 1 means it's enabled.
+<code>
+sudo vim /etc/sysctl.conf
+</code>
+In this file, uncomment this line:
+<code>
+net.ipv4.ip_forward
+</code>
+This will enable ip forwarding. Then, to enable the changes made in sysctl.conf:
+<code>
+sudo sysctl -p /etc/sysctl.conf
+</code>
+Now, let's check that ip forwarding is enabled:
+<code>
+cat /proc/sys/net/ipv4/ip_forward
+</code>
+That should return a 1 now.
+</p>
+<p>
+Now, let's set up forwarding from 80 to 8080:
+<code>
+sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+</code>
+</p>
+<p>
+Next, we need to open the Linux firewall to allow connections on port 80:
+<code>
+sudo iptables -A INPUT -p tcp -m tcp --sport 80 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp -m tcp --dport 80 -j ACCEPT
+</code>
+</p>
+<p>
+Now, let's try starting our app again:
+<code>
+node web.js
+</code>
+It should say it's "Listening on 8080."
+</p>
+<p>
+Now, in your browser, enter the public ip of your EC2 machine (e.g., 75.101.178.88). It should greet you with, "Hello, World!" Congratulations, you have a node.js server up and running!
+</p>
+</div>
+<div id="edit-link" class="hide" data-href="/22/edit"></div>
+</article><aside class="signature">
+Follow me on <a href="http://twitter.com/lauradhamilton">Twitter</a> or subscribe to <a href="http://www.lauradhamilton.com/posts.rss">RSS</a>
+</aside>
+<nav class="history clearfix">
+<a class="next" href="http://www.lauradhamilton.com/how-google-uses-machine-learning-to-detect-spam-blogs-maybe">How Google Uses Machine Learning to Detect Spam Blogs (Maybe)</a><a class="prev" href="http://www.lauradhamilton.com/tales-of-woe-on-the-bleeding-edge">Tales of Woe on the Bleeding Edge</a>
+</nav>
+<disclaimer><a href="http://www.lauradhamilton.com/">Lauradhamilton.com</a> is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to amazon.com.</disclaimer>
+</div>
+</div>
+<div class="avgrund-cover"></div>
+</div>
+<aside id="modal-login" class="avgrund-popup"><form accept-charset="UTF-8" action="http://www.lauradhamilton.com/sessions" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="/OXpevpQTZ4MsPd6RA3PUGfobPSSQAw24eA9g/Y01so="></div>
+<h3>Login</h3>
+<div class="field">
+<label for="email">Email</label>
+<input id="email" name="email" type="text">
+</div>
+<div class="field">
+<label for="password">Password</label>
+<input id="password" name="password" type="password">
+</div>
+<div class="actions">
+<input name="commit" type="submit" value="Login">
+</div>
+</form>
+</aside>
+<script type="text/rocketscript" data-rocketoptimized="true">
+      var _gaq=[['_setAccount',' UA-38928252-1 '],['_trackPageview']];
+      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g,s)}(document,'script'));
+    </script>
+
+<script id="twitter-csp-test"></script></body></html>
