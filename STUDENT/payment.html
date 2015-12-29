@@ -499,7 +499,7 @@ $.post( "http://52.23.157.36/api/v1/token")
       },
       paymentMethodNonceReceived: function (event, nonce) {
         console.log(nonce);
-        $.post( "http://52.23.157.36/api/v1/process", {body:{amount: 10,payment_method_nonce: nonce }})
+        $.post( "http://52.23.157.36/api/v1/process", {amount: '10.00',payment_method_nonce: nonce })
           .done(function( data ) {
             console.log( "Data Loaded: ", data );
             console.log(data.success);
