@@ -700,11 +700,11 @@
                           console.log("login avigator.geolocation-----=======");
                           console.log(position);
                           var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
-                          var spos="" + position.coords.latitude + ", " + position.coords.longitude; 
+                          var spos="" + position.coords.latitude + "," + position.coords.longitude; 
                           console.log("login spos="+spos);
                           ref.child(uid).update({latlng:spos});     
 
-                          window.location = 'STUDENT/index.html';
+                          window.location = 'STUDENT/index.html?curLatLng='+spos;
 
                         });
                     } else {
