@@ -216,11 +216,18 @@ function MyMapMgr(){
 var mmm=new MyMapMgr();
 
 
-var mat=window.location.search.match(/curLatLng=([0-9\+\-\.]+)[\,]([0-9\+\-\.]+)/);
-console.log(mat);
+//var mat=window.location.search.match(/curLatLng=([0-9\+\-\.]+)[\,]([0-9\+\-\.]+)/);
+//console.log(mat);
+//var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+// Get a database reference to our posts
+//var authData = ref.getAuth();
+//console.log(authData);
 
-mmm.initialize(mat[1],mat[2],"default center");
-setTimeout(cleanmap,8000);
+function startGMap(latlng){
+ var mat=latlng.split(",");
+ mmm.initialize(mat[1],mat[2],"default center");
+ setTimeout(cleanmap,8000);
+}
 
 function cleanmap() {
     mmm.cleanMap(null);
