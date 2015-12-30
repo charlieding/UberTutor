@@ -1,24 +1,32 @@
 var MyMapUti={
   getMarkImg:function(latlng,imgUrl){
-      var dataType=typeof(latlng);
-      if( dataType==="string"){
-        latlng=MyMapUti.mapLatLng(latlng);
-      }
+        var dataType=typeof(latlng);
+        if( dataType==="string"){
+           latlng=MyMapUti.mapLatLng(latlng);
+        }
         var pinIcon = new google.maps.MarkerImage(
             imgUrl,
             null, /* size is determined at runtime */
             null, /* origin is 0,0 */
-            null, /* anchor is bottom center of the scaled image */
+            new google.maps.Point(16, 16), /*null anchor is bottom center of the scaled image */
             new google.maps.Size(32, 32)
         );
         var markerimg = new google.maps.Marker({
           //map:map,
-          draggable:false,
+          draggable:true,
           optimized:false, // <-- required for animated gif
           animation: google.maps.Animation.DROP,
           position: latlng,
           icon: pinIcon,
         });
+        markerimg.m_origLatLng=latlng;
+        var flightPath=new google.maps.Polyline({
+          path:[],
+          strokeColor:"#ff0000",
+          strokeOpacity:0.8,
+          strokeWeight:0.5
+          });
+        markerimg.m_flightPath=flightPath;
 
         google.maps.event.addListener(markerimg,'click',function(ev) {
               console.log(ev.latLng, this.userObj,  this);
@@ -26,17 +34,50 @@ var MyMapUti={
               //infowindow.setPosition(ev.latLng);
               //infowindow.open(map);
               if(this.userObj){
+                findTutors();
                 updateTutorProfileByObject(this.userObj);
               }
               
         });
 
+        google.maps.event.addListener(markerimg,'dragstart',function(ev) {
+              console.log(ev.latLng, this.userObj,  this);
+        });
+        google.maps.event.addListener(markerimg, 'drag', function() {
+          console.log('Dragging...', markerimg.getPosition().lat(), markerimg.getPosition().lng());
+          if(markerimg.m_isEventPos===true){
+            return;
+          }
+          var arrLatlng=[];
+          arrLatlng.push(markerimg.getPosition());
+          arrLatlng.push(markerimg.m_origLatLng);
+          var x0=markerimg.m_origLatLng.lat(),
+              y0=markerimg.m_origLatLng.lng();
+          arrLatlng.push(new google.maps.LatLng(x0-0.00001,y0));arrLatlng.push(markerimg.m_origLatLng);
+          arrLatlng.push(new google.maps.LatLng(x0+0.00001,y0));arrLatlng.push(markerimg.m_origLatLng);
+          arrLatlng.push(new google.maps.LatLng(x0,y0-0.00001));arrLatlng.push(markerimg.m_origLatLng);
+          arrLatlng.push(new google.maps.LatLng(x0,y0+0.00001));arrLatlng.push(markerimg.m_origLatLng);
+
+          var mmap=markerimg.getMap();
+          markerimg.m_flightPath.setOptions({map:mmap,path:arrLatlng});
+         
+          //updateMarkerPosition(markerimg.getPosition());
+        });
+        google.maps.event.addListener(markerimg, 'dragend', function() {
+          console.log('Drag ended');
+          if(markerimg.m_isEventPos===true){
+            return;
+          }
+          //geocodePosition(markerimg.getPosition());
+        });        
 
 
 
 
 
-        
+
+
+
         return markerimg;
   },
   mapLatLng:function(slatlng){
@@ -104,7 +145,7 @@ var MyMapUti={
 
 
 
-
+//TODO: auto move img if overlaps.
 function FbaseUsers(map){
     function userMarkImg(userObj){
             var latlng=userObj.latlng;
@@ -236,7 +277,8 @@ function MyMapMgr(){
         mapTypeControl:false 
       };
       map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-      
+      map.panTo(centerLatLng);
+      map.setCenter(centerLatLng);
       google.maps.event.addListener(map, 'click', function(event) {
         //markerApptment.setMap(map);
         if(null!=draggableCursor){
@@ -251,7 +293,8 @@ function MyMapMgr(){
         //mark.setMap(null);
       });
       
-      
+        
+
       //center mark
       // mark=new google.maps.Marker({
          //position:centerLatLng,
@@ -275,21 +318,32 @@ function MyMapMgr(){
             fillOpacity:0.4,
             clickable:true
           });
-        myCity.setMap(map);
+        //myCity.setMap(map);
 
         //img marker
-        markerCentr=MyMapUti.getMarkImg(centerLatLng,"../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
-        markerCentr.setMap(map);
+        markerCentr=MyMapUti.getMarkImg(centerLatLng,"./mapPinOver2.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
+        markerCentr.setOptions({map:map,draggable:false});
+
 
         //crosshair polyline mark
         var crosshair=MyMapUti.crossHairPolylineMark(centerLatLng);
-        crosshair.setMap(map);
+        //crosshair.setMap(map);
 
+       var fbu=new FbaseUsers(map);    
 
         ////
         markerApptment=MyMapUti.getMarkImg(null,"../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
+        markerApptment.m_isEventPos=true;
+        google.maps.event.addListener(markerApptment, 'dragend', function() {
+          console.log('Drag ended');
+          if(markerApptment.m_isEventPos===true){
+            geocodePosition(markerApptment.getPosition());
+            return;
+          }
+          //geocodePosition(markerimg.getPosition());
+        });      
 
-        var fbu=new FbaseUsers(map);
+
 
     };
 
