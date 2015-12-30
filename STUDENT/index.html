@@ -439,6 +439,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
               updateUserImages(snapshot.val().imgUrl);
               updateUserName(snapshot.val().displayName)
               loggedInUserLatLng = snapshot.val().latlng;
+
+              startGMap(loggedInUserLatLng);
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });

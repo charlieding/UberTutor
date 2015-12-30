@@ -225,7 +225,7 @@ var mmm=new MyMapMgr();
 
 function startGMap(latlng){
  var mat=latlng.split(",");
- mmm.initialize(mat[1],mat[2],"default center");
+ mmm.initialize(mat[0],mat[1],"default center");
  setTimeout(cleanmap,8000);
 }
 
