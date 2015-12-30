@@ -30,6 +30,13 @@ var MyMapUti={
               }
               
         });
+
+
+
+
+
+
+        
         return markerimg;
   },
   mapLatLng:function(slatlng){
@@ -42,7 +49,62 @@ var MyMapUti={
       }
       return slatlng;
   },
+
+  crossHairPolylineMark:function(centerLatLng){
+     //var arr=sLatLng.split(",");
+     //if(arr.length<2) return alert("fatal error for latlng");
+     var x0=centerLatLng.lat(),
+         y0=centerLatLng.lng();
+
+     var arrLatlng=[];
+     arrLatlng.push(new google.maps.LatLng(-10.0+x0,y0));  
+     arrLatlng.push(new google.maps.LatLng(+10.0+x0,y0)); 
+     arrLatlng.push(new google.maps.LatLng(x0,y0)); 
+     arrLatlng.push(new google.maps.LatLng(x0,-10.0+y0)); 
+     arrLatlng.push(new google.maps.LatLng(x0,+10.0+y0)); 
+
+
+
+
+
+     var flightPath=new google.maps.Polyline({
+     path:arrLatlng,
+     strokeColor:"#000099",
+     strokeOpacity:0.8,
+     strokeWeight:0.5
+     });
+     return flightPath;
+     //flightPath.setMap(map);
+  },
+
+
+
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function FbaseUsers(map){
     function userMarkImg(userObj){
             var latlng=userObj.latlng;
@@ -113,11 +175,27 @@ function FbaseUsers(map){
     ref.on("child_added",function(snapshot){
         uerMarkImgAdd(snapshot);
     });
-
-
- 
 };
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function MyMapMgr(){
     var map=null;
     var markerCentr=null;
@@ -125,6 +203,29 @@ function MyMapMgr(){
     var infowindow=null;
     var centerLatLng=null;
     var draggableCursor=null;
+
+
+
+
+    //geocoder for addr.
+    var geocoder = new google.maps.Geocoder();
+    function geocodePosition(pos) {
+      geocoder.geocode({
+        latLng: pos
+      }, function(responses) {
+        if (responses && responses.length > 0) {
+          updateMarkerAddress(responses[0].formatted_address);
+        } else {
+          updateMarkerAddress('Cannot determine address at this location.');
+        }
+      });
+    };
+    function updateMarkerAddress(str) {
+      $("#eventPos").val(str);
+    };
+
+
+
     
     this.initialize=function(lat,lng, labeltxt) {
       centerLatLng = new google.maps.LatLng(lat, lng);
@@ -142,7 +243,9 @@ function MyMapMgr(){
            draggableCursor=null;
            map.setOptions({draggableCursor:null});
            markerApptment.setOptions({map:map,position:event.latLng});
-           $("#eventPos").val(event.latLng.toString());
+
+           //$("#eventPos").val(event.latLng.toString());
+           geocodePosition(event.latLng);
         }
         //infowindow.close();
         //mark.setMap(null);
@@ -177,6 +280,10 @@ function MyMapMgr(){
         //img marker
         markerCentr=MyMapUti.getMarkImg(centerLatLng,"../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
         markerCentr.setMap(map);
+
+        //crosshair polyline mark
+        var crosshair=MyMapUti.crossHairPolylineMark(centerLatLng);
+        crosshair.setMap(map);
 
 
         ////
