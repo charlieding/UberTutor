@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="myApp" ng-init="name='John';msg='ok'" >
+<html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,8 +23,8 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class=""  ng-controller="MyController">
-    <div class="wrapper">
+  <body class=""  >
+    <div class="wrapper"  ng-app="myApp" ng-controller="MyController">
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
 
@@ -40,9 +40,8 @@
                   <div class="box box-warning direct-chat direct-chat-warning">
                     <div class="box-header with-border">
                       <h3 class="box-title">
-
         <label for="nameInput">Username:</label>
-        <input ng-model="name" type="text" id="nameInput" value='jjj' placeholder="enter a username...">
+        <input ng-model="name" type="text" id="nameInput" placeholder="enter a username...">
 </h3>
 
                       <div class="box-tools pull-right">
@@ -82,7 +81,8 @@
       <ul id="example-messages" class="example-chat-messages">
         <li ng-repeat="msg in messages">
           <strong class="example-chat-username">{{ msg.from }}</strong>
-          {{ msg.body }}
+          <p>{{ msg.body }}</p>
+          <p>{{ msg.time }}</p>
         </li>
       </ul>
 
@@ -172,7 +172,7 @@
                         <div class="input-group">
                           <input type="text" name="message" placeholder="Type Message ..." class="form-control" ng-model="msg" ng-keydown="addMessage($event)" type="text" id="messageInput"  >
                           <span class="input-group-btn">
-                            <button type="button" class="btn btn-warning btn-flat">Send</button>
+                            <button type="button" class="btn btn-warning btn-flat" ng-click="addMessage($event)" >Send</button>
                           </span>
                         </div>
                       </form>
@@ -196,6 +196,7 @@
 
           // GET MESSAGES AS AN ARRAY
           $scope.messages = $firebaseArray(ref);
+          $scope.name='ff';
 
           //ADD MESSAGE METHOD
           $scope.addMessage = function(e) {
@@ -208,7 +209,8 @@
               //ADD TO FIREBASE
               $scope.messages.$add({
                 from: name,
-                body: $scope.msg
+                body: $scope.msg,
+                time: 123,
               });
 
               //RESET MESSAGE
