@@ -504,7 +504,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             },
             paymentMethodNonceReceived: function (event, nonce) {
               console.log(nonce);
-              $.post( "http://52.23.157.36/api/v1/process", {amount: '10.00',payment_method_nonce: nonce })
+              $.post( "http://52.23.157.36/api/v1/process", {amount: '10.00',payment_method_nonce: nonce, customerId: uid })
                 .done(function( data ) {
                   console.log( "Data Loaded: ", data );
                   console.log(data.success);
