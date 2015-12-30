@@ -439,7 +439,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           if (authData) {
             console.log("Authenticated user with uid:", authData.uid);
+
+            //Temporary Hack for anything
             loggedInUserID = authData.uid;
+
+            activateBraintree(authData.uid);
+
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
 
             // Attach an asynchronous callback to read the data at our posts reference
@@ -479,36 +484,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
         window.location = '../index.html';
       }
 
-/*************** BRAINTREE SANDBOX CODE ************************/
-// We generated a client token for you so you can test out this code
-// immediately. In a production-ready integration, you will need to
-// generate a client token on your server (see section below).
+      /*************** BRAINTREE SANDBOX CODE ************************/
+      // We generated a client token for you so you can test out this code
+      // immediately. In a production-ready integration, you will need to
+      // generate a client token on your server (see section below).
+      function activateBraintree(uid){
+      $.post( "http://52.23.157.36/api/v1/token",{customerId: uid})
+        .done(function( data ) {
+          console.log( "Data Loaded: ", data );
 
-$.post( "http://52.23.157.36/api/v1/token")
-  .done(function( data ) {
-    console.log( "Data Loaded: ", data );
+          var clientToken = data.client_token;
 
-    var clientToken = data.client_token;
+          braintree.setup(clientToken, "dropin", {
+            container: "payment-form",
+            paypal: {
+              singleUse: true,
+              amount: 10.00,
+              currency: 'USD'
+            },
+            paymentMethodNonceReceived: function (event, nonce) {
+              console.log(nonce);
+              $.post( "http://52.23.157.36/api/v1/process", {amount: '10.00',payment_method_nonce: nonce })
+                .done(function( data ) {
+                  console.log( "Data Loaded: ", data );
+                  console.log(data.success);
+                });
 
-    braintree.setup(clientToken, "dropin", {
-      container: "payment-form",
-      paypal: {
-        singleUse: true,
-        amount: 10.00,
-        currency: 'USD'
-      },
-      paymentMethodNonceReceived: function (event, nonce) {
-        console.log(nonce);
-        $.post( "http://52.23.157.36/api/v1/process", {amount: '10.00',payment_method_nonce: nonce })
-          .done(function( data ) {
-            console.log( "Data Loaded: ", data );
-            console.log(data.success);
+            }
           });
 
+        });
       }
-    });
-
-  });
 
 // $http({
 //         method: 'POST',
