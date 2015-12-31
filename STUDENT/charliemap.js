@@ -177,6 +177,35 @@ function FbaseUsers(map){
            markImgArr[uid]=mark;                        
          }
     };
+
+    function overlapAdjust(markImgArr,mark){
+        function isOverLap(a,b){
+        var dx=a.lat()-b.lat(),
+            dy=a.lng()-b.lng();
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<0.001){
+          return true;
+        }
+        return false;
+      } ;  
+      var overlapIdx=0;
+      var initialCenterLatLng=map.m_initialCenterLatLng;
+      if(true===isOverLap(initialCenterLatLng,mark.m_origLatLng)){
+            overlapIdx++;
+      };      
+      $.each(markImgArr,function(uid,obj){
+          if(true===isOverLap(obj.m_origLatLng,mark.m_origLatLng)){
+            overlapIdx++;
+          };        
+      });    
+      var x=mark.m_origLatLng.lat()+overlapIdx*0.001/4,
+          y=mark.m_origLatLng.lng()+overlapIdx*0.001/4;
+      mark.setOptions({position:new google.maps.LatLng(x,y)});
+      var arrLatlng=MyMapUti.getUserMarkImgFlightPath(mark);
+      mark.m_flightPath.setOptions({map:map,path:arrLatlng});
+    };
+
+    
     function userMarkImgAdd(snapshot){
           var userObj = snapshot.val();
           var uid=snapshot.key();
@@ -204,32 +233,7 @@ function FbaseUsers(map){
 
           //});      
     };
-    function overlapAdjust(markImgArr,mark){
-        function isOverLap(a,b){
-        var dx=a.lat()-b.lat(),
-            dy=a.lng()-b.lng();
-        var dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<0.001){
-          return true;
-        }
-        return false;
-      } ;  
-      var overlapIdx=0;
-      var initialCenterLatLng=map.m_initialCenterLatLng;
-      if(true===isOverLap(initialCenterLatLng,mark.m_origLatLng)){
-            overlapIdx++;
-      };      
-      $.each(markImgArr,function(uid,obj){
-          if(true===isOverLap(obj.m_origLatLng,mark.m_origLatLng)){
-            overlapIdx++;
-          };        
-      });    
-      var x=mark.m_origLatLng.lat()+overlapIdx*0.001/4,
-          y=mark.m_origLatLng.lng()+overlapIdx*0.001/4;
-      mark.setOptions({position:new google.maps.LatLng(x,y)});
-      var arrLatlng=MyMapUti.getUserMarkImgFlightPath(mark);
-      mark.m_flightPath.setOptions({map:map,path:arrLatlng});
-    };
+
 
 
 
@@ -413,9 +417,9 @@ var mmm=new MyMapMgr();
 //console.log(authData);
 
 function startGMap(latlng){
- var mat=latlng.split(",");
- mmm.initialize(mat[0],mat[1],"default center");
- setTimeout(cleanmap,8000);
+  var mat=latlng.split(",");
+  mmm.initialize(mat[0],mat[1],"default center");
+  setTimeout(cleanmap,8000);
 }
 
 function cleanmap() {
