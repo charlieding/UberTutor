@@ -224,8 +224,8 @@ function FbaseUsers(map){
             overlapIdx++;
           };        
       });    
-      var x=mark.m_origLatLng.lat()+overlapIdx*0.001/2,
-          y=mark.m_origLatLng.lng()+overlapIdx*0.001/2;
+      var x=mark.m_origLatLng.lat()+overlapIdx*0.001/4,
+          y=mark.m_origLatLng.lng()+overlapIdx*0.001/4;
       mark.setOptions({position:new google.maps.LatLng(x,y)});
       var arrLatlng=MyMapUti.getUserMarkImgFlightPath(mark);
       mark.m_flightPath.setOptions({map:map,path:arrLatlng});
