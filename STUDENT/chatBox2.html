@@ -172,7 +172,7 @@
                         <div class="input-group">
                           <input type="text" name="message" placeholder="Type Message ..." class="form-control" ng-model="msg" ng-keydown="addMessage($event)" type="text" id="messageInput"  >
                           <span class="input-group-btn">
-                            <button type="button" class="btn btn-warning btn-flat" ng-click="addMessage($event)" >Send</button>
+                            <button type="button" class="btn btn-warning btn-flat" ng-click="clickSend()" >Send</button>
                           </span>
                         </div>
                       </form>
@@ -188,21 +188,18 @@
     </div><!-- ./wrapper -->
     <script>
       var myApp = angular.module("myApp", ["firebase"]);
+      var ref = new Firebase("https://d4t799en9h6.firebaseio-demo.com/");
 
       myApp.controller("MyController", ["$scope", "$firebaseArray",
         function($scope, $firebaseArray) {
           //CREATE A FIREBASE REFERENCE
-          var ref = new Firebase("https://d4t799en9h6.firebaseio-demo.com/");
 
           // GET MESSAGES AS AN ARRAY
           $scope.messages = $firebaseArray(ref);
           $scope.name='ff';
 
-          //ADD MESSAGE METHOD
-          $scope.addMessage = function(e) {
-
-            //LISTEN FOR RETURN KEY
-            if (e.keyCode === 13 && $scope.msg) {
+          
+          function addmsg(){
               //ALLOW CUSTOM OR ANONYMOUS USER NAMES
               var name = $scope.name || "anonymous";
 
@@ -214,9 +211,23 @@
               });
 
               //RESET MESSAGE
-              $scope.msg = "";
+              $scope.msg = "";          
+          };
+          
+          //ADD MESSAGE METHOD
+          $scope.addMessage = function(e) {
+
+            //LISTEN FOR RETURN KEY
+            if (e.keyCode === 13 && $scope.msg) {
+                addmsg();
             }
-          }
+          };
+          
+          $scope.clickSend = function(e) {
+            console.log('clickSend');
+            //LISTEN FOR CLICK
+            addmsg();
+          };
         }
       ]);
     </script>
