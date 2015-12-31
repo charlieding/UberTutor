@@ -255,14 +255,15 @@ function MyMapMgr(){
         latLng: pos
       }, function(responses) {
         if (responses && responses.length > 0) {
-          updateMarkerAddress(responses[0].formatted_address);
+          updateMarkerAddress(pos, responses[0].formatted_address);
         } else {
-          updateMarkerAddress('Cannot determine address at this location.');
+          updateMarkerAddress(pos, 'Cannot determine address at this location.');
         }
       });
     };
-    function updateMarkerAddress(str) {
-      $("#eventPos").val(str);
+    function updateMarkerAddress(pos, str) {
+      var slatlng=pos.toString();
+      $("#eventPos").val(str).attr("latlng",slatlng).attr("title",slatlng);
     };
 
 
@@ -326,10 +327,9 @@ function MyMapMgr(){
 
 
         //crosshair polyline mark
-        var crosshair=MyMapUti.crossHairPolylineMark(centerLatLng);
+        //var crosshair=MyMapUti.crossHairPolylineMark(centerLatLng);
         //crosshair.setMap(map);
 
-       var fbu=new FbaseUsers(map);    
 
         ////
         markerApptment=MyMapUti.getMarkImg(null,"../img/map-pointer-a.gif?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
@@ -340,10 +340,10 @@ function MyMapMgr(){
             geocodePosition(markerApptment.getPosition());
             return;
           }
-          //geocodePosition(markerimg.getPosition());
         });      
 
 
+       var fbu=new FbaseUsers(map);    
 
     };
 
