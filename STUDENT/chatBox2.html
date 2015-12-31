@@ -55,17 +55,6 @@
                       <!-- Conversations are loaded here -->
                       <div class="direct-chat-messages">
                         <!-- Message. Default to the left -->
-                        <div class="direct-chat-msg" >
-                          <div class="direct-chat-info clearfix">
-                            <span class="direct-chat-name pull-left">Alexander Pierce</span>
-                            <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                          </div><!-- /.direct-chat-info -->
-                          <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
-                          </div><!-- /.direct-chat-text -->
-                        </div><!-- /.direct-chat-msg -->
-
                         <!-- Message to the right -->
                         <div xxxclass="direct-chat-msg rightxxx" ng-repeat="msg in messages" ng-class="getClass(msg)" >
                           <div class="direct-chat-info clearfix">
@@ -180,7 +169,7 @@
     </div><!-- ./wrapper -->
     <script>
       var myApp = angular.module("myApp", ["firebase"]);
-      var ref = new Firebase("https://d4t799en9h6.firebaseio-demo.com/");
+      var ref = new Firebase("https://d4t799en9h6.firebaseio-demo.com/chat");
 
       myApp.controller("MyController", ["$scope", "$firebaseArray",
         function($scope, $firebaseArray) {
@@ -199,6 +188,7 @@
               //ADD TO FIREBASE
               $scope.messages.$add({
                 from: name,
+                to: name,
                 body: $scope.msg,
                 time: 123,
               });
@@ -209,34 +199,36 @@
           
           //ADD MESSAGE METHOD
           $scope.addMessage = function(e) {
-
             //LISTEN FOR RETURN KEY
             if (e.keyCode === 13 && $scope.msg) {
                 addmsg();
             }
+            return true;
           };
           
           $scope.clickSend = function(e) {
             console.log('clickSend');
             //LISTEN FOR CLICK
-            addmsg();
+            if ( $scope.msg) {
+                addmsg();
+            }
           };
           
-          
+          var auth="ff";
           $scope.getClass=function(msg){
-            if(msg.from==='Andrew'){
+            if(msg.from===auth){
                 return "direct-chat-msg rightxxx right";
             }
             return "direct-chat-msg";
           };
           $scope.getClassName=function(msg){
-            if(msg.from==='Andrew'){
+            if(msg.from===auth){
                 return "direct-chat-name pull-right";
             }
             return "direct-chat-name pull-left";
           };
           $scope.getClassTimestamp=function(msg){
-            if(msg.from==='Andrew'){
+            if(msg.from===auth){
                 return "direct-chat-timestamp pull-left";
             }
             return "direct-chat-timestamp pull-right";
