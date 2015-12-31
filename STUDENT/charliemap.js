@@ -48,16 +48,7 @@ var MyMapUti={
           if(markerimg.m_isEventPos===true){
             return;
           }
-          var arrLatlng=[];
-          arrLatlng.push(markerimg.getPosition());
-          arrLatlng.push(markerimg.m_origLatLng);
-          var x0=markerimg.m_origLatLng.lat(),
-              y0=markerimg.m_origLatLng.lng();
-          arrLatlng.push(new google.maps.LatLng(x0-0.00001,y0));arrLatlng.push(markerimg.m_origLatLng);
-          arrLatlng.push(new google.maps.LatLng(x0+0.00001,y0));arrLatlng.push(markerimg.m_origLatLng);
-          arrLatlng.push(new google.maps.LatLng(x0,y0-0.00001));arrLatlng.push(markerimg.m_origLatLng);
-          arrLatlng.push(new google.maps.LatLng(x0,y0+0.00001));arrLatlng.push(markerimg.m_origLatLng);
-
+          var arrLatlng=MyMapUti.getUserMarkImgFlightPath(markerimg);
           var mmap=markerimg.getMap();
           markerimg.m_flightPath.setOptions({map:mmap,path:arrLatlng});
          
@@ -71,14 +62,19 @@ var MyMapUti={
           //geocodePosition(markerimg.getPosition());
         });        
 
-
-
-
-
-
-
-
         return markerimg;
+  },
+  getUserMarkImgFlightPath:function(markerimg){
+          var arrLatlng=[];
+          arrLatlng.push(markerimg.getPosition());
+          arrLatlng.push(markerimg.m_origLatLng);
+          var x0=markerimg.m_origLatLng.lat(),
+              y0=markerimg.m_origLatLng.lng();
+          arrLatlng.push(new google.maps.LatLng(x0-0.00001,y0));arrLatlng.push(markerimg.m_origLatLng);
+          arrLatlng.push(new google.maps.LatLng(x0+0.00001,y0));arrLatlng.push(markerimg.m_origLatLng);
+          arrLatlng.push(new google.maps.LatLng(x0,y0-0.00001));arrLatlng.push(markerimg.m_origLatLng);
+          arrLatlng.push(new google.maps.LatLng(x0,y0+0.00001));arrLatlng.push(markerimg.m_origLatLng);
+          return arrLatlng;
   },
   mapLatLng:function(slatlng){
       var dataType=typeof(slatlng);
@@ -181,7 +177,7 @@ function FbaseUsers(map){
            markImgArr[uid]=mark;                        
          }
     };
-    function uerMarkImgAdd(snapshot){
+    function userMarkImgAdd(snapshot){
           var userObj = snapshot.val();
           var uid=snapshot.key();
           //$.each(usersObj,function(uid,userObj){
@@ -194,6 +190,7 @@ function FbaseUsers(map){
 
             var markimg=userMarkImg(userObj);
             markimg.setMap(map);
+            overlapAdjust(markImgArr,markimg);
             markImgArr[uid]=markimg;
 
             ref.child(uid).on("child_removed",function(snapshot,prevKey){
@@ -207,6 +204,35 @@ function FbaseUsers(map){
 
           //});      
     };
+    function overlapAdjust(markImgArr,mark){
+        function isOverLap(a,b){
+        var dx=a.lat()-b.lat(),
+            dy=a.lng()-b.lng();
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<0.001){
+          return true;
+        }
+        return false;
+      } ;  
+      var overlapIdx=0;
+      var initialCenterLatLng=map.m_initialCenterLatLng;
+      if(true===isOverLap(initialCenterLatLng,mark.m_origLatLng)){
+            overlapIdx++;
+      };      
+      $.each(markImgArr,function(uid,obj){
+          if(true===isOverLap(obj.m_origLatLng,mark.m_origLatLng)){
+            overlapIdx++;
+          };        
+      });    
+      var x=mark.m_origLatLng.lat()+overlapIdx*0.001/2,
+          y=mark.m_origLatLng.lng()+overlapIdx*0.001/2;
+      mark.setOptions({position:new google.maps.LatLng(x,y)});
+      var arrLatlng=MyMapUti.getUserMarkImgFlightPath(mark);
+      mark.m_flightPath.setOptions({map:map,path:arrLatlng});
+    };
+
+
+
 
     var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
 
@@ -214,7 +240,8 @@ function FbaseUsers(map){
         //usersMarkImgs(snapshot);
     });
     ref.on("child_added",function(snapshot){
-        uerMarkImgAdd(snapshot);
+        userMarkImgAdd(snapshot);
+        //userMarkImgAutoPosAdjust();
     });
 };
     
@@ -278,8 +305,9 @@ function MyMapMgr(){
         mapTypeControl:false 
       };
       map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-      map.panTo(centerLatLng);
-      map.setCenter(centerLatLng);
+      //map.panTo(centerLatLng);
+      //map.setCenter(centerLatLng);
+      map.m_initialCenterLatLng=centerLatLng;
       google.maps.event.addListener(map, 'click', function(event) {
         //markerApptment.setMap(map);
         if(null!=draggableCursor){
