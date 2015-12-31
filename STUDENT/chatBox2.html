@@ -67,10 +67,10 @@
                         </div><!-- /.direct-chat-msg -->
 
                         <!-- Message to the right -->
-                        <div class="direct-chat-msg right" ng-repeat="msg in messages" >
+                        <div xxxclass="direct-chat-msg rightxxx" ng-repeat="msg in messages" ng-class="getClass(msg)" >
                           <div class="direct-chat-info clearfix">
-                            <span class="direct-chat-name pull-right">{{ msg.from }}</span>
-                            <span class="direct-chat-timestamp pull-left">{{ msg.time }}</span>
+                            <span xxxclass="direct-chat-name pull-right" ng-class="getClassName(msg)" >{{ msg.from }}</span>
+                            <span xxxclass="direct-chat-timestamp pull-left" ng-class="getClassTimestamp(msg)">{{ msg.time }}</span>
                           </div><!-- /.direct-chat-info -->
                           <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
                           <div class="direct-chat-text">
@@ -189,6 +189,7 @@
           // GET MESSAGES AS AN ARRAY
           $scope.messages = $firebaseArray(ref);
           $scope.name='ff';
+          
 
           
           function addmsg(){
@@ -219,6 +220,26 @@
             console.log('clickSend');
             //LISTEN FOR CLICK
             addmsg();
+          };
+          
+          
+          $scope.getClass=function(msg){
+            if(msg.from==='Andrew'){
+                return "direct-chat-msg rightxxx right";
+            }
+            return "direct-chat-msg";
+          };
+          $scope.getClassName=function(msg){
+            if(msg.from==='Andrew'){
+                return "direct-chat-name pull-right";
+            }
+            return "direct-chat-name pull-left";
+          };
+          $scope.getClassTimestamp=function(msg){
+            if(msg.from==='Andrew'){
+                return "direct-chat-timestamp pull-left";
+            }
+            return "direct-chat-timestamp pull-right";
           };
         }
       ]);
