@@ -77,29 +77,7 @@
                           </div><!-- /.direct-chat-text -->
                         </div><!-- /.direct-chat-msg -->
 
-                        <!-- Message. Default to the left -->
-                        <div class="direct-chat-msg">
-                          <div class="direct-chat-info clearfix">
-                            <span class="direct-chat-name pull-left">Alexander Pierce</span>
-                            <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
-                          </div><!-- /.direct-chat-info -->
-                          <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">
-                            Working with AdminLTE on a great new app! Wanna join?
-                          </div><!-- /.direct-chat-text -->
-                        </div><!-- /.direct-chat-msg -->
-
-                        <!-- Message to the right -->
-                        <div class="direct-chat-msg right">
-                          <div class="direct-chat-info clearfix">
-                            <span class="direct-chat-name pull-right">Sarah Bullock</span>
-                            <span class="direct-chat-timestamp pull-left">23 Jan 6:10 pm</span>
-                          </div><!-- /.direct-chat-info -->
-                          <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
-                          <div class="direct-chat-text">
-                            I would love to.
-                          </div><!-- /.direct-chat-text -->
-                        </div><!-- /.direct-chat-msg -->
+                        
 
                       </div><!--/.direct-chat-messages-->
 
@@ -209,22 +187,22 @@
             console.log("uid="+uid);
             console.log(msgObj);
             urlImg="dist/img/user1-128x128.jpg";
-            msgAddedUi(msgObj.msg,msgObj.sender,uid,urlImg);
+            msgAdded2Ui(msgObj.msg,msgObj.sender,uid,urlImg);
           //});      
      };
-     function msgAddedUi(msg,sender,datetime, urlImg){
+     function msgAdded2Ui(msg,sender,datetime, urlImg){
+          datatime=moment(datetime).format("MMM d h:m a");//todo fix
           var chatMsg='<div class="direct-chat-msg '+sender+'">'+
                           '<div class="direct-chat-info clearfix">'+
-                            '<span class="direct-chat-name pull-left">Alexander Pierce</span>'+
-                            '<span class=e"direct-chat-timestamp pull-right">'+datetime+'</span>'+
+                            '<span class="direct-chat-name pull-left">Alexander Pierce</span> '+
+                            '<span class=e"direct-chat-timestamp pull-right"> '+datetime+'</span>'+
                           '</div><!-- /.direct-chat-info -->'+
                           '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat-img -->'+
-                          '<div class="direct-chat-text" id="'+datetime+'">'+
+                          '<div class="direct-chat-text">'+
                             msg+
                           '</div><!-- /.direct-chat-text -->'+
                       '</div><!-- /.direct-chat-msg -->';
           $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
-
      }
 
       //Get id of tutor and student and get all messages related to them
@@ -246,7 +224,7 @@
       function sendMsg(){
           var msg=$("#msg").val();
           var sender="left";
-          var datetime=moment().format("YY-MM-DD@HH:mm:ss");
+          var datetime=moment().format();
           console.log(datetime);
           ref.child(datetime).set({msg:msg,sender:sender});
       };
