@@ -235,7 +235,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Tutor</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="bookings">
                         <tr>
                           <td><a href="pages/examples/invoice.html">OR9842</a></td>
                           <td>CS 1001</td>
@@ -263,7 +263,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <tr>
                           <td><a href="pages/examples/invoice.html">OR1848</a></td>
                           <td>ECON 1002</td>
-                          <td><span class="label label-success">Finished</span></td>
+                          <td><span class="label label-primary">Awaiting Response</span></td>
                           <td><div class="sparkbar" data-color="#f39c12" data-height="20">Will Jones</div></td>
                         </tr>
                         <tr>
@@ -347,17 +347,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
           var authData = ref.getAuth();
 
           if (authData) {
-            console.log("Authenticated user with uid:", authData.uid);
+            //console.log("Authenticated user with uid:", authData.uid);
             loggedInUserID = authData.uid;
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
 
             // Attach an asynchronous callback to read the data at our posts reference
             ref.on("value", function(snapshot) {
-              console.log(snapshot.val());
+              //console.log(snapshot.val());
               updateUserImages(snapshot.val().imgUrl);
               updateUserName(snapshot.val().displayName)
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
+              loadBookings(snapshot);
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });
@@ -387,6 +388,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
         ref.unauth();
         window.location = '../index.html';
       }
+
+
+    /******* MyBooking CODE - MOVE TO JS FILE *******/
+    function loadBookings(currUserSnapshot){
+        //console.log(currUserSnapshot.key());
+        var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+currUserSnapshot.key()+"/appointmentIDs");
+
+        // Attach an asynchronous callback to read the data at our posts reference
+        ref.on("value", function(snapshot) {
+          //console.log(snapshot.val());
+          var userAppointments = currUserSnapshot.val().appointmentIDs;
+          var allAppointments = snapshot.val();
+
+          console.log(userAppointments);
+          console.log(allAppointments);
+
+
+          //Clear list before showing
+          $("#bookings").empty();
+          //Go through every appointment for the user, map it to a real appointment, the display it all
+          if(userAppointments && allAppointments){
+            $.each(userAppointments, function(uid, appointmentMapObj){
+              console.log(uid);
+              //Get the entire Appointment Obj from Mapping
+              var ref = new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+uid);
+              ref.on("value", function(appointmentSnapshot) {
+                //Update Actual Bookings on UI
+                $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label label-info'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+"</div></td></tr>");
+
+              },function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+              });
+            });
+          } else{
+            $("#bookings").prepend("<tr><td>"+"Empty"+"</td><td>"+"</td><td><span class='label label-info'>"+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+"<a href="+"/STUDENT/index.html"+">"+"Find A Tutor"+"</a>"+"</div></td></tr>");
+          }
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });
+    }
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.

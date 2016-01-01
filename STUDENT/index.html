@@ -512,7 +512,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                   addTutorToDisplay(userObj, uid)
               }
             }
-          })
+          });
         }, function (errorObject) {
           console.log("The read failed: " + errorObject.code);
         });
@@ -648,7 +648,9 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           courses: courses,
           declineMessage: "null",
           questionTopic:  questionTopic,
-          creationDate: moment().format("M/D/YYYY h:m:s a")
+          creationDate: moment().format("M/D/YYYY h:m:s a"),
+          tutorDisplayName: $("#tutorProfileName").text(),
+          studentDisplayName: $("p.studentName").text()
         });
         var appointmentID = appointment.key();
 
