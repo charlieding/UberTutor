@@ -590,10 +590,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               
               //Remove listener if it already exists to prevent duplicate database calls
               if(onAppointmentChange){
-                usersRef.off('value', onAppointmentChange);
+                ref.off('value', onAppointmentChange);
               } 
 
               onAppointmentChange = ref.on("value", function(appointmentSnapshot) {
+                console.log("LISTENER ADDED! ");
 
                 //Default Unknown Status Style
                 var statusStyle = "bg-gray-active color-palette"
@@ -620,7 +621,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   loadBookings(currUserSnapshot);
                 } else {
                   //Doesn't Exist yet, just add
-                  $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+" <span tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'></i></span>"+"</div></td></tr>");
+                  $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+" <span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'></i></span>"+"</div></td></tr>");
                 }
 
               },function (errorObject) {
@@ -637,24 +638,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
     function initializeChat(_this){
       console.log("TutorID: "+ _this.getAttribute("tutorID"));
       console.log("StudentID: "+ _this.getAttribute("studentID"));
+      console.log("CurrentUserID: " + _this.getAttribute("currentUserID"));
       $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
       $.AdminLTE.controlSidebar.open();
-
-      //Todo use TutorID and to initialize Chat
       
+      //pass info to chatbox
+      chatBox(_this.getAttribute("tutorID"), _this.getAttribute("studentID"), _this.getAttribute("currentUserID"));
     }
 /******* CHATBOX CODE - MOVE TO JS FILE *******/
-      function msgAdded(snapshot){
-          var msgObj = snapshot.val();
-          var uid=snapshot.key();
-          //$.each(usersObj,function(uid,userObj){
-            console.log("uid="+uid);
-            console.log(msgObj);
-            urlImg="dist/img/user1-128x128.jpg";
-            msgAdded2Ui(msgObj.msg,msgObj.sender,uid,urlImg);
-          //});      
-     };
-     function msgAdded2Ui(msg,sender,datetime, urlImg){
+    function msgAdded(snapshot){
+      var msgObj = snapshot.val();
+      var uid=snapshot.key();
+      //$.each(usersObj,function(uid,userObj){
+      console.log("uid="+uid);
+      console.log(msgObj);
+      urlImg="dist/img/user1-128x128.jpg";
+      msgAdded2Ui(msgObj.msg,msgObj.sender,uid,urlImg);
+      //});      
+    };
+    function msgAdded2Ui(msg,sender,datetime, urlImg){
           datetime=moment(datetime).format("MMM d h:m a");//todo fix
           var otherside=(sender==="left")?"right":"left";
           var chatMsg='<div class="direct-chat-msg '+sender+'">'+
@@ -670,28 +672,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
           $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
      }
 
-      //Get id of tutor and student and get all messages related to them
-      var tutorId = null;
-      var studentId = null;
-      //sort which id is first TODO
+      var onChatChange = null;
+      var oldChatRef = null;
+      function chatBox(currUserID, tutorID, studentID){
+        //Remove old chat box listener 
+        if(onChatChange){
+          oldChatRef.off("child_added", onChatChange);
+        }
+        //Get id of tutor and student and get all messages related to them
+        var tutorId = null;
+        var studentId = null;
+        //sort which id is first TODO
 
-      var sortedChatUid = "facebook:10205542375624024_facebook:1129363767081285";
+        var sortedChatUid = "facebook:10205542375624024_facebook:1129363767081285";
 
-      var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
-
-      //load messages via child added
-      chatRef.on("child_added",function(snapshot){
-        msgAdded(snapshot);
-        //userMarkImgAutoPosAdjust();
-      });
+        var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
+        oldChatRef = chatRef;
+        //load messages via child added
+        onChatChange = chatRef.on("child_added",function(snapshot){
+          msgAdded(snapshot);
+          //userMarkImgAutoPosAdjust();
+        });
+      }
 
       //add new message using set
       function sendMsg(){
-          var msg=$("#msg").val();
-          var sender="left";
-          var datetime=moment().format();
-          console.log(datetime);
-          chatRef.child(datetime).set({msg:msg,sender:sender});
+        var msg=$("#msg").val();
+        var sender="left";
+        var datetime=moment().format();
+        console.log(datetime);
+        chatRef.child(datetime).set({msg:msg,sender:sender});
       };
     </script>
 
