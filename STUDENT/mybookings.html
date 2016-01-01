@@ -41,11 +41,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
       left:50px;
       right:60px;
     }
+    .direct-chat-messages{
+      height:calc(100vh - 270px);
+    }
     @media screen and (min-width: 768px) {
         #classSelection {
           top:8px;
           right:170px;
           left:50px;
+        }
+        .direct-chat-messages{
+          height:calc(100vh - 215px);
         }
     }
   </style>
@@ -187,11 +193,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <li><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
             <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
 
-            <li class="header" style="position:absolute; bottom:0px; width:100%; font-size: 9.5px; text-align: center;"> <!-- To the right -->
-              <!-- Default to the left -->
-              <strong>Copyright &copy; 2015 <a href="#">AsapTutor</a>.</strong> All rights reserved.
-            </li>
-
           </ul><!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->
@@ -214,6 +215,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <section class="content">
           <!-- Your Page Content Here -->
           <div class="row">
+            <!--Bookings-->
             <div class="col-md-12">
               <!-- TABLE: LATEST ORDERS -->
               <div class="box box-info">
@@ -287,9 +289,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <a href="javascript::;" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
                 </div><!-- /.box-footer -->
               </div><!-- /.box -->
-          </div>
+          </div><!-- /.row -->
+
+
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
+
+
 
       <!-- Add the sidebar's background. This div must be placed
            immediately after the control sidebar -->
@@ -300,6 +306,164 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <strong>Follow Us!</strong>&nbsp;&nbsp;&nbsp;<i class="fa fa-facebook-official"> Facebook</i>&nbsp;&nbsp;&nbsp;<i class="fa fa-twitter-square"></i> Twitter&nbsp;&nbsp;&nbsp;<i class="fa fa-instagram"> Instagram</i>
       </footer>
+
+
+     <!-- Control Sidebar -->
+      <aside id="rightsidebaraside" class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul id="rightsidetabs" class="nav nav-tabs nav-justified control-sidebar-tabs">
+          <li id="tutorProfileRightBar"><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-user"></i></a></li>
+          <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div id="righttabcontent" class="tab-content" style="padding-left:0px; padding-right:0px;">
+          <!-- Chat tab content -->
+          <div class="tab-pane" id="control-sidebar-settings-tab">
+           <!-- Left col -->
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+                  <!-- DIRECT CHAT -->
+                  <div class="box box-warning direct-chat direct-chat-warning">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">Direct Chat</h3>
+                      <div class="box-tools pull-right">
+                        <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                      </div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                      <!-- Conversations are loaded here -->
+                      <div class="direct-chat-messages" id='chatMessages'>
+                        <!-- Message. Default to the left -->
+                        <div class="direct-chat-msg">
+                          <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-left">Alexander Pierce</span>
+                            <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                          </div><!-- /.direct-chat-info -->
+                          <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
+                          <div class="direct-chat-text">
+                            Is this template really for free? That's unbelievable!
+                          </div><!-- /.direct-chat-text -->
+                        </div><!-- /.direct-chat-msg -->
+
+                        <!-- Message to the right -->
+                        <div class="direct-chat-msg right">
+                          <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-right">Sarah Bullock</span>
+                            <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
+                          </div><!-- /.direct-chat-info -->
+                          <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image"><!-- /.direct-chat-img -->
+                          <div class="direct-chat-text">
+                            You better believe it!
+                          </div><!-- /.direct-chat-text -->
+                        </div><!-- /.direct-chat-msg -->
+
+                        
+
+                      </div><!--/.direct-chat-messages-->
+
+                      <!-- Contacts are loaded here -->
+                      <div class="direct-chat-contacts">
+                        <ul class="contacts-list">
+                          <li>
+                            <a href="#">
+                              <img class="contacts-list-img" src="dist/img/user1-128x128.jpg">
+                              <div class="contacts-list-info">
+                                <span class="contacts-list-name">
+                                  Count Dracula
+                                  <small class="contacts-list-date pull-right">2/28/2015</small>
+                                </span>
+                                <span class="contacts-list-msg">How have you been? I was...</span>
+                              </div><!-- /.contacts-list-info -->
+                            </a>
+                          </li><!-- End Contact Item -->
+                          <li>
+                            <a href="#">
+                              <img class="contacts-list-img" src="dist/img/user7-128x128.jpg">
+                              <div class="contacts-list-info">
+                                <span class="contacts-list-name">
+                                  Sarah Doe
+                                  <small class="contacts-list-date pull-right">2/23/2015</small>
+                                </span>
+                                <span class="contacts-list-msg">I will be waiting for...</span>
+                              </div><!-- /.contacts-list-info -->
+                            </a>
+                          </li><!-- End Contact Item -->
+                          <li>
+                            <a href="#">
+                              <img class="contacts-list-img" src="dist/img/user3-128x128.jpg">
+                              <div class="contacts-list-info">
+                                <span class="contacts-list-name">
+                                  Nadia Jolie
+                                  <small class="contacts-list-date pull-right">2/20/2015</small>
+                                </span>
+                                <span class="contacts-list-msg">I'll call you back at...</span>
+                              </div><!-- /.contacts-list-info -->
+                            </a>
+                          </li><!-- End Contact Item -->
+                          <li>
+                            <a href="#">
+                              <img class="contacts-list-img" src="dist/img/user5-128x128.jpg">
+                              <div class="contacts-list-info">
+                                <span class="contacts-list-name">
+                                  Nora S. Vans
+                                  <small class="contacts-list-date pull-right">2/10/2015</small>
+                                </span>
+                                <span class="contacts-list-msg">Where is your new...</span>
+                              </div><!-- /.contacts-list-info -->
+                            </a>
+                          </li><!-- End Contact Item -->
+                          <li>
+                            <a href="#">
+                              <img class="contacts-list-img" src="dist/img/user6-128x128.jpg">
+                              <div class="contacts-list-info">
+                                <span class="contacts-list-name">
+                                  John K.
+                                  <small class="contacts-list-date pull-right">1/27/2015</small>
+                                </span>
+                                <span class="contacts-list-msg">Can I take a look at...</span>
+                              </div><!-- /.contacts-list-info -->
+                            </a>
+                          </li><!-- End Contact Item -->
+                          <li>
+                            <a href="#">
+                              <img class="contacts-list-img" src="dist/img/user8-128x128.jpg">
+                              <div class="contacts-list-info">
+                                <span class="contacts-list-name">
+                                  Kenneth M.
+                                  <small class="contacts-list-date pull-right">1/4/2015</small>
+                                </span>
+                                <span class="contacts-list-msg">Never mind I found...</span>
+                              </div><!-- /.contacts-list-info -->
+                            </a>
+                          </li><!-- End Contact Item -->
+                        </ul><!-- /.contatcts-list -->
+                      </div><!-- /.direct-chat-pane -->
+                    </div><!-- /.box-body -->
+                    <div class="box-footer">
+                      <form action="#" method="post">
+                        <div class="input-group">
+                          <input type="text" name="message" placeholder="Type Message ..." class="form-control" id="msg">
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-warning btn-flat" onclick="sendMsg();">Send</button>
+                          </span>
+                        </div>
+                      </form>
+                    </div><!-- /.box-footer-->
+                  </div><!--/.direct-chat -->
+                </div><!-- /.col -->
+              </div><!-- /.row -->
+            </div><!-- /.col -->
+          </div><!-- /.tab-pane -->
+        </div>
+      </aside><!-- /.control-sidebar -->
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div id="controlsidebarbg" class="control-sidebar-bg"></div>
+
     </div><!-- ./wrapper -->
 
     <!-- REQUIRED JS SCRIPTS -->
@@ -317,11 +481,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Select2 -->
     <script src="plugins/select2/select2.full.min.js"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="dist/js/demo.js"></script>
+    <script src="dist/js/demoNoInject.js"></script>
     <!-- SlimScroll -->
     <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <!-- FastClick -->
     <script src="plugins/fastclick/fastclick.min.js"></script>
+    <!--Moment Time-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
     <script>
       $(function () {
         /* BOOTSTRAP SLIDER */
@@ -471,9 +637,62 @@ scratch. This page gets rid of all links and provides the needed markup only.
     function initializeChat(_this){
       console.log("TutorID: "+ _this.getAttribute("tutorID"));
       console.log("StudentID: "+ _this.getAttribute("studentID"));
+      $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
+      $.AdminLTE.controlSidebar.open();
 
       //Todo use TutorID and to initialize Chat
+      
     }
+/******* CHATBOX CODE - MOVE TO JS FILE *******/
+      function msgAdded(snapshot){
+          var msgObj = snapshot.val();
+          var uid=snapshot.key();
+          //$.each(usersObj,function(uid,userObj){
+            console.log("uid="+uid);
+            console.log(msgObj);
+            urlImg="dist/img/user1-128x128.jpg";
+            msgAdded2Ui(msgObj.msg,msgObj.sender,uid,urlImg);
+          //});      
+     };
+     function msgAdded2Ui(msg,sender,datetime, urlImg){
+          datetime=moment(datetime).format("MMM d h:m a");//todo fix
+          var otherside=(sender==="left")?"right":"left";
+          var chatMsg='<div class="direct-chat-msg '+sender+'">'+
+                          '<div class="direct-chat-info clearfix">'+
+                            '<span class="direct-chat-name pull-left">Alexander Pierce</span> '+
+                            '<span class="direct-chat-timestamp pull-'+otherside+'"> '+datetime+'</span>'+
+                          '</div><!-- /.direct-chat-info -->'+
+                          '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat-img -->'+
+                          '<div class="direct-chat-text">'+
+                            msg+
+                          '</div><!-- /.direct-chat-text -->'+
+                      '</div><!-- /.direct-chat-msg -->';
+          $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
+     }
+
+      //Get id of tutor and student and get all messages related to them
+      var tutorId = null;
+      var studentId = null;
+      //sort which id is first TODO
+
+      var sortedChatUid = "facebook:10205542375624024_facebook:1129363767081285";
+
+      var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
+
+      //load messages via child added
+      chatRef.on("child_added",function(snapshot){
+        msgAdded(snapshot);
+        //userMarkImgAutoPosAdjust();
+      });
+
+      //add new message using set
+      function sendMsg(){
+          var msg=$("#msg").val();
+          var sender="left";
+          var datetime=moment().format();
+          console.log(datetime);
+          chatRef.child(datetime).set({msg:msg,sender:sender});
+      };
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
