@@ -472,6 +472,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         ref.unauth();
         window.location = '../index.html';
       }
+      var onFindTutorChange = null;
       function findTutors(){
 
         // Show Find Tutor as Header
@@ -490,8 +491,13 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
 
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
 
+        //Stop listener if there is already is one to prevent unneeded database calls.
+        if(onFindTutorChange){
+          ref.off('value', onFindTutorChange);
+        }
+
         // Attach an asynchronous callback to read the data at our posts reference
-        ref.on("value", function(snapshot) {
+        onFindTutorChange = ref.on("value", function(snapshot) {
           var userArr = snapshot.val();
 
           //Clear list before showing

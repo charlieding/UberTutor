@@ -391,12 +391,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
     /******* MyBooking CODE - MOVE TO JS FILE *******/
-    function loadBookings(currUserSnapshot){
+      var onUsersAppointmentChange = null;
+      var onAppointmentChange = null;
+
+      function loadBookings(currUserSnapshot){
         //console.log(currUserSnapshot.key());
-        var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+currUserSnapshot.key()+"/appointmentIDs");
+        var usersRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+currUserSnapshot.key()+"/appointmentIDs");
+        
+        //Remove listener if it already exists to prevent duplicate database calls
+        if(onUsersAppointmentChange){
+          usersRef.off('value', onUsersAppointmentChange);
+        } 
 
         // Attach an asynchronous callback to read the data at our posts reference
-        ref.on("value", function(snapshot) {
+        onUsersAppointmentChange = usersRef.on("value", function(snapshot) {
           //console.log(snapshot.val());
           var userAppointments = currUserSnapshot.val().appointmentIDs;
           var allAppointments = snapshot.val();
@@ -413,9 +421,41 @@ scratch. This page gets rid of all links and provides the needed markup only.
               console.log(uid);
               //Get the entire Appointment Obj from Mapping
               var ref = new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+uid);
-              ref.on("value", function(appointmentSnapshot) {
+              
+              //Remove listener if it already exists to prevent duplicate database calls
+              if(onAppointmentChange){
+                usersRef.off('value', onAppointmentChange);
+              } 
+
+              onAppointmentChange = ref.on("value", function(appointmentSnapshot) {
+
+                //Default Unknown Status Style
+                var statusStyle = "bg-gray-active color-palette"
+
+                if(appointmentSnapshot.val().status == "Awaiting Response"){
+                  var statusStyle = "label-primary";
+                }
+                if(appointmentSnapshot.val().status == "In Session"){
+                  var statusStyle = "label-info";
+                }
+                if(appointmentSnapshot.val().status == "Pending Payment"){
+                  var statusStyle = "label-warning";
+                }
+                if(appointmentSnapshot.val().status == "Finished"){
+                  var statusStyle = "label-success";
+                }
+                if(appointmentSnapshot.val().status == "Cancelled"){
+                  var statusStyle = "label-danger";
+                }
+
                 //Update Actual Bookings on UI
-                $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label label-info'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+"</div></td></tr>");
+                if($("#bookings a").text().indexOf(uid) > -1){
+                  //Already Exist, just remove all and readd everything
+                  loadBookings(currUserSnapshot);
+                } else {
+                  //Doesn't Exist yet, just add
+                  $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+" <span tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'></i></span>"+"</div></td></tr>");
+                }
 
               },function (errorObject) {
                 console.log("The read failed: " + errorObject.code);
@@ -427,6 +467,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }, function (errorObject) {
           console.log("The read failed: " + errorObject.code);
         });
+    }
+    function initializeChat(_this){
+      console.log("TutorID: "+ _this.getAttribute("tutorID"));
+      console.log("StudentID: "+ _this.getAttribute("studentID"));
+
+      //Todo use TutorID and to initialize Chat
     }
     </script>
 
