@@ -558,7 +558,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     /******* MyBooking CODE - MOVE TO JS FILE *******/
       var onUsersAppointmentChange = null;
-      var onAppointmentChange = null;
+      var refAndOnAppointmentChangeMap = {};
 
       function loadBookings(currUserSnapshot){
         //console.log(currUserSnapshot.key());
@@ -568,15 +568,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
         if(onUsersAppointmentChange){
           usersRef.off('value', onUsersAppointmentChange);
         } 
+        //Remove listener if it already exists to prevent duplicate database calls
+        if(refAndOnAppointmentChangeMap){
+          $.each(refAndOnAppointmentChangeMap, function(key, value){
+            console.log("Listener Removed");
+            new Firebase(key).off('value',value);
+          });
+        } 
 
         // Attach an asynchronous callback to read the data at our posts reference
-        onUsersAppointmentChange = usersRef.on("value", function(snapshot) {
+        var onUsersAppointmentChange = usersRef.on("value", function(snapshot) {
           //console.log(snapshot.val());
           var userAppointments = currUserSnapshot.val().appointmentIDs;
           var allAppointments = snapshot.val();
 
-          console.log(userAppointments);
-          console.log(allAppointments);
+          //console.log(userAppointments);
+          //console.log(allAppointments);
 
 
           //Clear list before showing
@@ -587,14 +594,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
               console.log(uid);
               //Get the entire Appointment Obj from Mapping
               var ref = new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+uid);
-              
-              //Remove listener if it already exists to prevent duplicate database calls
-              if(onAppointmentChange){
-                ref.off('value', onAppointmentChange);
-              } 
 
-              onAppointmentChange = ref.on("value", function(appointmentSnapshot) {
-                console.log("LISTENER ADDED! ");
+              refAndOnAppointmentChangeMap[ref] = ref.on("value", function(appointmentSnapshot) {
+                //console.log("LISTENER ADDED! "); //Listers are added here as well as any child changed object will trigger this
 
                 //Default Unknown Status Style
                 var statusStyle = "bg-gray-active color-palette"
@@ -621,7 +623,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   loadBookings(currUserSnapshot);
                 } else {
                   //Doesn't Exist yet, just add
-                  $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+" <span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'></i></span>"+"</div></td></tr>");
+                  $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+" &nbsp;&nbsp;<span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"</div></td></tr>");
                 }
 
               },function (errorObject) {
@@ -629,7 +631,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               });
             });
           } else{
-            $("#bookings").prepend("<tr><td>"+"Empty"+"</td><td>"+"</td><td><span class='label label-info'>"+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+"<a href="+"/STUDENT/index.html"+">"+"Find A Tutor"+"</a>"+"</div></td></tr>");
+            $("#bookings").prepend("<tr><td>"+"Empty"+"</td><td>"+
+              "</td><td><span class='label label-info'>"+
+              "</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+
+              "<a href="+"/STUDENT/index.html"+">"+"Find A Tutor"+"</a>"
+              +"</div></td></tr>");
           }
         }, function (errorObject) {
           console.log("The read failed: " + errorObject.code);
@@ -639,9 +645,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
       console.log("TutorID: "+ _this.getAttribute("tutorID"));
       console.log("StudentID: "+ _this.getAttribute("studentID"));
       console.log("CurrentUserID: " + _this.getAttribute("currentUserID"));
-      $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
-      $.AdminLTE.controlSidebar.open();
       
+      $.AdminLTE.controlSidebar.open();
+      $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
+
       //pass info to chatbox
       chatBox(_this.getAttribute("tutorID"), _this.getAttribute("studentID"), _this.getAttribute("currentUserID"));
     }
