@@ -446,7 +446,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="box-footer">
                       <form action="#" method="post">
                         <div class="input-group">
-                          <input type="text" name="message" placeholder="Type Message ..." class="form-control" id="msg">
+                          <input type="text" name="message" placeholder="Type Message ..." class="form-control" id="msg" onkeydown="msgkeydwn(event);">
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-warning btn-flat" onclick="sendMsg();">Send</button>
                           </span>
@@ -652,23 +652,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
       //pass info to chatbox
       chatBox(_this.getAttribute("tutorID"), _this.getAttribute("studentID"), _this.getAttribute("currentUserID"));
     }
+
+
+
+
+
+
+
+
+
 /******* CHATBOX CODE - MOVE TO JS FILE *******/
     function msgAdded(snapshot){
       var msgObj = snapshot.val();
       var uid=snapshot.key();
+      var ownerIdIndx=msgObj.ownerIdIndx;
+      var boxside=chatboxInfo.getSide(ownerIdIndx);
       //$.each(usersObj,function(uid,userObj){
       console.log("uid="+uid);
       console.log(msgObj);
-      urlImg="dist/img/user1-128x128.jpg";
-      msgAdded2Ui(msgObj.msg,msgObj.sender,uid,urlImg);
+      var usr=chatboxInfo.getUser(ownerIdIndx);
+      urlImg=usr.imgUrl;
+      msgAdded2Ui(msgObj.msg, boxside, uid, urlImg, usr.displayName);
       //});      
     };
-    function msgAdded2Ui(msg,sender,datetime, urlImg){
+    function msgAdded2Ui(msg,sender,datetime, urlImg, name){
           datetime=moment(datetime).format("MMM d h:m a");//todo fix
           var otherside=(sender==="left")?"right":"left";
           var chatMsg='<div class="direct-chat-msg '+sender+'">'+
                           '<div class="direct-chat-info clearfix">'+
-                            '<span class="direct-chat-name pull-left">Alexander Pierce</span> '+
+                            '<span class="direct-chat-name pull-left">'+name+'</span> '+
                             '<span class="direct-chat-timestamp pull-'+otherside+'"> '+datetime+'</span>'+
                           '</div><!-- /.direct-chat-info -->'+
                           '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat-img -->'+
@@ -677,39 +689,91 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           '</div><!-- /.direct-chat-text -->'+
                       '</div><!-- /.direct-chat-msg -->';
           $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
-     }
+     };
+     function GenChatBoxInfo(currUserID, tutorID, studentID){
+        var arr=[tutorID, studentID];
+        arr.sort();
+        var ret={};
+        ret.ownerIdIndx=arr.indexOf(currUserID);
+        ret.targetIdIndx=0;
+        if(ret.ownerIdIndx===0){
+           ret.targetIdIndx=1;
+        }
+        ret.sortedChatUid=arr.join("_");
+
+        function fbGetUser(uid){
+          var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+uid);
+          var usrObj={};
+          var abind=usrsRef.on("value",function(snapshot){
+              usrObj=snapshot.val();
+          });
+          usrsRef.off("value",abind);
+          return usrObj;
+        };
+        ret.owner =fbGetUser (arr[ret.ownerIdIndx]);
+        ret.target=fbGetUser (arr[ret.targetIdIndx]);
+
+
+        var userArr=[];
+        userArr[ret.ownerIdIndx]=ret.owner;
+        userArr[ret.targetIdIndx]=ret.target;
+
+        this.data=ret;
+
+        this.getUser=function(ownerIdIndx){
+          return userArr[ownerIdIndx];
+        };
+        this.getSide=function(ownerIdIndx){
+          var boxside="left";
+          if( ownerIdIndx === this.data.ownerIdIndx){
+            boxside="right";
+          };
+          return boxside;
+        };
+     };
+
+     var chatboxInfo=null;
 
       var onChatChange = null;
-      var oldChatRef = null;
+      var chatRef = null;
       function chatBox(currUserID, tutorID, studentID){
+        chatboxInfo = new GenChatBoxInfo(currUserID, tutorID, studentID);
+
         //Remove old chat box listener 
         if(onChatChange){
-          oldChatRef.off("child_added", onChatChange);
+          chatRef.off("child_added", onChatChange);
         }
         //Get id of tutor and student and get all messages related to them
         var tutorId = null;
         var studentId = null;
         //sort which id is first TODO
 
-        var sortedChatUid = "facebook:10205542375624024_facebook:1129363767081285";
+        var sortedChatUid = chatboxInfo.data.sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
 
-        var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
-        oldChatRef = chatRef;
+        chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
         //load messages via child added
         onChatChange = chatRef.on("child_added",function(snapshot){
           msgAdded(snapshot);
           //userMarkImgAutoPosAdjust();
         });
-      }
+      };
 
       //add new message using set
       function sendMsg(){
         var msg=$("#msg").val();
-        var sender="left";
+        var ownerIdIndx=chatboxInfo.data.ownerIdIndx;
         var datetime=moment().format();
         console.log(datetime);
-        chatRef.child(datetime).set({msg:msg,sender:sender});
+        chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
+      function msgkeydwn(e){
+        console.log(e);
+        if(e.which==13){
+          sendMsg();
+        };
+      };
+
+
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
