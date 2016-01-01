@@ -191,11 +191,12 @@
           //});      
      };
      function msgAdded2Ui(msg,sender,datetime, urlImg){
-          datatime=moment(datetime).format("MMM d h:m a");//todo fix
+          datetime=moment(datetime).format("MMM d h:m a");//todo fix
+          var otherside=(sender==="left")?"right":"left";
           var chatMsg='<div class="direct-chat-msg '+sender+'">'+
                           '<div class="direct-chat-info clearfix">'+
                             '<span class="direct-chat-name pull-left">Alexander Pierce</span> '+
-                            '<span class=e"direct-chat-timestamp pull-right"> '+datetime+'</span>'+
+                            '<span class="direct-chat-timestamp pull-'+otherside+'"> '+datetime+'</span>'+
                           '</div><!-- /.direct-chat-info -->'+
                           '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat-img -->'+
                           '<div class="direct-chat-text">'+
