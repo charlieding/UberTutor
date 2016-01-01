@@ -627,7 +627,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         //get Time, Day, latlng, duration, course, questionTopic
         var time = $("#tutorTime").val();
         var day = $("#tutorDay").val();
-        var latlng = $("#eventPos").val().replace("(", "").replace(")","").replace(" ","");
+        var latlng = $("#eventPos").attr("latlng");
+        var latlngAddress = $("#eventPos").val().replace("(", "").replace(")","").replace(" ","");
         var duration = $("#duration").text();
         var courses = $("#select2ClassSelection").select2('val')+"";
         var questionTopic = $("#topicQuestion").val();
@@ -642,6 +643,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           time: time,
           day: day,
           latlng: latlng,
+          latlngAddress: latlngAddress,
           duration: duration,
           cost: "null",
           status: "Awaiting Response",

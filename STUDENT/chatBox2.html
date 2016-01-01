@@ -13,9 +13,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-    <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
-    <script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -169,7 +167,15 @@
     </div><!-- ./wrapper -->
     <script>
       var myApp = angular.module("myApp", ["firebase"]);
-      var ref = new Firebase("https://d4t799en9h6.firebaseio-demo.com/chat");
+
+      //Get id of tutor and student and get all messages related to them
+      var tutorId = null;
+      var studentId = null;
+      //sort which id is first TODO
+
+      var sortedChatUid = "facebook:10205542375624024_facebook:1129363767081285";
+
+      var ref = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
 
       myApp.controller("MyController", ["$scope", "$firebaseArray",
         function($scope, $firebaseArray) {
@@ -177,9 +183,45 @@
 
           // GET MESSAGES AS AN ARRAY
           $scope.messages = $firebaseArray(ref);
-          $scope.name='ff';
+          $scope.name='asf';
           
+          // function loadChat(currUserSnapshot){
+          //   //console.log(currUserSnapshot.key());
+          //   var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+currUserSnapshot.key()+"/appointmentIDs");
 
+          //   // Attach an asynchronous callback to read the data at our posts reference
+          //   ref.on("value", function(snapshot) {
+          //     //console.log(snapshot.val());
+          //     var userAppointments = currUserSnapshot.val().appointmentIDs;
+          //     var allAppointments = snapshot.val();
+
+          //     console.log(userAppointments);
+          //     console.log(allAppointments);
+
+
+          //     //Clear list before showing
+          //     $("#bookings").empty();
+          //     //Go through every appointment for the user, map it to a real appointment, the display it all
+          //     if(userAppointments && allAppointments){
+          //       $.each(userAppointments, function(uid, appointmentMapObj){
+          //         console.log(uid);
+          //         //Get the entire Appointment Obj from Mapping
+          //         var ref = new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+uid);
+          //         ref.on("value", function(appointmentSnapshot) {
+          //           //Update Actual Bookings on UI
+          //           $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label label-info'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+"</div></td></tr>");
+
+          //         },function (errorObject) {
+          //           console.log("The read failed: " + errorObject.code);
+          //         });
+          //       });
+          //     } else{
+          //       $("#bookings").prepend("<tr><td>"+"Empty"+"</td><td>"+"</td><td><span class='label label-info'>"+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+"<a href="+"/STUDENT/index.html"+">"+"Find A Tutor"+"</a>"+"</div></td></tr>");
+          //     }
+          //   }, function (errorObject) {
+          //     console.log("The read failed: " + errorObject.code);
+          //   });
+          // }
           
           function addmsg(){
               //ALLOW CUSTOM OR ANONYMOUS USER NAMES
@@ -189,9 +231,14 @@
               $scope.messages.$add({
                 from: name,
                 to: name,
+                messageDirection: "left",//left or right
                 body: $scope.msg,
-                time: 123,
+                time: 123,  //moment().parse(HH MM SS);
+              }).then(function(ref){
+                console.log(ref.key());
               });
+
+              //console.log("TEST: ", test);
 
               //RESET MESSAGE
               $scope.msg = "";          
@@ -237,6 +284,9 @@
       ]);
     </script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
     <!-- jQuery 2.1.4 -->
     <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
