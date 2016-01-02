@@ -185,27 +185,27 @@ function FbaseUserMarkImgs(map){
       var arrLatlng=MyMapUti.getUserMarkImgFlightPath(mark);
       mark.m_flightPath.setOptions({map:map,path:arrLatlng});
     };
+
     var userShowCondition=null;
     function allowShowup(userObj){
+      if(null===userShowCondition){//no any cpmditions.
+        return true;
+      }
       var ret=false;
-      if(userShowCondition){
-        $.each(userShowCondition,function(key,val){
-            if( userObj[key] && userObj[key] === val){
-              ret=true;
-            };
-        });
-
-
-        //todo other conditions.
-        switch(userShowCondition.userType){
-          case "tutor":
-          break;
-          case "ustudent":
-          break;        
-          default:
-          break;
-        };        
-      };
+      $.each(userShowCondition,function(key,val){
+          if( userObj[key] && userObj[key] === val){
+            ret=true;
+          };
+      });
+      //todo other conditions.
+      switch(userShowCondition.otherstr){
+        case "admin":ret=true;
+        break;
+        case "guest":ret=true;
+        break;        
+        default:
+        break;
+      };        
       return ret;
     };
     function updateImgOnMap(uid,userObj,map){
@@ -229,7 +229,7 @@ function FbaseUserMarkImgs(map){
     function on_child_change(snapshot,changetype){
           var userObj = snapshot.val();
           var uid=snapshot.key();
-          console.log("uid="+uid,userObj);
+          //console.log("uid="+uid,userObj);
           switch(changetype){
             case "child_removed":updateImgOnMap(uid,userObj,null);
             break;
