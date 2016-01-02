@@ -797,13 +797,13 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
 
 };////
 
-      var mfcb=null;
+      var fireChatBox=null;
       function chatBox(tutorID, studentID, currUserID){
           $("#chatMessages").empty();
           if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
 
-          if(mfcb)mfcb.CloseChatBox();
-          mfcb=new MyFireChatBox(tutorID, studentID, currUserID);
+          if(fireChatBox)fireChatBox.CloseChatBox();
+          fireChatBox=new MyFireChatBox(tutorID, studentID, currUserID);
       };
 
       //add new message using set
@@ -815,7 +815,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         var datetime=moment().format();
         console.log(datetime);
         //chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
-        mfcb.SendMsg(datetime,msg);
+        fireChatBox.SendMsg(datetime,msg);
         $("#msg").val('');
       };
       function msgkeydwn(e){
