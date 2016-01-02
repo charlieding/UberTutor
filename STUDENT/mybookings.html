@@ -768,6 +768,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
       //add new message using set
       function sendMsg(){
         var msg=$("#msg").val();
+        msg=$.trim(msg);
+        if(msg.length===0)return;
         var ownerIdIndx=chatboxInfo.data.ownerIdIndx;
         var datetime=moment().format();
         console.log(datetime);
