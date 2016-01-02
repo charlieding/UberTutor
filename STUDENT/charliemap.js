@@ -394,7 +394,7 @@ function MyMapMgr(){
 
        fbum=new FbaseUserMarkImgs(map);    
        fbum.setConditions({userShowCondition:{userType:"tutor"}});
-       fbum.setConditions({userShowCondition:null});
+       //fbum.setConditions({userShowCondition:null});
     };
 
 
