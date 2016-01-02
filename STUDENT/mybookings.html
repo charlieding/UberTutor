@@ -228,13 +228,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <div class="table-responsive">
-                    <table class="table no-margin">
+                    <table class="table no-margin table-hover">
                       <thead>
                         <tr>
-                          <th>Order ID</th>
+                          <th>Message</th>
+                          <th>Tutor</th>
+                          <th>Date</th>
+                          <th>Location</th>
                           <th>Class</th>
                           <th>Status</th>
-                          <th>Tutor</th>
+                          <th>Action Item(s)</th>
                         </tr>
                       </thead>
                       <tbody id="bookings">
@@ -285,8 +288,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div><!-- /.table-responsive -->
                 </div><!-- /.box-body -->
                 <div class="box-footer clearfix">
-                  <a href="javascript::;" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
-                  <a href="javascript::;" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
+                  <a href="index.html" class="btn btn-sm btn-info btn-flat pull-left">Find a Tutor</a>
+                  <a href="#" onclick="alert('Coming Soon...');" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
                 </div><!-- /.box-footer -->
               </div><!-- /.box -->
           </div><!-- /.row -->
@@ -554,6 +557,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         ref.unauth();
         window.location = '../index.html';
       }
+      function cancelAppointment(){
+        alert("coming soon...");
+      }
 
 
     /******* MyBooking CODE - MOVE TO JS FILE *******/
@@ -581,6 +587,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           //console.log(snapshot.val());
           var userAppointments = currUserSnapshot.val().appointmentIDs;
           var allAppointments = snapshot.val();
+          var uids = "";
 
           //console.log(userAppointments);
           //console.log(allAppointments);
@@ -599,31 +606,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 //console.log("LISTENER ADDED! "); //Listers are added here as well as any child changed object will trigger this
 
                 //Default Unknown Status Style
-                var statusStyle = "bg-gray-active color-palette"
+                var statusStyle = "bg-gray-active color-palette";
+                var actionItem = "None";
 
                 if(appointmentSnapshot.val().status == "Awaiting Response"){
                   var statusStyle = "label-primary";
+                  var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "In Session"){
                   var statusStyle = "label-info";
                 }
                 if(appointmentSnapshot.val().status == "Pending Payment"){
                   var statusStyle = "label-warning";
+                  var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "Finished"){
                   var statusStyle = "label-success";
+                  var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "Cancelled"){
                   var statusStyle = "label-danger";
                 }
 
                 //Update Actual Bookings on UI
-                if($("#bookings a").text().indexOf(uid) > -1){
+                if(uids.indexOf(uid) > -1){
                   //Already Exist, just remove all and readd everything
                   loadBookings(currUserSnapshot);
                 } else {
                   //Doesn't Exist yet, just add
-                  $("#bookings").prepend("<tr><td><a style='font-size:10px' href="+"TBA-TODO"+">"+uid+"</a></td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+" &nbsp;&nbsp;<span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"</div></td></tr>");
+                  uids = uids+uid;
+                  $("#bookings").prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span></div></td><td>"+appointmentSnapshot.val().tutorDisplayName+"</td><td class='col-md-2'><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("M/D/YY h:mm a")+"</span></td><td class='col-md-3'>"+appointmentSnapshot.val().latlngAddress+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+actionItem+"</td></tr>");
                 }
 
               },function (errorObject) {
