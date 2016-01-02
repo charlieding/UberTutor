@@ -142,11 +142,13 @@ var MyMapUti={
 
 
 //TODO: auto move img if overlaps.
-function FbaseUsers(map){
+function FbaseUserMarkImgs(){
+    var map=null;
+    var defaultCenterLatLng=new google.maps.LatLng(+34.070044598142, -84.16012274947661);
     function userMarkImg(userObj){
             var latlng=userObj.latlng;
             if( !userObj.latlng || userObj.latlng.length===0){
-                latlng=new google.maps.LatLng(+34.070044598142, -84.16012274947661);
+                latlng=defaultCenterLatLng;
             };
             var imgUrl=userObj.imgUrl;
             if(!imgUrl || imgUrl.length===0){
@@ -157,27 +159,6 @@ function FbaseUsers(map){
             return obj;
     }; 
     var markImgArr={};
-    function userMarkImgUpdate(uid,snapshot,ops){
-         console.log(uid,snapshot,", ops="+ops);
-         var latlng = snapshot.val();
-         var key = snapshot.key();
-         console.log(key+" := "+latlng);
-
-         if(key!="latlng"){
-            return;
-         }
-         console.log("op..");
-         var mark=markImgArr[uid];
-         mark.setMap(null);
-         var pos=MyMapUti.mapLatLng(latlng);       
-         if(null==pos) return;    
- 
-         if("child_changed"===ops)  {
-            mark.setOptions({position:pos,map:map}); 
-           markImgArr[uid]=mark;                        
-         }
-    };
-
     function overlapAdjust(markImgArr,mark){
         function isOverLap(a,b){
         var dx=a.lat()-b.lat(),
@@ -190,7 +171,7 @@ function FbaseUsers(map){
       } ;  
       var overlapIdx=0;
       var initialCenterLatLng=map.m_initialCenterLatLng;
-      if(true===isOverLap(initialCenterLatLng,mark.m_origLatLng)){
+      if(true===isOverLap(initialCenterLatLng, mark.m_origLatLng)){
             overlapIdx++;
       };      
       $.each(markImgArr,function(uid,obj){
@@ -204,46 +185,63 @@ function FbaseUsers(map){
       var arrLatlng=MyMapUti.getUserMarkImgFlightPath(mark);
       mark.m_flightPath.setOptions({map:map,path:arrLatlng});
     };
-
-
-    function userMarkImgAdd(snapshot){
-          var userObj = snapshot.val();
-          var uid=snapshot.key();
-          //$.each(usersObj,function(uid,userObj){
-            console.log("uid="+uid,userObj);
-
-            if(userObj.type!="tutor"){
-              //return;
-            }
-
-            var markimg=userMarkImg(userObj);
-            markimg.setMap(map);
-            overlapAdjust(markImgArr,markimg);
-            markImgArr[uid]=markimg;
-
-            ref.child(uid).child("latlng").on("child_removed",function(snapshot,prevKey){
-                userMarkImgUpdate(uid,snapshot,'child_removed');
-            });
-            ref.child(uid).child("latlng").on("child_changed",function(snapshot,prevKey){
-                userMarkImgUpdate(uid,snapshot,'child_changed');
-            });
-
-          //});      
+    function allowShowup(userObj){
+      return true;
+    };
+    function updateImgOnMap(uid,userObj,map){
+        var mark=markImgArr[uid];
+        if(mark){
+          mark.setMap(null);
+          mark.m_flightPath.setMap(null);
+          delete markImgArr[uid];
+        }
+         
+        if(map){
+           mark=userMarkImg(userObj);
+           if( allowShowup(userObj) ){
+              mark.setMap(map);
+              overlapAdjust(markImgArr,mark);
+           };
+           markImgArr[uid]=mark;
+        }
     };
 
+    function on_child_change(snapshot,changetype){
+          var userObj = snapshot.val();
+          var uid=snapshot.key();
+          console.log("uid="+uid,userObj);
+          switch(changetype){
+            case "child_removed":updateImgOnMap(uid,userObj,null);
+            break;
+            case "child_changed":updateImgOnMap(uid,userObj,map);
+            break;
+            default:updateImgOnMap(uid,userObj,map);
+            break;
+          }; 
+    };
+
+    this.set=function(jparams){
+        map=jparams.map||alert("no map");
+        defaultCenterLatLng= jparams.centerLatLng||map.getCenter();
 
 
+        var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
+    
+        ref.on("child_added",function(snapshot){
+            on_child_change(snapshot,'child_added');
+            //userMarkImgAutoPosAdjust();
+        });
+    
+        ref.on("child_removed",function(snapshot,prevKey){
+          console.log("prevKey",prevKey);
+            on_child_change(snapshot,'child_removed');
+        });
+        ref.on("child_changed",function(snapshot,prevKey){
+          console.log("prevKey",prevKey);
+            on_child_change(snapshot,'child_changed');
+        });
 
-
-    var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
-
-    ref.on("value",function(snapshot){
-        //usersMarkImgs(snapshot);
-    });
-    ref.on("child_added",function(snapshot){
-        userMarkImgAdd(snapshot);
-        //userMarkImgAutoPosAdjust();
-    });
+    };
 };
     
 
@@ -372,9 +370,13 @@ function MyMapMgr(){
         });      
 
 
-       var fbu=new FbaseUsers(map);    
+       var fbu=new FbaseUserMarkImgs();    
+       fbu.set({map:map});
 
     };
+
+
+
 
     this.resetMap=function(){
       map.setOptions({center: centerLatLng});
