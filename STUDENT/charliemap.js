@@ -142,9 +142,9 @@ var MyMapUti={
 
 
 //TODO: auto move img if overlaps.
-function FbaseUserMarkImgs(){
-    var map=null;
-    var defaultCenterLatLng=new google.maps.LatLng(+34.070044598142, -84.16012274947661);
+function FbaseUserMarkImgs(map){
+    var defaultCenterLatLng=map.getCenter();//new google.maps.LatLng(+34.070044598142, -84.16012274947661);
+
     function userMarkImg(userObj){
             var latlng=userObj.latlng;
             if( !userObj.latlng || userObj.latlng.length===0){
@@ -185,8 +185,28 @@ function FbaseUserMarkImgs(){
       var arrLatlng=MyMapUti.getUserMarkImgFlightPath(mark);
       mark.m_flightPath.setOptions({map:map,path:arrLatlng});
     };
+    var userShowCondition=null;
     function allowShowup(userObj){
-      return true;
+      var ret=false;
+      if(userShowCondition){
+        $.each(userShowCondition,function(key,val){
+            if( userObj[key] && userObj[key] === val){
+              ret=true;
+            };
+        });
+
+
+        //todo other conditions.
+        switch(userShowCondition.userType){
+          case "tutor":
+          break;
+          case "ustudent":
+          break;        
+          default:
+          break;
+        };        
+      };
+      return ret;
     };
     function updateImgOnMap(uid,userObj,map){
         var mark=markImgArr[uid];
@@ -219,12 +239,7 @@ function FbaseUserMarkImgs(){
             break;
           }; 
     };
-
-    this.set=function(jparams){
-        map=jparams.map||alert("no map");
-        defaultCenterLatLng= jparams.centerLatLng||map.getCenter();
-
-
+    function firemap(){
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
     
         ref.on("child_added",function(snapshot){
@@ -240,8 +255,13 @@ function FbaseUserMarkImgs(){
           console.log("prevKey",prevKey);
             on_child_change(snapshot,'child_changed');
         });
-
     };
+    this.setOptions=function(jpar){
+        defaultCenterLatLng= jpar.centerLatLng||defaultCenterLatLng;
+        userShowCondition=jpar.userShowCondition||userShowCondition;
+    };
+
+    firemap();
 };
     
 
@@ -270,6 +290,8 @@ function MyMapMgr(){
     var infowindow=null;
     var centerLatLng=null;
     var draggableCursor=null;
+
+    var fbum=null;
 
 
 
@@ -370,9 +392,8 @@ function MyMapMgr(){
         });      
 
 
-       var fbu=new FbaseUserMarkImgs();    
-       fbu.set({map:map});
-
+       fbum=new FbaseUserMarkImgs(map);    
+       fbum.setOptions({userShowCondition:{userType:"tutor"}});
     };
 
 
@@ -401,7 +422,7 @@ function MyMapMgr(){
 
 
 
-};//
+};//MyMapMgr//
 
 
 
