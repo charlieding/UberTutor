@@ -675,12 +675,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
       msgAdded2Ui(msgObj.msg, boxside, uid, urlImg, usr.displayName);
       //});      
     };
-    function msgAdded2Ui(msg,sender,datetime, urlImg, name){
+    function msgAdded2Ui(msg,side,datetime, urlImg, name){
           datetime=moment(datetime).format("MMM d h:m a");//todo fix
-          var otherside=(sender==="left")?"right":"left";
-          var chatMsg='<div class="direct-chat-msg '+sender+'">'+
+          var otherside=(side==="left")?"right":"left";
+          var chatMsg='<div class="direct-chat-msg '+side+'">'+
                           '<div class="direct-chat-info clearfix">'+
-                            '<span class="direct-chat-name pull-left">'+name+'</span> '+
+                            '<span class="direct-chat-name pull-'+side+'">'+name+'</span> '+
                             '<span class="direct-chat-timestamp pull-'+otherside+'"> '+datetime+'</span>'+
                           '</div><!-- /.direct-chat-info -->'+
                           '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat-img -->'+
@@ -690,42 +690,41 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       '</div><!-- /.direct-chat-msg -->';
           $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
      };
-     function GenChatBoxInfo(currUserID, tutorID, studentID){
+
+
+
+
+     function GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj){
+      if(tutorID===studentID) return alert("self chat");
         var arr=[tutorID, studentID];
         arr.sort();
+        console.log(arr);
         var ret={};
+        ret.currUserID=currUserID;
         ret.ownerIdIndx=arr.indexOf(currUserID);
+        if(ret.ownerIdIndx<0) return alert("not find:"+currUserID);
         ret.targetIdIndx=0;
         if(ret.ownerIdIndx===0){
            ret.targetIdIndx=1;
         }
         ret.sortedChatUid=arr.join("_");
 
-        function fbGetUser(uid){
-          var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+uid);
-          var usrObj={};
-          var abind=usrsRef.on("value",function(snapshot){
-              usrObj=snapshot.val();
-          });
-          usrsRef.off("value",abind);
-          return usrObj;
+        ret.uidArr=arr;
+        ret.usrArr=[];
+
+        for(var i=0;i<arr.length;i++){
+                var uid=arr[i];
+                ret.usrArr[i]=usrsObj[uid];
         };
-        ret.owner =fbGetUser (arr[ret.ownerIdIndx]);
-        ret.target=fbGetUser (arr[ret.targetIdIndx]);
-
-
-        var userArr=[];
-        userArr[ret.ownerIdIndx]=ret.owner;
-        userArr[ret.targetIdIndx]=ret.target;
 
         this.data=ret;
 
         this.getUser=function(ownerIdIndx){
-          return userArr[ownerIdIndx];
+          return this.data.usrArr[ownerIdIndx];
         };
         this.getSide=function(ownerIdIndx){
           var boxside="left";
-          if( ownerIdIndx === this.data.ownerIdIndx){
+          if( this.data.currUserID === this.data.uidArr[ownerIdIndx]){
             boxside="right";
           };
           return boxside;
@@ -737,8 +736,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
       var onChatChange = null;
       var chatRef = null;
       function chatBox(tutorID, studentID, currUserID){
-        chatboxInfo = new GenChatBoxInfo(currUserID, tutorID, studentID);
-
+          if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
+          var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
+          usrsRef.once("value",function(snapshot){
+              var usrsObj=snapshot.val();
+              chatBoxBuild(tutorID, studentID, currUserID,usrsObj);
+          });
+      };
+      function chatBoxBuild(tutorID, studentID, currUserID, usrsObj){
+        chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj);
+        chatBoxFireup(chatboxInfo);
+      };
+      function chatBoxFireup(chatboxInfo){
         //Remove old chat box listener 
         if(onChatChange){
           chatRef.off("child_added", onChatChange);
@@ -755,6 +764,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
       };
 
+
       //add new message using set
       function sendMsg(){
         var msg=$("#msg").val();
@@ -762,15 +772,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var datetime=moment().format();
         console.log(datetime);
         chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
+        $("#msg").val('');
       };
       function msgkeydwn(e){
-        console.log(e);
-        if(e.which==13){
-          sendMsg();
+        //console.log(e);
+        if(e.keyCode===13 || e.which===13){
+           sendMsg();
         };
+        return true;
       };
 
-
+  $(document).ready(function() {
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
