@@ -677,7 +677,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 
-
+var MyFireChatBox=function(tutorID, studentID, currUserID){
 
      function GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj){
       if(tutorID===studentID) return alert("self chat");
@@ -719,12 +719,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
      };
 
-
-
-
       var chatboxInfo=null;
       var onChatChange = null;
       var chatRef = null;      
+      function DisconnectChat(){
+        //Remove old chat box listener 
+        if(onChatChange){
+          chatRef.off("child_added", onChatChange);
+        }
+      };
       function FireChatUsers(tutorID, studentID, currUserID){
           var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
           usrsRef.once("value",function(snapshot){
@@ -738,11 +741,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         FireChatMsgs(chatboxInfo);
       };
       function FireChatMsgs(chatboxInfo){
-        //Remove old chat box listener 
-        if(onChatChange){
-          chatRef.off("child_added", onChatChange);
-        }
 
+        DisconnectChat();
         //Sort which id is first to generate unique ID
         var sortedChatUid = chatboxInfo.data.sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
 
@@ -780,15 +780,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             '</div><!-- /.direct-chat-text -->'+
                         '</div><!-- /.direct-chat-msg -->';
            $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
-      };    
+      };
 
 
-        
+      this.CloseChatBox=function(){
+        DisconnectChat();
+      }    
+
+
+      this.SendMsg=function(datetime, msg){
+        var ownerIdIndx=chatboxInfo.data.ownerIdIndx;
+        chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
+      };
+      FireChatUsers(tutorID, studentID, currUserID);
+
+};////
+
+      var mfcb=null;
       function chatBox(tutorID, studentID, currUserID){
           $("#chatMessages").empty();
           if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
 
-          FireChatUsers(tutorID, studentID, currUserID);
+          if(mfcb)mfcb.CloseChatBox();
+          mfcb=new MyFireChatBox(tutorID, studentID, currUserID);
       };
 
       //add new message using set
@@ -796,10 +810,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var msg=$("#msg").val();
         msg=$.trim(msg);
         if(msg.length===0)return;
-        var ownerIdIndx=chatboxInfo.data.ownerIdIndx;
+        //var ownerIdIndx=mfcb.chatboxInfo.data.ownerIdIndx;
         var datetime=moment().format();
         console.log(datetime);
-        chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
+        //chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
+        mfcb.SendMsg(datetime,msg);
         $("#msg").val('');
       };
       function msgkeydwn(e){
