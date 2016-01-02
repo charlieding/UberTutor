@@ -674,34 +674,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 /******* CHATBOX CODE - MOVE TO JS FILE *******/
-    function msgAdded(snapshot){
-      var msgObj = snapshot.val();
-      var uid=snapshot.key();
-      var ownerIdIndx=msgObj.ownerIdIndx;
-      var boxside=chatboxInfo.getSide(ownerIdIndx);
-      //$.each(usersObj,function(uid,userObj){
-      console.log("uid="+uid);
-      console.log(msgObj);
-      var usr=chatboxInfo.getUser(ownerIdIndx);
-      urlImg=usr.imgUrl;
-      msgAdded2Ui(msgObj.msg, boxside, uid, urlImg, usr.displayName);
-      //});      
-    };
-    function msgAdded2Ui(msg,side,datetime, urlImg, name){
-          datetime=moment(datetime).format("MMM d h:mm a");//todo fix
-          var otherside=(side==="left")?"right":"left";
-          var chatMsg='<div class="direct-chat-msg '+side+'">'+
-                          '<div class="direct-chat-info clearfix">'+
-                            '<span class="direct-chat-name pull-'+side+'">'+name+'</span> '+
-                            '<span class="direct-chat-timestamp pull-'+otherside+'"> '+datetime+'</span>'+
-                          '</div><!-- /.direct-chat-info -->'+
-                          '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat-img -->'+
-                          '<div class="direct-chat-text">'+
-                            msg+
-                          '</div><!-- /.direct-chat-text -->'+
-                      '</div><!-- /.direct-chat-msg -->';
-          $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
-     };
+
 
 
 
@@ -746,25 +719,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
      };
 
-     var chatboxInfo=null;
 
+
+
+      var chatboxInfo=null;
       var onChatChange = null;
-      var chatRef = null;
-      function chatBox(tutorID, studentID, currUserID){
-        $("#chatMessages").empty();
-          if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
+      var chatRef = null;      
+      function FireChatUsers(tutorID, studentID, currUserID){
           var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
           usrsRef.once("value",function(snapshot){
               var usrsObj=snapshot.val();
               chatBoxBuild(tutorID, studentID, currUserID,usrsObj);
-          });
-      };
+          });        
+      }
       function chatBoxBuild(tutorID, studentID, currUserID, usrsObj){
         chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj);
         $("#boxtitle").text(chatboxInfo.getTargetName());
-        chatBoxFireup(chatboxInfo);
+        FireChatMsgs(chatboxInfo);
       };
-      function chatBoxFireup(chatboxInfo){
+      function FireChatMsgs(chatboxInfo){
         //Remove old chat box listener 
         if(onChatChange){
           chatRef.off("child_added", onChatChange);
@@ -780,7 +753,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
           //userMarkImgAutoPosAdjust();
         });
       };
+      function msgAdded(snapshot){
+        var msgObj = snapshot.val();
+        var uid=snapshot.key();
+        var ownerIdIndx=msgObj.ownerIdIndx;
+        var boxside=chatboxInfo.getSide(ownerIdIndx);
+        //$.each(usersObj,function(uid,userObj){
+        console.log("uid="+uid);
+        console.log(msgObj);
+        var usr=chatboxInfo.getUser(ownerIdIndx);
+        urlImg=usr.imgUrl;
+        msgAdded2Ui(msgObj.msg, boxside, uid, urlImg, usr.displayName);
+        //});      
+      };
+      function msgAdded2Ui(msg,side,datetime, urlImg, name){
+            datetime=moment(datetime).format("MMM d h:mm a");
+            var otherside=(side==="left")?"right":"left";
+            var chatMsg='<div class="direct-chat-msg '+side+'">'+
+                            '<div class="direct-chat-info clearfix">'+
+                              '<span class="direct-chat-name pull-'+side+'">'+name+'</span> '+
+                              '<span class="direct-chat-timestamp pull-'+otherside+'"> '+datetime+'</span>'+
+                            '</div><!-- /.direct-chat-info -->'+
+                            '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat- img  -->'+
+                            '<div class="direct-chat-text">'+
+                              msg+
+                            '</div><!-- /.direct-chat-text -->'+
+                        '</div><!-- /.direct-chat-msg -->';
+           $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
+      };    
 
+
+        
+      function chatBox(tutorID, studentID, currUserID){
+          $("#chatMessages").empty();
+          if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
+
+          FireChatUsers(tutorID, studentID, currUserID);
+      };
 
       //add new message using set
       function sendMsg(){

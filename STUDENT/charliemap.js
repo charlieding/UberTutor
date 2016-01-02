@@ -256,9 +256,9 @@ function FbaseUserMarkImgs(map){
             on_child_change(snapshot,'child_changed');
         });
     };
-    this.setOptions=function(jpar){
+    this.setConditions=function(jpar){
         defaultCenterLatLng= jpar.centerLatLng||defaultCenterLatLng;
-        userShowCondition=jpar.userShowCondition||userShowCondition;
+        userShowCondition=jpar.userShowCondition;
     };
 
     firemap();
@@ -393,7 +393,8 @@ function MyMapMgr(){
 
 
        fbum=new FbaseUserMarkImgs(map);    
-       fbum.setOptions({userShowCondition:{userType:"tutor"}});
+       fbum.setConditions({userShowCondition:{userType:"tutor"}});
+       fbum.setConditions({userShowCondition:null});
     };
 
 
