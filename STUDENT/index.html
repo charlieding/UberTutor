@@ -258,7 +258,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                     </div>
                     <div style="float:left; width:60%;">
                       <div class="input-group">
-                        <input type="text" id='eventPos' class="form-control" placeholder="Where to meet? Eg: Library">
+                        <input type="text" id='eventPos' class="form-control" placeholder="Where to meet? Eg: Library (Default: Your Current Location)">
                         <span style="cursor:pointer" id="cursorChange" class="input-group-addon"><i class="fa fa-map-pin"></i></span>
                       </div>
                     </div>
@@ -365,7 +365,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                       <p><span id="flexibility">0</span> Minutes(s)</p>
                     </div>
                     <div class="box-footer mainbox-footer">
-                      <button id="confirmTutorButton" type="submit" href="#" class="btn btn-default" style="width:100%;" onclick="requestAppointment();">Confirm & Request!</button>
+                      <button id="confirmTutorButton" type="submit" class="btn btn-default" style="width:100%;" onclick="requestAppointment();">Confirm & Request!</button>
                     </div>
                   </div>
           </div><!-- /.tab-pane -->
@@ -629,7 +629,6 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
       }
       // --TODO--
       function requestAppointment(){ 
-        alert("trigger");
         //get Time, Day, latlng, duration, course, questionTopic
         var time = $("#tutorTime").val();
         var day = $("#tutorDay").val();
@@ -638,6 +637,9 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         var duration = $("#duration").text();
         var courses = $("#select2ClassSelection").select2('val')+"";
         var questionTopic = $("#topicQuestion").val();
+        if(!latlng){
+          latlng = loggedInUserLatLng;
+        }
         
         //set status=AwaitingResponse, cost=null, declineMessage=null
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -671,6 +673,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         ref.child("users").child(selectedTutorID).child("appointmentIDs").child(appointmentID).set({
           studentID: loggedInUserID
         });
+        window.location = 'mybookings.html';
       }
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
       //:::                                                                         :::
