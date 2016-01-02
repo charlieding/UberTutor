@@ -316,7 +316,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Create the tabs -->
         <ul id="rightsidetabs" class="nav nav-tabs nav-justified control-sidebar-tabs">
           <li id="tutorProfileRightBar"><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-user"></i></a></li>
-          <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
+          <li><a href="#" onclick="closeChat();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
         </ul>
         <!-- Tab panes -->
         <div id="righttabcontent" class="tab-content" style="padding-left:0px; padding-right:0px;">
@@ -559,6 +559,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
       }
       function cancelAppointment(){
         alert("coming soon...");
+      }
+      function closeChat(){
+        $.AdminLTE.controlSidebar.close();
+
+        //Close Chat Listeners
+        fireChatBox.CloseChatBox();
       }
 
 
