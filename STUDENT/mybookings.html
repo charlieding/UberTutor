@@ -326,7 +326,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <!-- DIRECT CHAT -->
                   <div class="box box-warning direct-chat direct-chat-warning">
                     <div class="box-header with-border">
-                      <h3 class="box-title">Direct Chat</h3>
+                      <h3 class="box-title" id="boxtitle">Direct Chat</h3>
                       <div class="box-tools pull-right">
                         <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -729,6 +729,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           };
           return boxside;
         };
+        this.getTargetName=function(){
+          return this.data.usrArr[ret.targetIdIndx].displayName;
+        }
      };
 
      var chatboxInfo=null;
@@ -736,6 +739,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       var onChatChange = null;
       var chatRef = null;
       function chatBox(tutorID, studentID, currUserID){
+        $("#chatMessages").empty();
           if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
           var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
           usrsRef.once("value",function(snapshot){
@@ -745,6 +749,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       };
       function chatBoxBuild(tutorID, studentID, currUserID, usrsObj){
         chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj);
+        $("#boxtitle").text(chatboxInfo.getTargetName());
         chatBoxFireup(chatboxInfo);
       };
       function chatBoxFireup(chatboxInfo){

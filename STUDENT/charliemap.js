@@ -158,7 +158,7 @@ function FbaseUsers(map){
     }; 
     var markImgArr={};
     function userMarkImgUpdate(uid,snapshot,ops){
-         console.log(uid+", ops="+ops);
+         console.log(uid,snapshot,", ops="+ops);
          var latlng = snapshot.val();
          var key = snapshot.key();
          console.log(key+" := "+latlng);
@@ -205,13 +205,12 @@ function FbaseUsers(map){
       mark.m_flightPath.setOptions({map:map,path:arrLatlng});
     };
 
-    
+
     function userMarkImgAdd(snapshot){
           var userObj = snapshot.val();
           var uid=snapshot.key();
           //$.each(usersObj,function(uid,userObj){
-            console.log("uid="+uid);
-            console.log(userObj);
+            console.log("uid="+uid,userObj);
 
             if(userObj.type!="tutor"){
               //return;
@@ -222,12 +221,10 @@ function FbaseUsers(map){
             overlapAdjust(markImgArr,markimg);
             markImgArr[uid]=markimg;
 
-            ref.child(uid).on("child_removed",function(snapshot,prevKey){
-                console.log("prevKey="+prevKey);
+            ref.child(uid).child("latlng").on("child_removed",function(snapshot,prevKey){
                 userMarkImgUpdate(uid,snapshot,'child_removed');
             });
-            ref.child(uid).on("child_changed",function(snapshot,prevKey){
-                console.log("prevKey="+prevKey);
+            ref.child(uid).child("latlng").on("child_changed",function(snapshot,prevKey){
                 userMarkImgUpdate(uid,snapshot,'child_changed');
             });
 
@@ -419,44 +416,18 @@ var mmm=new MyMapMgr();
 function startGMap(latlng){
   var mat=latlng.split(",");
   mmm.initialize(mat[0],mat[1],"default center");
+
+  function cleanmap() {
+    mmm.cleanMap(null);
+  }  
   setTimeout(cleanmap,8000);
 }
 
-function cleanmap() {
-    mmm.cleanMap(null);
-}
-
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        alert("not support navigator.geolocation");
-    }
-}
-function showPosition(position) {
-    var currentLatLng=position;
-    var ss = "" + position.coords.latitude + "," + position.coords.longitude; 
-    console.log("ok currentLatLng="+ss);
-
-    
-    mmm.initialize(currentLatLng.coords.latitude,currentLatLng.coords.longitude,"default center");
-    setTimeout(cleanmap,8000);
-}    
 
 
-//getLocation();
 
 
-function updateLoginLatLng(uid){
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position){
-          var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
-          ref.child(uid).set({latlng:position.coords.toString()});          
-        });
-    } else {
-        alert("not support navigator.geolocation");
-    }  
-}
+
 
 
 
