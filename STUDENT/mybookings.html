@@ -676,7 +676,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       //});      
     };
     function msgAdded2Ui(msg,side,datetime, urlImg, name){
-          datetime=moment(datetime).format("MMM d h:m a");//todo fix
+          datetime=moment(datetime).format("MMM d h:mm a");//todo fix
           var otherside=(side==="left")?"right":"left";
           var chatMsg='<div class="direct-chat-msg '+side+'">'+
                           '<div class="direct-chat-info clearfix">'+
