@@ -141,7 +141,7 @@ var MyMapUti={
 
 
 
-//TODO: auto move img if overlaps.
+
 function FbaseUserMarkImgs(map){
     var defaultCenterLatLng=map.getCenter();//new google.maps.LatLng(+34.070044598142, -84.16012274947661);
 
