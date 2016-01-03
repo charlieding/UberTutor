@@ -588,6 +588,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+key+"/status")).set('Finished');
                       });
                       isBookingsEmpty();
+                      alert("Thanks for your payment. Feel free to now leave your tutor a review!");
+                    } else {
+                      alert("Something went wrong... Please try again or contact us at 678-577-0937");
                     }
                   });
               }
