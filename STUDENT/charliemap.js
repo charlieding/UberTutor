@@ -22,9 +22,9 @@ var MyMapUti={
         markerimg.m_origLatLng=latlng;
         var flightPath=new google.maps.Polyline({
           path:[],
-          strokeColor:"#ff0000",
+          strokeColor:"#0000ff",
           strokeOpacity:0.8,
-          strokeWeight:0.5
+          strokeWeight:0.9
           });
         markerimg.m_flightPath=flightPath;
 
