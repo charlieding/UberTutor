@@ -732,12 +732,12 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         this.getUser=function(ownerIdIndx){
           return ret.usrArr[ownerIdIndx];
         };
-        this.getSide=function(ownerIdIndx){
-          var boxside="left";
+        this.getSides=function(ownerIdIndx){
+          var boxsides=["left","right"];
           if( ret.currUserID === ret.uidArr[ownerIdIndx]){
-            boxside="right";
+            boxsides=["right","left"];
           };
-          return boxside;
+          return boxsides;
         };
         this.getTargetName=function(){
           return ret.usrArr[ret.targetIdIndx].displayName;
@@ -791,26 +791,25 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
       };
       function msgAdded(snapshot){
         var msgObj = snapshot.val();
-        var uid=snapshot.key();
+        var key=snapshot.key();
         var ownerIdIndx=msgObj.ownerIdIndx;
-        var boxside=chatboxInfo.getSide(ownerIdIndx);
+        var boxsides=chatboxInfo.getSides(ownerIdIndx);
         //$.each(usersObj,function(uid,userObj){
-        console.log("uid="+uid);
-        console.log(msgObj);
+        console.log("key="+key,msgObj);
         var usr=chatboxInfo.getUser(ownerIdIndx);
         urlImg=usr.imgUrl;
-        msgAdded2Ui(msgObj.msg, boxside, uid, urlImg, usr.displayName);
+        var datetime=moment(msgObj.datetime).format("MMM d h:mm a");     
+        msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);
         //});      
       };
-      function msgAdded2Ui(msg,side,datetime, urlImg, name){
-            datetime=moment(datetime).format("MMM d h:mm a");
-            var otherside=(side==="left")?"right":"left";
-            var chatMsg='<div class="direct-chat-msg '+side+'">'+
+      function msgAdded2Ui(msg, datetime, usr, boxsides){
+
+            var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
-                              '<span class="direct-chat-name pull-'+side+'">'+name+'</span> '+
-                              '<span class="direct-chat-timestamp pull-'+otherside+'"> '+datetime+'</span>'+
+                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+usr.displayName+'</span> '+
+                              '<span class="direct-chat-timestamp pull-'+boxsides[1]+'"> '+datetime+'</span>'+
                             '</div><!-- /.direct-chat-info -->'+
-                            '<img class="direct-chat-img" src="'+urlImg+'" alt="message user image"><!-- /.direct-chat- img  -->'+
+                            '<img class="direct-chat-img" src="'+usr.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
                             '<div class="direct-chat-text">'+
                               msg+
                             '</div><!-- /.direct-chat-text -->'+
@@ -826,7 +825,16 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
 
       this.SendMsg=function(datetime, msg){
         var ownerIdIndx=""+chatboxInfo.data.ownerIdIndx;
-        chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
+        //var timestamp=Firebase.ServerValue.TIMESTAMP;
+
+        // Record the current time immediately, and queue an event to
+// record the time at which the user disconnects.
+//var sessionsRef = chatRef;//new Firebase('https://samplechat.firebaseio-demo.com/sessions/');
+//var mySessionRef = sessionsRef.push();
+//mySessionRef.onDisconnect().update({ endedAt: Firebase.ServerValue.TIMESTAMP });
+//mySessionRef.update({ startedAt: Firebase.ServerValue.TIMESTAMP });
+
+        chatRef.push().set({datetime:datetime, msg:msg, ownerIdIndx:ownerIdIndx});
       };
       FireChatUsers(tutorID, studentID, currUserID);
 
