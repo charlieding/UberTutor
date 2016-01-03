@@ -557,19 +557,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         ref.unauth();
         window.location = '../index.html';
       }
-      function goToPayments(){
-        window.location ='payment.html';
-      }
-      function cancelAppointment(){
-        alert("coming soon...");
-      }
-      function closeChat(){
-        $.AdminLTE.controlSidebar.close();
-
-        //Close Chat Listeners
-        fireChatBox.CloseChatBox();
-      }
-
 
     /******* MyBooking CODE - MOVE TO JS FILE *******/
       var onUsersAppointmentChange = null;
@@ -622,10 +609,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                 if(appointmentSnapshot.val().status == "Awaiting Response"){
                   var statusStyle = "label-primary";
-                  var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
+                  var actionItem = "<span onclick='cancelAppointment(this);' appointmentId='"+appointmentSnapshot.key()+"' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
                 }
-                if(appointmentSnapshot.val().status == "Approved"){
+                if(appointmentSnapshot.val().status == "Accepted"){
                   var statusStyle = "label-info";
+                  var actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "On the Way"){
                   var statusStyle = "label-info";
@@ -639,7 +627,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 }
                 if(appointmentSnapshot.val().status == "Finished"){
                   var statusStyle = "label-success";
-                  var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                  var actionItem = "<span onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "Cancelled"){
                   var statusStyle = "label-danger";
@@ -681,19 +669,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
       //pass info to chatbox
       chatBox(_this.getAttribute("tutorID"), _this.getAttribute("studentID"), _this.getAttribute("currentUserID"));
     }
-
-
-
-
-
-
-
+    function goToPayments(){
+      window.location ='payment.html';
+    }
+    function cancelAppointment(_this){
+      console.log("AppointmentKey:" + _this.getAttribute("appointmentKey"));
+      (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentKey+"/status")).set('Cancelled');
+    }
+    function leaveFeedback(_this){
+      console.log("AppointmentKey:" + _this.getAttribute("appointmentKey"));
+      (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentKey+"/status")).set('Cancelled');
+    }
+    function closeChat(){
+      $.AdminLTE.controlSidebar.close();
+      //Close Chat Listeners
+      fireChatBox.CloseChatBox();
+    }
 
 
 /******* CHATBOX CODE - MOVE TO JS FILE *******/
-
-
-
 var MyFireChatBox=function(tutorID, studentID, currUserID){
 
      function GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj){
