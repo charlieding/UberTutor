@@ -133,16 +133,16 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->
-                  <img id="userImageNavbar" src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <img id="userImageNavbar" src="dist/img/l.gif" class="user-image" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs studentName">(Student's Name)</span>
+                  <span class="hidden-xs studentName"></span>
                 </a>
                 <ul class="dropdown-menu" style="right:0px;">
                   <!-- The user image in the menu -->
                   <li class="user-header">
-                    <img id="userImageHeader" src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <img id="userImageHeader" src="dist/img/l.gif" class="img-circle" alt="User Image">
                     <p>
-                      <span class="studentName">(Student's Name)</span>
+                      <span class="studentName"></span>
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
@@ -179,10 +179,10 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel">
               <div class="pull-left image">
-                <img id="userImagePanel" src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img id="userImagePanel" src="dist/img/l.gif" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
-                <p class="studentName">(Student's Name)</p>
+                <p class="studentName"></p>
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
               </div>
@@ -548,10 +548,51 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
 
         //Display Name
         var displayName = userObj.displayName;
-        //Stars -- TODO, get from reviews
-        var stars = 3.5; 
-        var numOfReview = 13;
-        var starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i>";
+        //Stars Get From User Obj
+        var stars = userObj.reviewAvgStars; 
+        var numOfReview = userObj.numOfReviews  || "0";
+        var starsHtml = "No Reviews Yet";
+        if(parseFloat(stars) < 0.75){
+          //0.5
+          starsHtml = "<i class='fa fa-star-half-o' onclick></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i>";
+        }
+        if(parseFloat(stars) >= 0.75 && parseFloat(stars) < 1.25){
+          //1.0
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i>";
+        }
+        if(parseFloat(stars) >= 1.25 && parseFloat(stars) < 1.75){
+          //1.5
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star-half-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i>";
+        }
+        if(parseFloat(stars) >= 1.75 && parseFloat(stars) < 2.25){
+          //2.0
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i>";
+
+        }
+        if(parseFloat(stars) >= 2.25 && parseFloat(stars) < 2.75){
+          //2.5
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star-half-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i>";
+        }
+        if(parseFloat(stars) >= 2.75 && parseFloat(stars) < 3.25){
+          //3.0
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i>";
+        }
+        if(parseFloat(stars) >= 3.25 && parseFloat(stars) < 3.75){
+          //3.5
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star-half-o'></i><i class='fa fa-star-o'></i>";
+        }
+        if(parseFloat(stars) >= 3.75 && parseFloat(stars) < 4.25){
+          //4.0
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star-o'></i>";
+        }
+        if(parseFloat(stars) >= 4.25 && parseFloat(stars) < 4.75){
+          //4.5
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star-half-o'></i>";
+        }
+        if(parseFloat(stars) >= 4.75){
+          //5.0
+          starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i>";
+        }
 
         $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj)+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+")</p></div></a></li>");
       }
@@ -577,17 +618,96 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
       function updateTutorProfileByObject(usrObj){
         selectedTutorID = usrObj.uid;
 
+        var joinDate = moment(usrObj.joinDate).format("MMM. YYYY") || "Unknown";
+        var numOfReviews = usrObj.numOfReviews || "0";
+        var stars = parseFloat(usrObj.reviewAvgStars);
+
         //Update Tutor Profile
         $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
         $("#tutorProfileName").text(usrObj.displayName);
-        $("#tutorProfileNumOfReviews").text(" (13)");
-        $("#tutorProfileMembership").text("Tutor since Nov. 2012");
+        $("#tutorProfileNumOfReviews").text(" ("+numOfReviews+")");
+        $("#tutorProfileMembership").text("Tutor since " + joinDate);
         $("#tutorBiography").text(usrObj.biography);
-        $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-        $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-        $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
-        $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-half-o" );
-        $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        if(parseFloat(stars) < 0.75){
+          //0.5
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star-half-o" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 0.75 && parseFloat(stars) < 1.25){
+          //1.0
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 1.25 && parseFloat(stars) < 1.75){
+          //1.5
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-half-o" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 1.75 && parseFloat(stars) < 2.25){
+          //2.0
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 2.25 && parseFloat(stars) < 2.75){
+          //2.5
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-half-o" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 2.75 && parseFloat(stars) < 3.25){
+          //3.0
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 3.25 && parseFloat(stars) < 3.75){
+          //3.5
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-half-o" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 3.75 && parseFloat(stars) < 4.25){
+          //4.0
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+        }
+        if(parseFloat(stars) >= 4.25 && parseFloat(stars) < 4.75){
+          //4.5
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-half-o" );
+        }
+        if(parseFloat(stars) >= 4.75){
+          //5.0
+          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
+          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star" );
+        }
 
         //Hide Find Tutor Header Name
         isTutorSelected = true;
@@ -669,7 +789,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           studentDisplayName: $("p.studentName").text(),
           feedbackLeft: "false",
           feedbackMessage: "null",
-          feedbackRating: "0"
+          feedbackRating: "0",
+          flexibility: $("#flexibility").text()
         });
         var appointmentID = appointment.key();
 

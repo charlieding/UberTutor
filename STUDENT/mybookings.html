@@ -119,16 +119,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <!-- The user image in the navbar-->
-                  <img src="dist/img/user2-160x160.jpg" class="user-image userImage" alt="User Image">
+                  <img src="dist/img/l.gif" class="user-image userImage" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs userName">(Student's Name)</span>
+                  <span class="hidden-xs userName"></span>
                 </a>
                 <ul class="dropdown-menu" style="right:0px;">
                   <!-- The user image in the menu -->
                   <li class="user-header">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle userImage" alt="User Image">
+                    <img src="dist/img/l.gif" class="img-circle userImage" alt="User Image">
                     <p>
-                      <span class="userName">(Student's Name)</span>
+                      <span class="userName"></span>
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
@@ -165,10 +165,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="dist/img/user2-160x160.jpg" class="img-circle userImage" alt="User Image">
+              <img src="dist/img/l.gif" class="img-circle userImage" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p class="userName">(Student's Name)</p>
+              <p class="userName"></p>
               <!-- Status -->
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -662,7 +662,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 }
                 if(appointmentSnapshot.val().status == "Finished"){
                   var statusStyle = "label-success";
-                  var actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorDisplayName='"+appointmentSnapshot.val().tutorDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                  if(appointmentSnapshot.val().feedbackLeft == "true"){
+                    var actionItem = "Feedback Left";
+                  } else {
+                    var actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentSnapshot.val().tutorDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                  }
                 }
                 if(appointmentSnapshot.val().status == "Cancelled"){
                   var statusStyle = "label-danger";
@@ -716,21 +720,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $('#feedback').modal(); 
       var tutName = _this.getAttribute("tutorDisplayName");
       $("#feedbackTutorName").text(tutName);
-
-      //get stars, feedback message
-      var appId = _this.getAttribute("appointmentId");
-      var stars = $("#input-id").rating().val();
-      var msg = $("#feedbackTextArea").val();
+      $("#submitFeedbackBtn").attr("appointmentId", _this.getAttribute('appointmentId'));
+      $("#submitFeedbackBtn").attr("tutorId", _this.getAttribute('tutorId'));
 
       $("#submitFeedbackBtn").click(function() {
+        //get stars, feedback message
+        var appId = $("#submitFeedbackBtn").attr("appointmentId");
+        var stars = $("#input-id").rating().val();
+        var msg = $("#feedbackTextArea").val();
+        var tutorId = $("#submitFeedbackBtn").attr("tutorId");
+        console.log(tutorId);
+
         //set feedbackLeft to true, and persist message and stars
-        alert("Submit Button Clicked");
+        console.log("Submit Button Clicked", msg, stars);
         (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appId+"/feedbackLeft")).set('true');
         (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appId+"/feedbackMessage")).set(msg);
         (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appId+"/feedbackRating")).set(stars);
-        $( "#submitFeedbackBtn" ).off();
-        $('#feedback').modal('toggle');
+
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+tutorId+"/numOfReviews")).once('value', function (numOfReviewsSnapshot) {
+          (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+tutorId+"/reviewAvgStars")).once('value', function (reviewAvgStarsSnapshot) {
+            console.log(numOfReviewsSnapshot.val());
+            console.log(reviewAvgStarsSnapshot.val());
+            var numOfReviews = parseInt((numOfReviewsSnapshot.val()));
+            var reviewAvgStars = parseFloat((reviewAvgStarsSnapshot.val()));
+            var newAvgStars = ((reviewAvgStars * numOfReviews) + parseFloat(stars))/ (numOfReviews+1);
+            (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+tutorId+"/reviewAvgStars")).set(newAvgStars+"");
+            (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+tutorId+"/numOfReviews")).set(numOfReviews+1+"");
+            $('#feedback').modal('toggle');
+          }, function (err) {
+            // code to handle read error
+            console.log(err);
+          });
+        }, function (err) {
+          // code to handle read error
+          console.log(err);
+        });
       });
+    }
+    function persistFeedback(_this){
+
     }
     function closeChat(){
       $.AdminLTE.controlSidebar.close();
