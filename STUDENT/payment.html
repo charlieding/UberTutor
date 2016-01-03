@@ -235,7 +235,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Tutor</th>
                           <th>Duration</th>
                           <th>Price</th>
-                          <th>Pay Now</th>
                         </tr>
                       </thead>
                       <tbody id="bookings">
@@ -246,7 +245,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <td><div class="sparkbar" data-color="#00a65a" data-height="20">Julie Holmes</div></td>
                           <td>3 hour(s)</td>
                           <td>$60.00</td>
-                          <td><input type="submit" form="checkout" value="Pay"></td>
                         </tr>
                         <tr>
                           <td><a href="pages/examples/invoice.html">OR1848</a></td>
@@ -288,6 +286,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </table>
                   </div><!-- /.table-responsive -->
                 </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                  <span href="index.html" class="pull-right">Total: $<span class="total_price" >312.33</span></span>
+                </div><!-- /.box-footer --> 
               </div><!-- /.box -->
             </div><!-- /.row -->
             <div class="col-md-12">
@@ -298,7 +299,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <form id="checkout" method="post" action="/checkout">
                       <div id="payment-form"></div>
                       <!--http://stackoverflow.com/questions/11869079/html-button-to-submit-a-form-elsewhere-on-the-page-->
-                    </form>
+                  </form>
+                  <div style="margin:auto; width:50%;"><input id="button_checkout" type="submit" style="width:100%;" class="btn btn-lg btn-danger" form="checkout" value="Pay $312.33 Now"></div>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
             </div>
@@ -369,7 +371,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             //Temporary Hack for anything
             loggedInUserID = authData.uid;
 
-            activateBraintree(authData.uid);
+            //activateBraintree(authData.uid, 0);
 
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+authData.uid);
 
@@ -380,6 +382,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               updateUserName(snapshot.val().displayName)
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
+              loadPendingPayments(snapshot);
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });
@@ -410,88 +413,186 @@ scratch. This page gets rid of all links and provides the needed markup only.
         window.location = '../index.html';
       }
 
+      /***************  My Payments Code ****************************/
+      var onUsersAppointmentChange = null;
+      var refAndOnAppointmentChangeMap = {};
+
+      function loadPendingPayments(currUserSnapshot){
+        //console.log(currUserSnapshot.key());
+        var usersRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+currUserSnapshot.key()+"/appointmentIDs");
+        
+        //Remove listener if it already exists to prevent duplicate database calls
+        if(onUsersAppointmentChange){
+          console.log("Listener Removed");
+          usersRef.off('value', onUsersAppointmentChange);
+          onUsersAppointmentChange = null;
+        } 
+        //Remove listener if it already exists to prevent duplicate database calls
+        if(refAndOnAppointmentChangeMap){
+          $.each(refAndOnAppointmentChangeMap, function(key, value){
+            console.log("Listener Removed");
+            new Firebase(key).off('value',value);     
+          });
+          refAndOnAppointmentChangeMap = {}; 
+        } 
+
+        // Attach an asynchronous callback to read the data at our posts reference
+        console.log("LISTENER ADDED! ");
+        onUsersAppointmentChange = usersRef.on("value", function(snapshot) {
+          //console.log(snapshot.val());
+          var userAppointments = currUserSnapshot.val().appointmentIDs;
+          var allAppointments = snapshot.val();
+          var uids = "";
+
+          //console.log(userAppointments);
+          //console.log(allAppointments);
+
+
+          //Clear list and prices map before showing
+          $("#bookings").empty();
+          var paymentUidToCostMap = {};
+          //Go through every appointment for the user, map it to a real appointment, the display it all
+          if(userAppointments && allAppointments){
+            $.each(userAppointments, function(uid, appointmentMapObj){
+              console.log(uid);
+              //Get the entire Appointment Obj from Mapping
+              var ref = new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+uid);
+              console.log("LISTENER ADDED! ");
+              refAndOnAppointmentChangeMap[ref] = ref.on("value", function(appointmentSnapshot) {
+                //console.log("LISTENER ADDED! "); //Listers are added here as well as any child changed object will trigger this
+                if(appointmentSnapshot && appointmentSnapshot.val() && appointmentSnapshot.val().status == "Pending Payment"){
+                  //Default Unknown Status Style
+                  var statusStyle = "bg-gray-active color-palette";
+                  var actionItem = "None";
+
+                  if(appointmentSnapshot.val().status == "Awaiting Response"){
+                    var statusStyle = "label-primary";
+                    var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
+                  }
+                  if(appointmentSnapshot.val().status == "In Session"){
+                    var statusStyle = "label-info";
+                  }
+                  if(appointmentSnapshot.val().status == "Pending Payment"){
+                    var statusStyle = "label-warning";
+                    var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
+                  }
+                  if(appointmentSnapshot.val().status == "Finished"){
+                    var statusStyle = "label-success";
+                    var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                  }
+                  if(appointmentSnapshot.val().status == "Cancelled"){
+                    var statusStyle = "label-danger";
+                  }
+
+                  //Update Actual Bookings on UI
+                  if(uids.indexOf(uid) > -1){
+                    //Already Exist, just remove all and readd everything
+                    loadPendingPayments(currUserSnapshot);
+                  } else {
+                    //Doesn't Exist yet, just add
+                    uids = uids+uid;
+                    // $("#bookings").prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span></div></td><td>"+appointmentSnapshot.val().tutorDisplayName+"</td><td class='col-md-2'><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("M/D/YY h:mm a")+"</span></td><td class='col-md-3'>"+appointmentSnapshot.val().latlngAddress+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+actionItem+"</td></tr>");
+                    $("#bookings").prepend("<tr>"+
+                        "<td><a href='pages/examples/invoice.html'>"+uid+"</a></td>"+
+                        "<td>"+appointmentSnapshot.val().courses+"</td>"+
+                        "<td><span class='label label-warning'>Pending Payment</span></td>"+
+                        "<td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+"</div></td>"+
+                        "<td>"+appointmentSnapshot.val().duration+" hour(s)</td>"+
+                        "<td>$"+appointmentSnapshot.val().cost+"</td>"+
+                      "</tr>");
+                    paymentUidToCostMap[uid] = appointmentSnapshot.val().cost;
+                    updateTotalPricesCheckout(paymentUidToCostMap);
+                    isBookingsEmpty();
+                  }
+                } else if(uids.indexOf(uid) > -1) {
+                  //It just switched out of Payment Object
+                  loadPendingPayments(currUserSnapshot);
+                } else{
+                  //Object that has never been in Payment Pending
+                  isBookingsEmpty();
+                }
+
+              },function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+              });
+            });
+          } else{
+            isBookingsEmpty();
+          }
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });
+      }
+      function isBookingsEmpty(){
+        $("#emptyMsg").remove();
+        if($("#bookings").children().size() > 0){
+          return false;
+        } else {
+          $("#bookings").prepend("<tr id='emptyMsg'><td>"+"Empty"+"</td><td>"+
+            "</td><td><span class='label label-info'>"+
+            "</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+
+            "<a href="+"/STUDENT/index.html"+">"+""+"</a>"+"</div></td><td></td><td></td></tr>");  
+          $(".total_price").text(0);
+          $("#button_checkout").attr("value", "Nothing to Pay");
+          $('#button_checkout').prop('disabled', true);
+          $("#checkout").empty();
+          return true;
+        }
+      }
+      function updateTotalPricesCheckout(paymentUidToCostMap){
+        if(paymentUidToCostMap){
+          var total = 0;
+          $.each(paymentUidToCostMap, function(key, value){
+            console.log(key, value);
+            total = total + parseFloat(value);  
+          });
+          $(".total_price").text(total);
+          $('#button_checkout').prop('disabled', false);
+          $("#button_checkout").attr("value", "Pay $"+total+" Now");
+          activateBraintree(loggedInUserID, total, paymentUidToCostMap);
+        } 
+      }
+
       /*************** BRAINTREE SANDBOX CODE ************************/
       // We generated a client token for you so you can test out this code
       // immediately. In a production-ready integration, you will need to
       // generate a client token on your server (see section below).
-      function activateBraintree(uid){
-      $.post( "http://52.23.157.36/api/v1/token",{customerId: uid})
-        .done(function( data ) {
-          console.log( "Data Loaded: ", data );
+      function activateBraintree(uid, total_price, paymentUidToCostMap){
+        $("#checkout").empty();
+        $("#checkout").prepend("<div id='payment-form'></div>");
+        $('#button_checkout').prop('disabled', true);
+        $.post( "http://52.23.157.36/api/v1/token",{customerId: uid})
+          .done(function( data ) {
+            console.log( "Data Loaded: ", data );
+            var clientToken = data.client_token;
+            //Hard coded Hack to allow this button to be clickable only after Braintree is loaded
+            setTimeout(function(){$('#button_checkout').prop('disabled', false);}, 1300);
+            braintree.setup(clientToken, "dropin", {
+              container: "payment-form",
+              paypal: {
+                singleUse: true,
+                amount: total_price,
+                currency: 'USD'
+              },
+              paymentMethodNonceReceived: function (event, nonce) {
+                console.log(nonce);
+                $.post( "http://52.23.157.36/api/v1/process", {amount: total_price,payment_method_nonce: nonce, customerId: uid })
+                  .done(function( data ) {
+                    console.log( "Data Loaded: ", data );
+                    console.log(data.success);
+                    if(data.success && paymentUidToCostMap){
+                      $.each(paymentUidToCostMap, function(key, value){
+                        (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+key+"/status")).set('Finished');
+                      });
+                      isBookingsEmpty();
+                    }
+                  });
+              }
+            });
 
-          var clientToken = data.client_token;
 
-          braintree.setup(clientToken, "dropin", {
-            container: "payment-form",
-            paypal: {
-              singleUse: true,
-              amount: 10.00,
-              currency: 'USD'
-            },
-            paymentMethodNonceReceived: function (event, nonce) {
-              console.log(nonce);
-              $.post( "http://52.23.157.36/api/v1/process", {amount: '10.00',payment_method_nonce: nonce, customerId: uid })
-                .done(function( data ) {
-                  console.log( "Data Loaded: ", data );
-                  console.log(data.success);
-                });
-
-            }
           });
-
-        });
       }
-
-// $http({
-//         method: 'POST',
-//         url: 'http://52.23.157.36/api/v1/token'
-//       }).success(function (data) {
-
-//         console.log(data.client_token);
-//         braintree.setup(data.client_token, 'dropin', {
-//           container: 'checkout',
-//           // Form is not submitted by default when paymentMethodNonceReceived is implemented
-//           paymentMethodNonceReceived: function (event, nonce) {
-
-//             //$scope.message = 'Processing your payment...';
-//             //$scope.showDropinContainer = false;
-
-//             $http({
-//               method: 'POST',
-//               url: 'http://52.23.157.36/api/v1/process',
-//               data: {
-//                 amount: "10",//$scope.amount,
-//                 payment_method_nonce: nonce
-//               }
-//             }).success(function (data) {
-
-//               console.log(data.success);
-
-//               if (data.success) {
-//                 // $scope.message = 'Payment authorized, thanks.';
-//                 // $scope.showDropinContainer = false;
-//                 // $scope.isError = false;
-//                 // $scope.isPaid = true;
-
-//               } else {
-//                 // implement your solution to handle payment failures
-//                 // $scope.message = 'Payment failed: ' + data.message + ' Please refresh the page and try again.';
-//                 // $scope.isError = true;
-//               }
-
-//             }).error(function (error) {
-//               // $scope.message = 'Error: cannot connect to server. Please make sure your server is running.';
-//               // $scope.showDropinContainer = false;
-//               // $scope.isError = true;
-//             });
-//           }
-//         });
-
-//       }).error(function (error) {
-//         // $scope.message = 'Error: cannot connect to server. Please make sure your server is running.';
-//         // $scope.showDropinContainer = false;
-//         // $scope.isError = true;
-//       });
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.

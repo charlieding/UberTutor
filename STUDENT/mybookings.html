@@ -557,6 +557,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         ref.unauth();
         window.location = '../index.html';
       }
+      function goToPayments(){
+        window.location ='payment.html';
+      }
       function cancelAppointment(){
         alert("coming soon...");
       }
@@ -579,6 +582,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         //Remove listener if it already exists to prevent duplicate database calls
         if(onUsersAppointmentChange){
           usersRef.off('value', onUsersAppointmentChange);
+          onUsersAppointmentChange = null;
         } 
         //Remove listener if it already exists to prevent duplicate database calls
         if(refAndOnAppointmentChangeMap){
@@ -586,10 +590,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             console.log("Listener Removed");
             new Firebase(key).off('value',value);
           });
+          refAndOnAppointmentChangeMap = {};
         } 
 
         // Attach an asynchronous callback to read the data at our posts reference
-        var onUsersAppointmentChange = usersRef.on("value", function(snapshot) {
+        onUsersAppointmentChange = usersRef.on("value", function(snapshot) {
           //console.log(snapshot.val());
           var userAppointments = currUserSnapshot.val().appointmentIDs;
           var allAppointments = snapshot.val();
@@ -619,12 +624,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   var statusStyle = "label-primary";
                   var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
                 }
+                if(appointmentSnapshot.val().status == "Approved"){
+                  var statusStyle = "label-info";
+                }
+                if(appointmentSnapshot.val().status == "On the Way"){
+                  var statusStyle = "label-info";
+                }
                 if(appointmentSnapshot.val().status == "In Session"){
                   var statusStyle = "label-info";
                 }
                 if(appointmentSnapshot.val().status == "Pending Payment"){
                   var statusStyle = "label-warning";
-                  var actionItem = "<span onclick='cancelAppointment(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
+                  var actionItem = "<span onclick='goToPayments();' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "Finished"){
                   var statusStyle = "label-success";
