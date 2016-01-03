@@ -184,7 +184,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1> Profile
-            <small style="cursor:pointer;">Update</small>
+            <small href="#" data-toggle="control-sidebar">Put in Email and Phone to get Alerts/Notifications</small>
           </h1>
           <ol class="breadcrumb">
             <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
@@ -201,19 +201,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <!-- Profile Image -->
               <div class="box box-primary">
                 <div class="box-body box-profile">
-                  <img class="profile-user-img img-responsive img-circle userImage" src="dist/img/user4-128x128.jpg" alt="User profile picture">
-                  <h3 class="profile-username text-center userName">Nina Mcintire</h3>
-                  <p id="major" class="text-muted text-center">Software Engineer</p>
+                  <img class="profile-user-img img-responsive img-circle userImage" src="dist/img/l.gif" alt="User profile picture">
+                  <h3 class="profile-username text-center userName"></h3>
+                  <p id="currentStatus" class="text-muted text-center"></p>
 
                   <ul class="list-group list-group-unbordered">
                     <li class="list-group-item">
-                      <b>Phone Number</b> <a id="phoneNumber" class="pull-right">(678)-577-0937</a>
+                      <b>Phone Number</b> <a id="phoneNumber" class="pull-right"></a>
                     </li>
                     <li class="list-group-item">
-                      <b>Email</b> <a id="email" class="pull-right">thinkbigcd@gmail.com</a>
+                      <b>Email</b> <a id="email" class="pull-right"></a>
                     </li>
                     <li class="list-group-item">
-                      <b>Member Since</b> <a id="joinDate" class="pull-right">December 7th, 2014</a>
+                      <b>Member Since</b> <a id="joinDate" class="pull-right"></a>
                     </li>
                   </ul>
                 </div><!-- /.box-body -->
@@ -226,15 +226,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <h3 class="box-title">About Me</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <strong><i class="fa fa-book margin-r-5"></i>  Education</strong>
+                  <strong><i class="fa fa-university margin-r-5"></i>  Education</strong>
                   <p id="education" class="text-muted">
-                    B.S. in Computer Science from the University of Tennessee at Knoxville
                   </p>
 
                   <hr>
 
                   <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-                  <p id="location" class="text-muted">Malibu, California</p>
+                  <p id="location" class="text-muted"></p>
 
                   <hr>
 
@@ -246,11 +245,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <span class="label label-warning">PHP</span>
                     <span class="label label-primary">Node.js</span>
                   </p>
-
+                  <hr>
+                  <strong><i class="fa fa-book margin-r-5"></i> Courses Expertise</strong>
+                  <p id="courseExpertise">
+                    <span class="label label-danger">CS 1001</span>
+                    <span class="label label-success">PSYC 2001</span>
+                    <span class="label label-info">MATH 3001</span>
+                    <span class="label label-warning">MATH 2001</span>
+                    <span class="label label-primary">CS 2001</span>
+                  </p>
                   <hr>
 
                   <strong><i class="fa fa-file-text-o margin-r-5"></i> Biography</strong>
-                  <p id="biography" >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                  <p id="biography" ></p>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
             </div><!-- /.col -->
@@ -265,31 +272,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Name</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputName" placeholder="Name">
+                          <input type="text" class="form-control" id="inputName" placeholder="Name you want others to see">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Phone Number</label>
+                        <div class="col-sm-10">
+                          <input type="tel" class="form-control" id="inputPhoneNumber" placeholder="Get Alert/Notification of Upcoming Sessions">
                         </div>
                       </div>
                       <div class="form-group">
                         <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                          <input type="email" class="form-control" id="inputEmail" placeholder="Get Alert/Notifications of Upcoming Sessions">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Name</label>
+                        <label for="inputSkills" class="col-sm-2 control-label">Education</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputName" placeholder="Name">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-                        <div class="col-sm-10">
-                          <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                          <input type="text" class="form-control" id="inputEducation" placeholder="Eg: B.S. in Computer Science from Stanford Univerity '14">
                         </div>
                       </div>
                       <div class="form-group">
                         <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                          <input type="text" class="form-control" id="inputSkills" placeholder="Separate with a comma (Eg: PHP,Python,Java)">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputSkills" class="col-sm-2 control-label">Course Expertise</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputCourseExpertise" placeholder="Separate with a comma (Eg: CS 1001, MATH 3001, PSYC 1001)">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputExperience" class="col-sm-2 control-label">Biography</label>
+                        <div class="col-sm-10">
+                          <textarea class="form-control" id="inputBiography" placeholder="Biography you want others to see"></textarea>
                         </div>
                       </div>
                       <div class="form-group">
@@ -303,8 +322,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </div>
                       <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger">Submit</button>
-                          <button type="submit" class="btn btn-warning" href="#" data-toggle="control-sidebar">Advanced</button>
+                          <button type="submit" onclick="saveProfile();" class="btn btn-danger">Submit</button>
                         </div>
                       </div>
                     </form>
@@ -483,7 +501,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="control-sidebar-bg"></div>
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          <b>Version</b> Alpha 0.0.1
+          <b >Version</b> Alpha 0.0.1
         </div>
         <strong>Follow Us!</strong>&nbsp;&nbsp;&nbsp;<i href"#ComingSoon" onclick="alert('Coming Soon...');" style="cursor:pointer" class="fa fa-facebook-official"> Facebook</i>&nbsp;&nbsp;&nbsp;<i href"#ComingSoon" onclick="alert('Coming Soon...');" style="cursor:pointer" class="fa fa-twitter-square"> Twitter</i>&nbsp;&nbsp;&nbsp;<i href"#ComingSoon" onclick="alert('Coming Soon...');"  style="cursor:pointer" class="fa fa-instagram"> Instagram</i>
       </footer>
@@ -573,25 +591,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $("#joinDate").text(moment(snapshot.val().creationDate).format("MMMM Do, YYYY"));
         $("#email").text(snapshot.val().email);
         $("#phoneNumber").text(snapshot.val().phoneNumber);
-        $("#major").text(snapshot.val().major);
+        $("#currentStatus").text(snapshot.val().userType.charAt(0).toUpperCase() + snapshot.val().userType.slice(1));
         $("#education").text(snapshot.val().education);
         $("#location").text(snapshot.val().city+", "+snapshot.val().state);
         $("#biography").text(snapshot.val().biography);
+        $("#courseExpertise").empty();
+        $("#skills").empty();
+    
+        var skillsArray = snapshot.val().skills.split(",");
+        var courseExpertiseArray = snapshot.val().courseExpertise.split(",");
+        $.each(skillsArray, function(index, value){
+          $("#skills").prepend(getRandomSpan(value));
+        });
+        $.each(courseExpertiseArray, function(index, value){
+          $("#courseExpertise").prepend(getRandomSpan(value));
+        });
 
-
-
-
-
-                    // skills
-                    // <span class="label label-danger">UI Design</span>
-                    // <span class="label label-success">Coding</span>
-                    // <span class="label label-info">Javascript</span>
-                    // <span class="label label-warning">PHP</span>
-                    // <span class="label label-primary">Node.js</span>
-
-                    
-
-
+        function getRandomSpan(text){
+          //Generate Random Number between 1 and 5 inclusive
+          var randomNum = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+          switch(randomNum) {
+              case 1:
+                  return " <span class='label label-danger'>"+text+"</span> ";
+              case 2:
+                  return " <span class='label label-success'>"+text+"</span> ";
+              case 3:
+                  return " <span class='label label-info'>"+text+"</span> ";
+              case 4:
+                  return " <span class='label label-warning'>"+text+"</span> ";
+              case 5:
+                  return " <span class='label label-primary'>"+text+"</span> ";
+          }         
+        }
       }
       function updateUserName(userName){
         if(userName){
@@ -602,6 +633,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
         ref.unauth();
         window.location = '../index.html';
+      }
+      function saveProfile(){
+        var name = $("#inputName").val();
+        var phone = $("#inputPhoneNumber").val();
+        var email = $("#inputEmail").val();
+        var edu = $("#inputEducation").val();
+        var skills = $("#inputSkills").val();
+        var courses = $("#inputCourseExpertise").val();
+        var bio = $("#inputBiography").val();
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/displayName")).set(name);
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/phoneNumber")).set(phone);
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/email")).set(email);
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/education")).set(edu);
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/skills")).set(skills);
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/courseExpertise")).set(courses);
+        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/biography")).set(bio);
       }
 
     </script>
