@@ -836,26 +836,20 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
 
         chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
         //load messages via child added
-        onChatChange = chatRef.on("child_added",function(snapshot){
-          msgAdded(snapshot);
-          //userMarkImgAutoPosAdjust();
-        });
+        onChatChange = chatRef.on("child_added",on_child_added_msg);
       };
-      function msgAdded(snapshot){
+      function on_child_added_msg(snapshot){
         var msgObj = snapshot.val();
         var key=snapshot.key();
+        console.log("key="+key,msgObj);
+
         var ownerIdIndx=msgObj.ownerIdIndx;
         var boxsides=chatboxInfo.getSides(ownerIdIndx);
-        //$.each(usersObj,function(uid,userObj){
-        console.log("key="+key,msgObj);
         var usr=chatboxInfo.getUser(ownerIdIndx);
-        urlImg=usr.imgUrl;
         var datetime=moment(msgObj.datetime).format("MMM d h:mm a");     
-        msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);
-        //});      
+        msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);    
       };
       function msgAdded2Ui(msg, datetime, usr, boxsides){
-
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
                               '<span class="direct-chat-name pull-'+boxsides[0]+'">'+usr.displayName+'</span> '+
