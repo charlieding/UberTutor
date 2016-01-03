@@ -870,13 +870,13 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
       };
       function on_child_added_msg(snapshot){
         var msgObj = snapshot.val();
-        var key=snapshot.key();
-        console.log("key="+key,msgObj);
+        var utc=snapshot.key();
+        console.log("key="+utc,msgObj);
 
         var ownerIdIndx=msgObj.ownerIdIndx;
         var boxsides=chatboxInfo.getSides(ownerIdIndx);
         var usr=chatboxInfo.getUser(ownerIdIndx);
-        var datetime=moment(msgObj.datetime).format("MMM d h:mm a");     
+        var datetime=moment(utc).format("MMM d h:mm a");     
         msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);    
       };
       function msgAdded2Ui(msg, datetime, usr, boxsides){
@@ -899,7 +899,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
       }    
 
 
-      this.SendMsg=function(datetime, msg){
+      this.SendMsg=function(msg){
         var ownerIdIndx=""+chatboxInfo.data.ownerIdIndx;
         //var timestamp=Firebase.ServerValue.TIMESTAMP;
 
@@ -909,8 +909,8 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
 //var mySessionRef = sessionsRef.push();
 //mySessionRef.onDisconnect().update({ endedAt: Firebase.ServerValue.TIMESTAMP });
 //mySessionRef.update({ startedAt: Firebase.ServerValue.TIMESTAMP });
-
-        chatRef.push().set({datetime:datetime, msg:msg, ownerIdIndx:ownerIdIndx});
+        var utc=moment().utc().format();
+        chatRef.child(utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
       FireChatUsers(tutorID, studentID, currUserID);
 
@@ -936,7 +936,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         var datetime=moment().format();
         console.log(datetime);
         //chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
-        fireChatBox.SendMsg(datetime,msg);
+        fireChatBox.SendMsg(msg);
         $("#msg").val('');
       };
       function msgkeydwn(e){
