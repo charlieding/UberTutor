@@ -252,10 +252,10 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                 <!-- form start -->
                 <form role="form">
                   <div class="box-body">
-                    <!-- text input -->
+                    <!-- text input 
                     <div class="form-group">
                       <input id="topicQuestion" type="text" class="form-control" placeholder="[OPTIONAL] General Topic/Question   Eg:Calculus Matrix Multiplications">
-                    </div>
+                    </div> -->
                     <div style="float:left; width:60%;">
                       <div class="input-group">
                         <input type="text" id='eventPos' class="form-control" placeholder="Where to meet? Eg: Library (Default: Your Current Location)">
@@ -359,7 +359,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                     <p id="tutorBiography"  style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
                       I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
                     </p>
-                    <h4 class="control-sidebar-subheading">Flexiblity</h4>
+                    <h4 class="control-sidebar-subheading">Start Time Flexiblity</h4>
                     <div style="text-align:center; padding-left:30px; padding-right:30px;">
                       <input id="flexibilitySlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="120" data-slider-step="1" data-slider-value="0"/>
                       <p><span id="flexibility">0</span> Minutes(s)</p>
@@ -632,7 +632,17 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         $("#tutorProfileNumOfReviews").text(" ("+numOfReviews+")");
         $("#tutorProfileMembership").text("Tutor since " + joinDate);
         $("#tutorBiography").text(usrObj.biography);
-        if(parseFloat(stars) < 0.75){
+        $("#tutorProfileStar1").text("");
+        if(parseFloat(stars) == 0){
+          //0.5
+          $("#tutorProfileStar1").text("No Reviews");
+          $("#tutorProfileStar1").removeClass();
+          $("#tutorProfileStar2").removeClass();
+          $("#tutorProfileStar3").removeClass();
+          $("#tutorProfileStar4").removeClass();
+          $("#tutorProfileStar5").removeClass();
+        }
+        if(parseFloat(stars) < 0.75 && parseFloat(stars) >0){
           //0.5
           $("#tutorProfileStar1").removeClass().addClass( "fa fa-star-half-o" );
           $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-o" );
