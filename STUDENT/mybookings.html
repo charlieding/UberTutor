@@ -876,7 +876,9 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         var ownerIdIndx=msgObj.ownerIdIndx;
         var boxsides=chatboxInfo.getSides(ownerIdIndx);
         var usr=chatboxInfo.getUser(ownerIdIndx);
-        var datetime=moment(utc).format("MMM d h:mm a");     
+
+        var localTime = moment.utc(utc).toDate();
+        var datetime  = moment(localTime).format("MMM D hh:mm a");     
         msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);    
       };
       function msgAdded2Ui(msg, datetime, usr, boxsides){
@@ -909,7 +911,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
 //var mySessionRef = sessionsRef.push();
 //mySessionRef.onDisconnect().update({ endedAt: Firebase.ServerValue.TIMESTAMP });
 //mySessionRef.update({ startedAt: Firebase.ServerValue.TIMESTAMP });
-        var utc=moment().utc().format();
+        var utc=moment.utc().format();
         chatRef.child(utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
       FireChatUsers(tutorID, studentID, currUserID);

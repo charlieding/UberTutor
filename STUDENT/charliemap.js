@@ -301,7 +301,7 @@ function MyMapMgr(){
     function geocodePosition(pos) {
       geocoder.geocode({
         latLng: pos
-      }, function(responses) {
+      }, function(responses, status) {
         if (responses && responses.length > 0) {
           updateMarkerAddress(pos, responses[0].formatted_address);
         } else {
