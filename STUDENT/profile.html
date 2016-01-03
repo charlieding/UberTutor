@@ -203,17 +203,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="box-body box-profile">
                   <img class="profile-user-img img-responsive img-circle userImage" src="dist/img/user4-128x128.jpg" alt="User profile picture">
                   <h3 class="profile-username text-center userName">Nina Mcintire</h3>
-                  <p class="text-muted text-center">Software Engineer</p>
+                  <p id="major" class="text-muted text-center">Software Engineer</p>
 
                   <ul class="list-group list-group-unbordered">
                     <li class="list-group-item">
-                      <b>Phone Number</b> <a class="pull-right">(678)-577-0937</a>
+                      <b>Phone Number</b> <a id="phoneNumber" class="pull-right">(678)-577-0937</a>
                     </li>
                     <li class="list-group-item">
-                      <b>Email</b> <a class="pull-right">thinkbigcd@gmail.com</a>
+                      <b>Email</b> <a id="email" class="pull-right">thinkbigcd@gmail.com</a>
                     </li>
                     <li class="list-group-item">
-                      <b>Member Since</b> <a class="pull-right">December 7th, 2014</a>
+                      <b>Member Since</b> <a id="joinDate" class="pull-right">December 7th, 2014</a>
                     </li>
                   </ul>
                 </div><!-- /.box-body -->
@@ -227,19 +227,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <strong><i class="fa fa-book margin-r-5"></i>  Education</strong>
-                  <p class="text-muted">
+                  <p id="education" class="text-muted">
                     B.S. in Computer Science from the University of Tennessee at Knoxville
                   </p>
 
                   <hr>
 
                   <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-                  <p class="text-muted">Malibu, California</p>
+                  <p id="location" class="text-muted">Malibu, California</p>
 
                   <hr>
 
                   <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-                  <p>
+                  <p id="skills">
                     <span class="label label-danger">UI Design</span>
                     <span class="label label-success">Coding</span>
                     <span class="label label-info">Javascript</span>
@@ -249,8 +249,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                   <hr>
 
-                  <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                  <strong><i class="fa fa-file-text-o margin-r-5"></i> Biography</strong>
+                  <p id="biography" >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
             </div><!-- /.col -->
@@ -546,7 +546,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               console.log(snapshot.val());
               updateUserImages(snapshot.val().imgUrl);
               updateUserName(snapshot.val().displayName);
-              $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
+              initProfile(snapshot);
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
             }, function (errorObject) {
@@ -567,6 +567,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
         if (imgURL){
           $(".userImage").attr("src", imgURL);
         }
+      }
+      function initProfile(snapshot){
+        $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
+        $("#joinDate").text(moment(snapshot.val().creationDate).format("MMMM Do, YYYY"));
+        $("#email").text(snapshot.val().email);
+        $("#phoneNumber").text(snapshot.val().phoneNumber);
+        $("#major").text(snapshot.val().major);
+        $("#education").text(snapshot.val().education);
+        $("#location").text(snapshot.val().city+", "+snapshot.val().state);
+        $("#biography").text(snapshot.val().biography);
+
+
+
+
+
+                    // skills
+                    // <span class="label label-danger">UI Design</span>
+                    // <span class="label label-success">Coding</span>
+                    // <span class="label label-info">Javascript</span>
+                    // <span class="label label-warning">PHP</span>
+                    // <span class="label label-primary">Node.js</span>
+
+                    
+
+
       }
       function updateUserName(userName){
         if(userName){
