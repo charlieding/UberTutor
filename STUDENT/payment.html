@@ -121,16 +121,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <img src="dist/img/l.gif" class="img-circle userImage" alt="User Image">
                     <p>
                       <span class="userName"></span>
-                      <small>Member since Nov. 2012</small>
+                      <small></small>
                     </p>
                   </li>
                   <!-- Menu Body -->
                   <li class="user-body">
                     <div class="col-xs-6 text-center">
-                      <a href="#">Followers</a>
+                      <a href="help.html">Need Help?</a>
                     </div>
                     <div class="col-xs-6 text-center">
-                      <a href="#">Friends</a>
+                      <a href="becometutor.html">Become a Tutor</a>
                     </div>
                   </li>
                   <!-- Menu Footer-->
@@ -313,9 +313,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="control-sidebar-bg"></div>
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          <b>Version</b> 2.3.0
+          <b>Version</b> Alpha 0.0.1
         </div>
-        <strong>Follow Us!</strong>&nbsp;&nbsp;&nbsp;<i class="fa fa-facebook-official"> Facebook</i>&nbsp;&nbsp;&nbsp;<i class="fa fa-twitter-square"></i> Twitter&nbsp;&nbsp;&nbsp;<i class="fa fa-instagram"> Instagram</i>
+        <strong>Follow Us!</strong>&nbsp;&nbsp;&nbsp;<i href"#ComingSoon" onclick="alert('Coming Soon...');" style="cursor:pointer" class="fa fa-facebook-official"> Facebook</i>&nbsp;&nbsp;&nbsp;<i href"#ComingSoon" onclick="alert('Coming Soon...');" style="cursor:pointer" class="fa fa-twitter-square"> Twitter</i>&nbsp;&nbsp;&nbsp;<i href"#ComingSoon" onclick="alert('Coming Soon...');"  style="cursor:pointer" class="fa fa-instagram"> Instagram</i>
       </footer>
     </div><!-- ./wrapper -->
 
@@ -379,7 +379,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             ref.on("value", function(snapshot) {
               console.log(snapshot.val());
               updateUserImages(snapshot.val().imgUrl);
-              updateUserName(snapshot.val().displayName)
+              updateUserName(snapshot.val().displayName);
+              $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
               loadPendingPayments(snapshot);

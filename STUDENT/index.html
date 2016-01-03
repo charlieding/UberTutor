@@ -143,7 +143,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                     <img id="userImageHeader" src="dist/img/l.gif" class="img-circle" alt="User Image">
                     <p>
                       <span class="studentName"></span>
-                      <small>Member since Nov. 2012</small>
+                      <small id="memberSinceDateProfile"></small>
                     </p>
                   </li>
                   <!-- Menu Body -->
@@ -269,7 +269,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                   </div><!-- /.box-body -->
                   <div class="box-footer mainbox-footer">
                     <button type="submit" href="#control-sidebar-home-tab" data-toggle="tab" class="btn btn-primary" style="float: right; width:73%;" onclick="findTutors();">Find Tutors!</button>
-                    <button type="submit" href="#" class="btn btn-danger" style="float: left; width:25%;" > <b><i>ASAP</i></b> <i class="fa fa-bolt"></i></button>
+                    <button type="submit" onclick="asap();" class="btn btn-danger disabled" style="float: left; width:25%;" > <b><i>ASAP</i></b> <i class="fa fa-bolt"></i></button>
                   </div>
                 </form>
               </div>
@@ -443,7 +443,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
             ref.once("value", function(snapshot) {
               console.log(snapshot.val());
               updateUserImages(snapshot.val().imgUrl);
-              updateUserName(snapshot.val().displayName)
+              updateUserName(snapshot.val().displayName);
+              $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserLatLng = snapshot.val().latlng;
 
               startGMap(loggedInUserLatLng);
@@ -751,7 +752,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
       // --TODO--
       function asap(){
         //Contact all tutors, even offline tutors 
-
+        alert("Coming Soon. This will contact all tutors (offline or online) to get you help as soon as possible.")
       }
       // --TODO--
       function requestAppointment(){ 
