@@ -666,7 +666,10 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           questionTopic:  questionTopic,
           creationDate: moment().format("M/D/YYYY h:m:s a"),
           tutorDisplayName: $("#tutorProfileName").text(),
-          studentDisplayName: $("p.studentName").text()
+          studentDisplayName: $("p.studentName").text(),
+          feedbackLeft: "false",
+          feedbackMessage: "null",
+          feedbackRating: "0"
         });
         var appointmentID = appointment.key();
 
