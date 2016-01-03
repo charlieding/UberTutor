@@ -558,6 +558,8 @@
 
     <!-- Firebase -->
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <!--Moment Time-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
 
     <script>
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
@@ -756,7 +758,11 @@
                     //universal fields
                     uid:authData.uid,
                     latlng: "",
-                    phoneNumber: "",
+                    phoneNumber: "Not Specified",
+                    major: "Not Specified",
+                    education: "Not Specifed",
+                    state: "",
+                    city: "",
                     appointmentIDs: "",
                     tutorRequests: "",
                     freeSchedule: {
@@ -784,7 +790,8 @@
                     },
                     userType: "student",
                     biography: "No Biography Yet",
-                    joinDate: moment(),
+                    email:"Not Specified",
+                    joinDate: moment().format(),
                     reviewAvgStars: "0",
                     numOfReviews: "0"
 
