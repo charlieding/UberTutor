@@ -680,10 +680,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 /******* CHATBOX CODE - MOVE TO JS FILE *******/
-
+var MyFireChatUsersUti={
+  usrsObj:null,
+  FireChatUsers:function (tutorID, studentID, currUserID){
+          var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
+          usrsRef.on("value",function(snapshot){
+              var usrsObj=snapshot.val();
+              once_value_users(tutorID, studentID, currUserID,usrsObj);
+          });        
+      }
+};
 
 
 var MyFireChatBox=function(tutorID, studentID, currUserID){
+     var sortedChatUidConnectedArr=[];
 
      function GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj){
       if(tutorID===studentID) return alert("self chat");
@@ -700,9 +710,10 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         }
         ret.sortedChatUid=arr.join("_");
 
+
+
         ret.uidArr=arr;
         ret.usrArr=[];
-
         for(var i=0;i<arr.length;i++){
                 var uid=arr[i];
                 ret.usrArr[i]=usrsObj[uid];
@@ -711,18 +722,19 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         this.data=ret;
 
         this.getUser=function(ownerIdIndx){
-          return this.data.usrArr[ownerIdIndx];
+          return ret.usrArr[ownerIdIndx];
         };
         this.getSide=function(ownerIdIndx){
           var boxside="left";
-          if( this.data.currUserID === this.data.uidArr[ownerIdIndx]){
+          if( ret.currUserID === ret.uidArr[ownerIdIndx]){
             boxside="right";
           };
           return boxside;
         };
         this.getTargetName=function(){
-          return this.data.usrArr[ret.targetIdIndx].displayName;
-        }
+          return ret.usrArr[ret.targetIdIndx].displayName;
+        };
+
      };
 
       var chatboxInfo=null;
@@ -732,25 +744,35 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         //Remove old chat box listener 
         if(onChatChange){
           chatRef.off("child_added", onChatChange);
+          delete onChatChange;
+          delete onChatChange;
+          onChatChange=null;
+          chatRef=null;
         }
       };
       function FireChatUsers(tutorID, studentID, currUserID){
           var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
           usrsRef.once("value",function(snapshot){
               var usrsObj=snapshot.val();
-              chatBoxBuild(tutorID, studentID, currUserID,usrsObj);
+              once_value_users(tutorID, studentID, currUserID,usrsObj);
           });        
       }
-      function chatBoxBuild(tutorID, studentID, currUserID, usrsObj){
+      function once_value_users(tutorID, studentID, currUserID, usrsObj){
         chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj);
         $("#boxtitle").text(chatboxInfo.getTargetName());
         FireChatMsgs(chatboxInfo);
       };
       function FireChatMsgs(chatboxInfo){
 
-        DisconnectChat();
+        //DisconnectChat();
         //Sort which id is first to generate unique ID
         var sortedChatUid = chatboxInfo.data.sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
+        console.log("sortedChatUid",sortedChatUid);
+        if(sortedChatUidConnectedArr.indexOf(sortedChatUid)>=0){
+          return;
+        };
+        sortedChatUidConnectedArr.push(sortedChatUid);
+
 
         chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
         //load messages via child added
@@ -795,7 +817,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
 
 
       this.SendMsg=function(datetime, msg){
-        var ownerIdIndx=chatboxInfo.data.ownerIdIndx;
+        var ownerIdIndx=""+chatboxInfo.data.ownerIdIndx;
         chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
       FireChatUsers(tutorID, studentID, currUserID);
@@ -807,8 +829,10 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
           $("#chatMessages").empty();
           if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
 
-          if(fireChatBox)fireChatBox.CloseChatBox();
-          fireChatBox=new MyFireChatBox(tutorID, studentID, currUserID);
+          if(null===fireChatBox){
+            fireChatBox=new MyFireChatBox(tutorID, studentID, currUserID);            
+          }
+
       };
 
       //add new message using set
