@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>UberTutor - 1:1 Tutoring</title>
+    <title>AsapTutor - 1:1 Tutoring</title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -64,6 +64,7 @@
         width: 1.25em;
         height: 1.25em;
         position: absolute;
+        top: 10px;
         margin-top: 0.1em;
         margin-left:1.0em;
         box-sizing: border-box;
@@ -71,6 +72,87 @@
     .cta-text {
         padding-left: 2.5em;
     }
+
+    /*Or Spacer CSS*/
+.or-spacer {
+        width: 220px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+  //margin-top: 100px;
+  //margin-left: 100px;
+  width: 400px;
+  position: relative;
+}
+.or-spacer .mask {
+  overflow: hidden;
+  height: 20px;
+}
+.or-spacer .mask:after {
+  content: '';
+  display: block;
+  margin: -25px auto 0;
+  width: 100%;
+  height: 25px;
+  border-radius: 125px / 12px;
+  box-shadow: 0 0 8px black;
+}
+.or-spacer span {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: -25px;
+  left: 50%;
+  margin-left: -25px;
+  border-radius: 100%;
+  box-shadow: 0 2px 4px #999;
+  background: white;
+}
+.or-spacer span i {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  border-radius: 100%;
+  border: 1px dashed #aaa;
+  text-align: center;
+  line-height: 40px;
+  font-style: normal;
+  color: #999;
+}
+
+.or-spacer-vertical {
+  display: inline-block;
+  margin-top: 100px;
+  margin-left: 100px;
+  width: 100px;
+  position: relative;
+}
+.or-spacer-vertical .mask {
+  overflow: hidden;
+  width: 20px;
+  height: 200px;
+}
+.or-spacer-vertical.left .mask:after {
+  content: '';
+  display: block;
+  margin-left: -20px;
+  width: 20px;
+  height: 100%;
+  border-radius: 12px / 125px;
+  box-shadow: 0 0 8px black;
+}
+.or-spacer-vertical.right .mask:before {
+  content: '';
+  display: block;
+  margin-left: 20px;
+  width: 20px;
+  height: 100%;
+  border-radius: 12px / 125px;
+  box-shadow: 0 0 8px black;
+}
 </style>
 
 </head>
@@ -87,7 +169,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Uber Tutor</a>
+                <a class="navbar-brand page-scroll" href="#page-top">Asap Tutor</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -137,7 +219,7 @@
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <h2 class="section-heading">Tutors Avaiable at Your Fingertips</h2>
                     <hr class="light">
-                    <p class="text-faded">Whatever your academic needs, count on UberTutor for tutors in minutes. The UberTutor app matches you with the smartest classmates that have took or are taking your class at the tap of a button. Just request and go.</p>
+                    <p class="text-faded">Whatever your academic needs, count on AsapTutor for tutors in minutes. The AsapTutor app matches you with the smartest classmates that have took or are taking your class at the tap of a button. Just request and go.</p>
                     <a class="btn btn-default btn-xl" data-toggle="modal" href="#register">Get Started!</a>
                 </div>
             </div>
@@ -299,7 +381,7 @@
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <h2 class="section-heading">Let's Get In Touch!</h2>
                     <hr class="primary">
-                    <p>Have questions? Give us a call or send us an email and we will get back to you as soon as possible!</p>
+                    <p>Have Questions? Give us a call or send us an email and we will get back to you as soon as possible!</p>
                 </div>
                 <div class="col-lg-4 col-lg-offset-2 text-center">
                     <i class="fa fa-phone fa-3x wow bounceIn"></i>
@@ -338,36 +420,36 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title"><strong style="color: black">Login</strong> <small>to <strong style="color: grey">Uber</strong>Tutor</small></h4>
+            <h4 class="modal-title"><strong style="color: black">Login</strong> <small>to <strong style="color: grey">Asap</strong>Tutor</small></h4>
           </div>
           <div class="modal-body" style="padding-bottom: 0px;">
-            <form class="form-horizontal">
-              <div class="form-group">
-                <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" id="inputEmailLogin" placeholder="Email Address">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="inputPassword" class="col-lg-2 control-label">Password</label>
-                <div class="col-lg-10">
-                  <input type="password" class="form-control" id="inputPasswordLogin" placeholder="Password">
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox"> Remember me
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <hr>
+            <br>
             <button class="btn btn-primary btnfb"  onclick="fblogin();" type="button">
-                <span class="cta-text">Sign in with Facebook</span> 
+                <i class="fa fa-facebook-official"></i><span> Sign in with Facebook</span>
             </button>
+            <br><br>
+            <div class="or-spacer">  
+                <div class="mask"></div>  
+                <span><i>or</i></span>
+            </div>
+            <br>
+               <!-- form start -->
+                <form class="form-horizontal" style="padding-left:50px; padding-right:50px;">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="inputEmailLogin"><small style="color:grey;">Email Address</small></label>
+                      <input type="email" class="form-control" id="inputEmailLogin" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                      <label for="inputPasswordLogin"><small style="color:grey;">Password</small></label>
+                      <input type="password" class="form-control" id="inputPasswordLogin" placeholder="Password">          
+                    </div>
+                  </div><!-- /.box-body -->
+                </form>
           </div>
           <br>
           <div class="modal-footer">
-            <a id="forgotPassword">Forgot Password?</a>
+            <a id="forgotPassword" style="cursor:pointer;" onclick="resetPassword();">Forgot Password?</a>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="button" onclick="login();" class="btn btn-primary">Login</button>
             <div id="result">
@@ -383,9 +465,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title"><strong style="color: black">Register</strong> <small>for <strong style="color: grey">Uber</strong>Tutor</small></h4>
+            <h4 class="modal-title"><strong style="color: black">Register</strong> <small>for <strong style="color: grey">Asap</strong>Tutor</small></h4>
           </div>
           <div class="modal-body" style="padding-bottom: 0px;">
+            <br>
+            <button class="btn btn-primary btnfb"  onclick="fbregister();" type="button">
+                <i class="fa fa-facebook-official"></i><span> Sign up with Facebook</span>
+            </button>
+            <hr>
             <form class="form-horizontal">
               <div class="form-group">
                 <label for="inputName" class="col-lg-2 control-label">Full Name</label>
@@ -394,21 +481,10 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputSchool" class="col-lg-2 control-label">School</label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" id="schoolName" placeholder="Eg: Georgia Tech, Harvard">
-                </div>
-              </div>
-              <div class="form-group">
                 <label for="inputEmail" class="col-lg-2 control-label">Email</label>
                 <div class="col-lg-10">
                   <input type="text" class="form-control" id="registerEmail" placeholder="Email">
                 </div>
-              </div>
-              <div class = "form-group">
-                 <label for="inputUserType" id="userType" class="col-lg-2 control-label">User Type</label>
-                 <input type="radio" name="colors" id="studentRadio" checked="true"> Student
-                 <input type="radio" name="colors" id="tutorRadio"> Tutor
               </div>
               <div class="form-group">
                 <label for="inputPassword" class="col-lg-2 control-label">Password</label>
@@ -420,10 +496,6 @@
                 </div>
               </div>
             </form>
-            <hr>
-            <button class="btn btn-primary btnfb"  onclick="fbregister();" type="button">
-                <span class="cta-text" >Sign up with Facebook</span> 
-            </button>
           </div>
           <br>
           <div class="modal-footer">
@@ -441,13 +513,13 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">UberTutor's Terms of Agreement</h4>
+          <h4 class="modal-title">AsapTutor's Terms of Agreement</h4>
         </div>
         <div class="modal-body">
             <dl style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; color:black;">
-                <dt>Welcome to UberTutor!</dt>
+                <dt>Welcome to AsapTutor!</dt>
                 <br/>
-                <dd>Thanks for using our products and services (“Services”). The Services are provided by UberTutor Inc. (“UberTutor”), located at <span itemprop="contentLocation">332386 Georgia Tech Station, Atlanta, GA 30332, United States</span>.</dd>
+                <dd>Thanks for using our products and services (“Services”). The Services are provided by AsapTutor Inc. (“AsapTutor”), located at <span itemprop="contentLocation">332386 Georgia Tech Station, Atlanta, GA 30332, United States</span>.</dd>
                 <br/>
                 <dd>By using our Services, you are agreeing to these terms. Please read them carefully.</dd>
                 <br/>
@@ -461,7 +533,7 @@
                 <br/>
                 <dd>Using our Services does not give you ownership of any intellectual property rights in our Services or the content you access. You may not use content from our Services unless you obtain permission from its owner or are otherwise permitted by law. These terms do not grant you the right to use any branding or logos used in our Services. Don’t remove, obscure, or alter any legal notices displayed in or along with our Services.</dd>
                 <br/>
-                <dd>Our Services display some content that is not UberTutor's. This content is the sole responsibility of the entity that makes it available. We may review content to determine whether it is illegal or violates our policies, and we may remove or refuse to display content that we reasonably believe violates our policies or the law. But that does not necessarily mean that we review content, so please don’t assume that we do.</dd>
+                <dd>Our Services display some content that is not AsapTutor's. This content is the sole responsibility of the entity that makes it available. We may review content to determine whether it is illegal or violates our policies, and we may remove or refuse to display content that we reasonably believe violates our policies or the law. But that does not necessarily mean that we review content, so please don’t assume that we do.</dd>
                 <br/>
                 <dd>In connection with your use of the Services, we may send you service announcements, administrative messages, and other information. You may opt out of some of those communications.</dd>
                 <br/>
@@ -469,7 +541,7 @@
                 <br/>
                 <dd>We are constantly changing and improving our Services. We may add or remove functionalities or features, and we may suspend or stop a Service altogether.</dd>  
                 <br/>
-                <dd>You can stop using our Services at any time, although we’ll be sorry to see you go. UberTutor may also stop providing Services to you, or add or create new limits to our Services at any time.</dd>  
+                <dd>You can stop using our Services at any time, although we’ll be sorry to see you go. AsapTutor may also stop providing Services to you, or add or create new limits to our Services at any time.</dd>  
                 <br/>
                 <dd>We believe that you own your data and preserving your access to such data is important. If we discontinue a Service, where reasonably possible, we will give you reasonable advance notice and a chance to get information out of that Service.</dd>    
                 <br/>
@@ -477,7 +549,7 @@
                 <br/>
                 <dd>We provide our Services using a commercially reasonable level of skill and care and we hope that you will enjoy using them. But there are certain things that we don’t promise about our Services.</dd>
                 <br/>
-                <dd>OTHER THAN AS EXPRESSLY SET OUT IN THESE TERMS OR ADDITIONAL TERMS, NEITHER UberTutor NOR ITS SUPPLIERS OR DISTRIBUTORS MAKE ANY SPECIFIC PROMISES ABOUT THE SERVICES. FOR EXAMPLE, WE DON’T MAKE ANY COMMITMENTS ABOUT THE CONTENT WITHIN THE SERVICES, THE SPECIFIC FUNCTION OF THE SERVICES, OR THEIR RELIABILITY, AVAILABILITY, OR ABILITY TO MEET YOUR NEEDS. WE PROVIDE THE SERVICES “AS IS”.</dd>
+                <dd>OTHER THAN AS EXPRESSLY SET OUT IN THESE TERMS OR ADDITIONAL TERMS, NEITHER AsapTutor NOR ITS SUPPLIERS OR DISTRIBUTORS MAKE ANY SPECIFIC PROMISES ABOUT THE SERVICES. FOR EXAMPLE, WE DON’T MAKE ANY COMMITMENTS ABOUT THE CONTENT WITHIN THE SERVICES, THE SPECIFIC FUNCTION OF THE SERVICES, OR THEIR RELIABILITY, AVAILABILITY, OR ABILITY TO MEET YOUR NEEDS. WE PROVIDE THE SERVICES “AS IS”.</dd>
                 <br/>
                 <dd>SOME JURISDICTIONS PROVIDE FOR CERTAIN WARRANTIES, LIKE THE IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. TO THE EXTENT PERMITTED BY LAW, WE EXCLUDE ALL WARRANTIES.</dd>
                 <br/>
@@ -491,7 +563,7 @@
                 <br/>
                 <dd>If there is a conflict between these terms and the additional terms, the additional terms will control for that conflict.</dd>
                 <br/>
-                <dd>These terms control the relationship between UberTutor and you. They do not create any third party beneficiary rights</dd>
+                <dd>These terms control the relationship between AsapTutor and you. They do not create any third party beneficiary rights</dd>
                 <br/>
                 <dd>If you do not comply with these terms, and we don’t take action right away, this doesn’t mean that we are giving up any rights that we may have (such as taking action in the future).</dd>
                 <br/>
@@ -516,17 +588,17 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">UberTutor's Privacy</h4>
+          <h4 class="modal-title">AsapTutor's Privacy</h4>
         </div>
         <div class="modal-body">
             <dl style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; color:black;">
                 <dt>Privacy and Copyright Protection</dt>
                 <br/>
-                <dd>UberTutor's privacy policies explain how we treat your personal data and protect your privacy when you use our Services. By using our Services, you agree that UberTutor can use such data in accordance with our privacy policies.</dd>
+                <dd>AsapTutor's privacy policies explain how we treat your personal data and protect your privacy when you use our Services. By using our Services, you agree that AsapTutor can use such data in accordance with our privacy policies.</dd>
                 <br/>
                 <dd>We respond to notices of alleged copyright infringement and terminate accounts of repeat infringers according to the process set out in the U.S. Digital Millennium Copyright Act.</dd>
                 <br/>
-                <dd>This is not for commercial use. All ideas are property of UberTutor. Pictures and Images obtained from Google Images Search Engine, with sole exception of our Logo. We reserve all rights to our ideas and logo.</dd>
+                <dd>This is not for commercial use. All ideas are property of AsapTutor. Pictures and Images obtained from Google Images Search Engine, with sole exception of our Logo. We reserve all rights to our ideas and logo.</dd>
                 <br/>
             </dl>
         </div>
@@ -539,7 +611,7 @@
     <!-- FOOTER -->
     <footer>
         <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; <meta itemprop="DatePublished" content="2015-03-14">2018 UberTutor, Inc. &middot; <a data-toggle="modal" href="#privacy">Privacy</a> &middot; <a data-toggle="modal" href="#toa">Terms of Agreement</a></p>
+        <p>&copy; <meta itemprop="DatePublished" content="2015-03-14">2018 AsapTutor, Inc. &middot; <a data-toggle="modal" href="#privacy">Privacy</a> &middot; <a data-toggle="modal" href="#toa">Terms of Agreement</a></p>
     </footer>
 
     <!-- jQuery -->
@@ -695,6 +767,30 @@
             }
         });
         }
+
+        function resetPassword(){
+            if(!$("#inputEmailLogin").val()){
+                alert("Please enter an Email Address.")
+                return;
+            }
+            var resetPasswordRef = new Firebase("https://ubertutoralpha.firebaseio.com");
+            resetPasswordRef.resetPassword({
+              email: $("#inputEmailLogin").val()
+            }, function(error) {
+              if (error) {
+                switch (error.code) {
+                  case "INVALID_USER":
+                    alert("The specified user account does not exist.");
+                    break;
+                  default:
+                    alert("Error resetting password:", error);
+                }
+              } else {
+                alert("Password reset email sent successfully!");
+              }
+            });
+        }
+
         function updateLoginLatLng(uid){
             console.log("login avigator.geolocation----------"+uid);
                     if (navigator.geolocation) {
