@@ -73,7 +73,30 @@
         padding-left: 2.5em;
     }
 
-    /*Or Spacer CSS*/
+/*Loading*/
+.overlay {
+    z-index: 100;
+    background: rgba(255,255,255,0.7);
+    border-radius: 3px;
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.faOverlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -25px;
+    margin-top: -25px;
+    color: #000;
+    font-size: 50px;
+}
+
+/*Or Spacer CSS*/
 .or-spacer {
         width: 220px;
         display: block;
@@ -418,6 +441,9 @@
     <div class="modal fade" id="login">
       <div class="modal-dialog">
         <div class="modal-content">
+                <div class="overlay">
+                  <i class="fa fa-refresh fa-spin faOverlay"></i>
+                </div>
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title"><strong style="color: black">Login</strong> <small>to <strong style="color: grey">Asap</strong>Tutor</small></h4>
@@ -463,6 +489,9 @@
     <div class="modal fade" id="register">
       <div class="modal-dialog">
         <div class="modal-content">
+                <div class="overlay">
+                  <i class="fa fa-refresh fa-spin faOverlay"></i>
+                </div>
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title"><strong style="color: black">Register</strong> <small>for <strong style="color: grey">Asap</strong>Tutor</small></h4>
@@ -636,6 +665,7 @@
             // Register the callback to be fired every time auth state changes
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.onAuth(authDataCallback);
+            $(".overlay").hide();
         });
         // Create a callback which logs the current auth state
         function authDataCallback(authData) {
@@ -647,11 +677,13 @@
         }
 
         function fblogin(){
+            $(".overlay").show();
             console.log("Executing FB Login...");
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.authWithOAuthPopup("facebook", loginAuthHandler);
         }
         function login(){
+            $(".overlay").show();
             console.log("Executing Traditional Login...");
             var email = $('#inputEmailLogin').val();
             var pass = $('#inputPasswordLogin').val();
@@ -666,6 +698,7 @@
           if (error) {
             console.log("Login Failed!", error);
             alert(error);
+            $(".overlay").hide();
           } else {
             checkIfUserExistsLogin(authData.uid, authData);
           }
@@ -681,14 +714,17 @@
             var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
             ref.unauth();
             alert("User: "+getName(authData)+" does not exist.");
+            $(".overlay").hide();
         }
 
         function fbregister(){
+            $(".overlay").show();
             console.log("Executing FB Register...");
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.authWithOAuthPopup("facebook", registerAuthHandler);
         }
         function register(){
+            $(".overlay").show();
             console.log("Executing Traditional Register...");
             /*Get UI Values*/
             var email = $('#registerEmail').val();
@@ -696,6 +732,7 @@
             var pass2 = $('#Password2').val();
             if(pass1 != pass2){
                 alert("Passwords Do Not Match")
+                $(".overlay").hide();
                 return;
             }
             /*Authenticate First To see if user exists before registering*/
@@ -719,6 +756,7 @@
             persistNewUserDB("traditionalEmailPassword");
           } else if (error) {
             alert(error);
+            $(".overlay").hide();
           }else {
             console.log(error, authData);
           }
@@ -759,6 +797,7 @@
                 var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
                 ref.unauth();
                 alert("User: "+getName(authData)+" already exists.");
+                $(".overlay").hide();
             }else{
                 persistNewUserDB(authData);
             }
@@ -766,8 +805,10 @@
         }
 
         function resetPassword(){
+            $(".overlay").show();
             if(!$("#inputEmailLogin").val()){
                 alert("Please enter an Email Address.")
+                $(".overlay").hide();
                 return;
             }
             var resetPasswordRef = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -785,6 +826,7 @@
               } else {
                 alert("Password reset email sent successfully!");
               }
+              $(".overlay").hide();
             });
         }
 
@@ -805,6 +847,7 @@
                         });
                     } else {
                         alert("not support navigator.geolocation");
+                        $(".overlay").hide();
                     }  
         }
         function persistNewUserDB(authData){
@@ -919,6 +962,7 @@
           if (error) {
             console.log("Login Failed!", error);
             alert(error);
+            $(".overlay").hide();
           } else {
             console.log("Successfully Created and Logged in. Payload:",authData);
 
