@@ -820,7 +820,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
 
       //pass info to chatbox
-      chatBox(_this.getAttribute("tutorID"), _this.getAttribute("studentID"), _this.getAttribute("currentUserID"));
+      chatBox(_this.getAttribute("tutorID"), _this.getAttribute("studentID"), _this.getAttribute("currentUserID"),_this);
     }
     function goToPayments(){
       window.location ='payment.html';
@@ -1026,18 +1026,29 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         var utc=moment.utc().format();
         chatRef.child(utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
-      FireChatUsers(tutorID, studentID, currUserID);
+      //FireChatUsers(tutorID, studentID, currUserID);
 
-};////
+      var chatElm=null;
+      this.SetSession=function(chatElem){
+        chatElm=chatElem;
+        var tutorID=$(chatElem).attr("tutorID"),
+        studentID=$(chatElem).attr("studentID");
+        console.log("wei",tutorID,studentID);
+
+        FireChatUsers(tutorID,studentID,currUserID);
+      }
+
+};////////////////////////////////////////////
 
       var fireChatBox=null;
-      function chatBox(tutorID, studentID, currUserID){
+      function chatBox(tutorID, studentID, currUserID,chatElem){
           $("#chatMessages").empty();
           if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
 
           if(null===fireChatBox){
             fireChatBox=new MyFireChatBox(tutorID, studentID, currUserID);            
           }
+          fireChatBox.SetSession(chatElem);
 
       };
 
