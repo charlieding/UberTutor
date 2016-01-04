@@ -713,7 +713,7 @@
             } else {
                 //Hack for IOS Mobile View - TODO, DEBUG & FIX
                 if(authenticatedIosRedirectFlag){
-                    alert("Mobile View not supported. Please use Desktop for best Experience.")
+                    alert("This Device is not supported. Please use Desktop for best Experience.")
                     window.location = 'STUDENT/index.html';
                 }
                 checkIfUserExistsLogin(authDataRetry.uid, authDataRetry);
@@ -780,7 +780,7 @@
             if (authDataRetry){
                 //Hack for IOS Mobile View
                 if(authenticatedIosRedirectFlag){
-                    alert("Mobile View not supported. Please use Desktop for best Experience.")
+                    alert("This Device is not supported. Please use Desktop for best Experience.")
                     window.location = 'STUDENT/index.html';
                 }
               if(authDataRetry.provider = "facebook"){
