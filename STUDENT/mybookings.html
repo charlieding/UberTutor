@@ -214,22 +214,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </section>
 
         <!-- Main content -->
-        <section class="content">
+        <section id="mainContentSection" class="content">
 
-         <!-- Current Session -->
-          <div class="row">
-            <!--Bookings-->
+         <!-- SAMPLE TOP HEADER -->
+     <!-- <div class="row"> 
             <div class="col-md-8 center-block" style="float:none;">
-              <!-- TABLE: LATEST ORDERS -->
               <div class="box box-info">
                 <div class="box-header with-border">
                   <h1 class="box-title" ><b>On The Way</b> $20/hr</h1>
                   <div class="box-tools pull-right">
-                    <!--<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>-->
-                    <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
                     <button onclick="cancelAppointment(this);" class="btn btn-sm btn-danger" style="cursor:pointer;">Cancel</button>
                   </div>
-                </div><!-- /.box-header -->
+                </div>
                 <div class="box-body">
                   <div class="table-responsive">
                     <table class="table no-margin table-hover">
@@ -240,7 +236,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div><b id="mainCourse">CS 1234</b> on <b id="mainDate">Jan 3, 5:00PM</b></div>
                             <div>with <b id="mainTutor">Inez Raharjo</b>, 1hr(s)</div>
                             <span class="btn btn-sm btn-primary label" style="cursor:pointer;"><i class="fa fa-comments-o"> Chat</i></span>
-                            <span data-toggle="tooltip" title="" class="badge bg-yellow" data-original-title="3 New Messages">3</span>
+                            <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>
                           </td>
                           <td>
                             <div>Location</div>
@@ -248,12 +244,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div>Berkley, CA 91245</div>
                           </td>
                       </tbody>
-                    </table>
-                  </div><!-- /.table-responsive -->
-                </div><!-- /.box-body -->
-              </div><!-- /.box -->
-            </div><!--bookingsdiv-->
-          </div><!-- /.row -->
+                    </table> -->
+                  <!-- </div>/.table-responsive -->
+                <!-- </div>/.box-body -->
+              <!-- </div>/.box -->
+            <!-- </div>bookingsdiv -->
+          <!-- </div>/.row -->
 
           <!-- Upcoming Sessions -->
           <div class="row">
@@ -279,7 +275,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Location</th>
                           <th>Class</th>
                           <th>Status</th>
-                          <th>Price</th>
+                          <th>Duration / Price</th>
                           <th>Action Item(s)</th>
                         </tr>
                       </thead>
@@ -327,7 +323,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Location</th>
                           <th>Class</th>
                           <th>Status</th>
-                          <th>Price Paid</th>
+                          <th>Duration / Price</th>
                           <th>Action Item(s)</th>
                         </tr>
                       </thead>
@@ -377,10 +373,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="box-header with-border">
                       <h3 class="box-title" id="boxtitle">Direct Chat</h3>
                       <div class="box-tools pull-right">
-                        <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>
+                        <!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>-->
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
-                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
                       </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
@@ -674,6 +670,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           //Clear lists before showing
           $("#upcomingBookings").empty();
           $("#pastBookings").empty();
+          $(".refreshable").remove();
+
           //Go through every appointment for the user, map it to a real appointment, the display it all
           if(userAppointments && allAppointments){
             $.each(userAppointments, function(uid, appointmentMapObj){
@@ -688,6 +686,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 var statusStyle = "bg-gray-active color-palette";
                 var actionItem = "None";
                 var upcomingPastOrNow = "#pastBookings";
+                var paymentText = "Price Estimate";
 
                 if(appointmentSnapshot.val().status == "Awaiting Response"){
                   upcomingPastOrNow = "#upcomingBookings";
@@ -700,15 +699,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "On the Way"){
-                  upcomingPastOrNow = "#now";
+                  upcomingPastOrNow = "#mainContentSection";
                   statusStyle = "label-info";
+                  actionItem = "<button class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button>";
                 }
                 if(appointmentSnapshot.val().status == "In Session"){
-                  upcomingPastOrNow = "#now";
+                  upcomingPastOrNow = "#mainContentSection";
                   statusStyle = "label-info";
+                  actionItem = "<button class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button>";
                 }
                 if(appointmentSnapshot.val().status == "Pending Payment"){
-                  upcomingPastOrNow = "#now";
+
+                  upcomingPastOrNow = "#mainContentSection";
+                  paymentText = "Amount Due";
                   statusStyle = "label-warning";
                   actionItem = "<span onclick='goToPayments();' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
                 }
@@ -733,12 +736,57 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   //Doesn't Exist yet, just add
                   uids = uids+uid;
 
-                  if(upcomingPastOrNow == "#now"){
+                  if(upcomingPastOrNow == "#mainContentSection"){
+                    (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+appointmentSnapshot.val().tutorID+"/imgUrl")).once('value', function (imgUrlSnapshot) {
+                      var imgUrl = imgUrlSnapshot.val();
+
+        $(upcomingPastOrNow).prepend(""+
+          "<div class='row refreshable'>"+
+            "<div class='col-md-8 center-block' style='float:none;'>"+
+              "<div class='box box-info'>"+
+                "<div class='box-header with-border'>"+
+                  "<h1 class='box-title' ><b>"+appointmentSnapshot.val().status+"</b> - "+paymentText+": $"+appointmentSnapshot.val().cost+"</h1>"+
+                  "<div class='box-tools pull-right'>"+
+                    actionItem+
+                  "</div>"+
+                "</div>"+
+                "<div class='box-body'>"+
+                  "<div class='table-responsive'>"+
+                    "<table class='table no-margin table-hover'>"+
+                      "<tbody>"+
+                        "<tr>"+
+                          "<td><img src='"+imgUrl+"' class='img-circle userImage' style='height:65px;' alt='User Image'></td>"+
+                          "<td>"+
+                            "<div><b>"+appointmentSnapshot.val().courses+"</b> on <b>"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mmA")+"</b></div>"+
+                            "<div>with <b>"+appointmentSnapshot.val().tutorDisplayName+"</b>, "+appointmentSnapshot.val().duration+"hr(s) - $"+appointmentSnapshot.val().costHourly+"/hr</div>"+
+                            "<span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+
+                            " <span data-toggle='tooltip' title='3 New Messages' class='badge bg-yellow'>3</span>"+
+                          "</td>"+
+                          "<td>"+
+                            "<div>Location</div>"+
+                            "<div>"+appointmentSnapshot.val().latlngAddress+"</div>"+
+                          "</td>"+
+                      "</tbody>"+
+                    "</table>"+
+                  "</div>"+
+                "</div>"+
+              "</div>"+
+            "</div>"+
+          "</div>");
+
+
+                    }, function (err) {
+                      // code to handle read error
+                      console.log(err);
+                    });
+
+
+
 
                   } else if(upcomingPastOrNow == "#upcomingBookings"){
-                    $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span></div></td><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>$"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                    $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='3 New Messages' class='badge bg-yellow'>3</span>"+"</div></td><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
                   } else if(upcomingPastOrNow == "#pastBookings"){
-                    $(upcomingPastOrNow).prepend("<tr><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>$"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                    $(upcomingPastOrNow).prepend("<tr><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
                   }
                 }
 
