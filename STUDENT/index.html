@@ -413,10 +413,10 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                     <p id="biographyModal" ></p>
                     <ul class="list-group list-group-unbordered">
                       <li class="list-group-item">
-                        <b class="pull-left">Phone Number</b>.<a id="phoneNumberModal" class="pull-right"></a>
+                        <b class="pull-left">Phone Number</b>.<a style="cursor:pointer;" id="phoneNumberModal" class="pull-right"></a>
                       </li>
                       <li class="list-group-item">
-                        <b class="pull-left">Email</b>.<a id="emailModal" class="pull-right"></a>
+                        <b class="pull-left">Email</b>.<a style="cursor:pointer;" id="emailModal" class="pull-right"></a>
                       </li>
                     </ul>
                   </div><!-- /.box-body -->
@@ -706,7 +706,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         }
       }
       function updateTutorProfile(_this){
-        alert(_this);
+        //BUG HERE - TODO - YOU CAN NOT STORE DOUBLE OR SINGLE QUOTES INTO STRING
         var usrObj=JSON.parse($(_this).attr("userobj"));
         console.log(usrObj);
         updateTutorProfileByObject(usrObj);
@@ -747,6 +747,21 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
             $("#tutorProfileImageHeader").click(function(){
               tutorProfileModal();
             });
+            //Add Opacity hover effect
+            $('#tutorProfileName').hover(function() {
+              $(this).stop().animate({ opacity: 0.6 }, "fast"); //on mouse hover
+            },
+            function() {
+              $(this).stop().animate({ opacity: 1.0 }, "fast"); //on mouse out
+            });
+            $('#tutorProfileImageHeader').hover(function() {
+              $(this).stop().animate({ opacity: 0.6 }, "fast"); //on mouse hover
+            },
+            function() {
+              $(this).stop().animate({ opacity: 1.0 }, "fast"); //on mouse out
+            });
+
+
             if(parseFloat(stars) == 0){
               //0.5
               $("#tutorProfileStar1").text("No Reviews");
@@ -947,7 +962,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           latlng: latlng,
           latlngAddress: latlngAddress,
           duration: duration,
-          cost: cost,
+          cost: cost + "",
           status: "Awaiting Response",
           courses: courses,
           declineMessage: "null",

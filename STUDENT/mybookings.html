@@ -644,20 +644,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
         
         //Remove listener if it already exists to prevent duplicate database calls
         if(onUsersAppointmentChange){
+          console.log("Listener Removed");
           usersRef.off('value', onUsersAppointmentChange);
           onUsersAppointmentChange = null;
         } 
         //Remove listener if it already exists to prevent duplicate database calls
         if(refAndOnAppointmentChangeMap){
           $.each(refAndOnAppointmentChangeMap, function(key, value){
-            console.log("Listener Removed");
+            console.log("Listener Removed DEEP");
             new Firebase(key).off('value',value);
           });
           refAndOnAppointmentChangeMap = {};
         } 
 
         // Attach an asynchronous callback to read the data at our posts reference
-        onUsersAppointmentChange = usersRef.on("value", function(snapshot) {
+        onUsersAppointmentChange = usersRef.once("value", function(snapshot) {
+          console.log("Listener Added");
           //console.log(snapshot.val());
           var userAppointments = currUserSnapshot.val().appointmentIDs;
           var allAppointments = snapshot.val();
@@ -680,7 +682,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               var ref = new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+uid);
 
               refAndOnAppointmentChangeMap[ref] = ref.on("value", function(appointmentSnapshot) {
-                //console.log("LISTENER ADDED! "); //Listers are added here as well as any child changed object will trigger this
+                console.log("LISTENER ADDED DEEP "); //Listers are added here as well as any child changed object will trigger this
 
                 //Default Unknown Status Style
                 var statusStyle = "bg-gray-active color-palette";
