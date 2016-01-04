@@ -755,15 +755,14 @@
                     lastName: authData.facebook.cachedUserProfile.last_name,
                     gender: authData.facebook.cachedUserProfile.gender,
                     locale: authData.facebook.cachedUserProfile.locale,
-                    age: authData.facebook.cachedUserProfile.age_range.min,
+                    age: authData.facebook.cachedUserProfile.age_range.min+"",
                     //universal fields
                     uid:authData.uid,
                     latlng: "",
                     phoneNumber: "Not Specified",
-                    major: "Not Specified",
                     education: "Not Specifed",
-                    state: "",
-                    city: "",
+                    state: "City Not Specified",
+                    city: "State Not Specified",
                     appointmentIDs: "",
                     tutorRequests: "",
                     freeSchedule: {
@@ -794,7 +793,11 @@
                     email:"Not Specified",
                     joinDate: moment().format(),
                     reviewAvgStars: "0",
-                    numOfReviews: "0"
+                    numOfReviews: "0",
+                    skills: "",
+                    courseExpertise: "",
+                    costHourly:"Not Set"
+
 
                     //todo add more fields
 

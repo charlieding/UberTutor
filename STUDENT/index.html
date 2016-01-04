@@ -92,7 +92,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
   |               | sidebar-mini                            |
   |---------------------------------------------------------|
   -->
-  <body class="hold-transition skin-blue sidebar-mini">
+  <body class="hold-transition skin-blue sidebar-mini" style="overflow:hidden">
     <div id="globalwrapper" class="wrapper">
 
       <!-- Main Header -->
@@ -252,10 +252,10 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                 <!-- form start -->
                 <form role="form">
                   <div class="box-body">
-                    <!-- text input -->
+                    <!-- text input 
                     <div class="form-group">
                       <input id="topicQuestion" type="text" class="form-control" placeholder="[OPTIONAL] General Topic/Question   Eg:Calculus Matrix Multiplications">
-                    </div>
+                    </div> -->
                     <div style="float:left; width:60%;">
                       <div class="input-group">
                         <input type="text" id='eventPos' class="form-control" placeholder="Where to meet? Eg: Library (Default: Your Current Location)">
@@ -281,7 +281,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         <!-- Create the tabs -->
         <ul id="rightsidetabs" class="nav nav-tabs nav-justified control-sidebar-tabs">
           <li id="searchTutorsRightBar"><a href="#control-sidebar-home-tab" data-toggle="tab" onclick="findTutors();"><i class="fa fa-search"></i></a></li>
-          <li id="tutorProfileRightBar"><a href="#control-sidebar-settings-tab" data-toggle="tab" onclick="emptyTutorLogic();" ><i class="fa fa-user"></i></a></li>
+          <li id="tutorProfileRightBar"><a href="#control-sidebar-settings-tab" data-toggle="tab" onclick="setTutorProfileTabActive();" ><i class="fa fa-user"></i></a></li>
           <li><a href="#" onclick="$.AdminLTE.controlSidebar.close();" style="cursor:pointer"><i class="fa fa-close"></i></a></li>
         </ul>
         <!-- Date and time range & time Picker-->
@@ -307,74 +307,134 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           <!-- Home tab content -->
           <div class="tab-pane" id="control-sidebar-home-tab">
             <ul id="tutorsList" class="control-sidebar-menu">
-              <li>
-                <a href="javascript::;">
-                  <img src="dist/img/user1-128x128.jpg" class="user-image menu-icon" alt="User Image">
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Langdon Chen <span style="font-size:10px; color:grey;"> &nbsp;<b>0.3</b> mile(s)</span></h4>
-                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> (13)</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <img src="dist/img/user3-128x128.jpg" class="user-image menu-icon" alt="User Image">
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Frodo Urlo <span style="font-size:10px; color:grey;"> &nbsp;<b>1.1</b> mile(s)</span></h4>
-                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"> (8)</i></p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <img src="dist/img/user4-128x128.jpg" class="user-image menu-icon" alt="User Image">
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Nora Park <span style="font-size:10px; color:grey;"> &nbsp;<b>1.9</b> mile(s)</span></h4>
-                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"> (5)</i></p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="javascript::;">
-                  <img src="dist/img/user5-128x128.jpg" class="user-image menu-icon" alt="User Image">
-                  <div class="menu-info">
-                    <h4 class="control-sidebar-subheading">Cron Balmer <span style="font-size:10px; color:grey;"> &nbsp;<b>2.1</b> mile(s)</span></h4>
-                    <p><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o">(2)</i>
-                      </p>
-                  </div>
-                </a>
-              </li>
             </ul><!-- /.control-sidebar-menu -->
           </div><!-- /.tab-pane -->
           <!-- Settings tab content -->
           <div class="tab-pane" id="control-sidebar-settings-tab">
                   <div class="hideTutorProfileWhenNoTutorSelected" style="text-align:center;">
-                    <img id="tutorProfileImageHeader" src="dist/img/photo1.png" style="width:70%;" class="user-image img-circle" alt="User Image">
+                    <img id="tutorProfileImageHeader" src="dist/img/photo1.png" style="width:70%; cursor:pointer;" class="user-image img-circle" alt="User Image">
                     <p>
-                      <h4 id="tutorProfileName" class="control-sidebar-subheading">Langdon Chen</h4>
+                      <h4 id="tutorProfileName" style="cursor:pointer" class="control-sidebar-subheading">Langdon Chen</h4>
                       <p style="margin-top: -8px;"><i id="tutorProfileStar1" class="fa fa-star"></i><i id="tutorProfileStar2" class="fa fa-star"></i><i id="tutorProfileStar3" class="fa fa-star"></i><i id="tutorProfileStar4" class="fa fa-star"></i><i id="tutorProfileStar5" class="fa fa-star"></i><span id="tutorProfileNumOfReviews"> (13)</span></p>
                       <p id="tutorProfileMembership" style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
+                    </p>
+                    <h4 class="control-sidebar-subheading">Pricing</h4>
+                    <p style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
+                      $<span id="bookingCostTotal" >150</span> for <span id="bookingDuration" >3</span> Hour(s) @ $<span id="bookingHourlyCost">30</span>/hr 
                     </p>
                     <h4 class="control-sidebar-subheading">Biography</h4>
                     <p id="tutorBiography"  style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
                       I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
                     </p>
-                    <h4 class="control-sidebar-subheading">Flexiblity</h4>
-                    <div style="text-align:center; padding-left:30px; padding-right:30px;">
-                      <input id="flexibilitySlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="120" data-slider-step="1" data-slider-value="0"/>
-                      <p><span id="flexibility">0</span> Minutes(s)</p>
-                    </div>
-                    <div class="box-footer mainbox-footer">
-                      <button id="confirmTutorButton" type="button" class="btn btn-default" style="width:100%;" onclick="requestAppointment();">Confirm & Request!</button>
-                    </div>
                   </div>
           </div><!-- /.tab-pane -->
+        </div>
+        <div id="tutorPageDecals" style="text-align:center; border-top: 1px solid white;" >
+          <h4 class="control-sidebar-subheading">Start Time Flexiblity</h4>
+          <div style="text-align:center; padding-left:30px; padding-right:30px;">
+            <input id="flexibilitySlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="120" data-slider-step="1" data-slider-value="0"/>
+            <p><span id="flexibility">0</span> Minutes(s)</p>
+          </div>
+          <div class="box-footer mainbox-footer">
+            <button id="confirmTutorButton" type="button" class="btn btn-default" style="width:100%;" onclick="requestAppointment();">Confirm & Request!</button>
+          </div>
         </div>
       </aside><!-- /.control-sidebar -->
       <!-- Add the sidebar's background. This div must be placed
            immediately after the control sidebar -->
       <div id="controlsidebarbg" class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
+
+    <!-- Modals
+    ===================================================== -->
+    <!--Feedback Modal -->
+    <div class="modal fade" id="tutorProfileModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"><strong style="color: black">Tutor Profile</strong> <small> Asap<strong style="color: grey">Tutor </strong></small></h4>
+          </div>
+          <div class="modal-body" style="padding-bottom: 0px; text-align:center;">
+
+
+
+
+            <div class="row">
+              <div class="col-md-12">
+
+                <!-- Profile Image -->
+                <div class="box box-primary">
+                  <div class="box-body box-profile">
+                    <img id="tutorImageModal" class="profile-user-img img-responsive img-circle userImage" src="dist/img/l.gif" alt="User profile picture">
+                    <h3 id="tutorNameModal" class="profile-username text-center userName"></h3>
+                    <p id="currentStatusModal" class="text-muted text-center"> since <span id="joinDateModal"></span></p>
+                  </div><!-- /.box-body -->
+                </div><!-- /.box -->
+              </div>
+              <div class="col-md-12">
+                <!-- About Me Box -->
+                <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">About Me</h3>
+                  </div><!-- /.box-header -->
+                  <div class="box-body">
+                    <strong><i class="fa fa-university margin-r-5"></i>  Education</strong>
+                    <p id="educationModal" class="text-muted">
+                    </p>
+
+                    <hr>
+
+                    <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+                    <p id="locationModal" class="text-muted"></p>
+
+                    <hr>
+
+                    <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+                    <p id="skillsModal">
+                      <span class="label label-danger">UI Design</span>
+                      <span class="label label-success">Coding</span>
+                      <span class="label label-info">Javascript</span>
+                      <span class="label label-warning">PHP</span>
+                      <span class="label label-primary">Node.js</span>
+                    </p>
+                    <hr>
+                    <strong><i class="fa fa-book margin-r-5"></i> Courses Expertise</strong>
+                    <p id="courseExpertiseModal">
+                      <span class="label label-danger">CS 1001</span>
+                      <span class="label label-success">PSYC 2001</span>
+                      <span class="label label-info">MATH 3001</span>
+                      <span class="label label-warning">MATH 2001</span>
+                      <span class="label label-primary">CS 2001</span>
+                    </p>
+                    <hr>
+
+                    <strong><i class="fa fa-file-text-o margin-r-5"></i> Biography</strong>
+                    <p id="biographyModal" ></p>
+                    <ul class="list-group list-group-unbordered">
+                      <li class="list-group-item">
+                        <b class="pull-left">Phone Number</b>.<a style="cursor:pointer;" id="phoneNumberModal" class="pull-right"></a>
+                      </li>
+                      <li class="list-group-item">
+                        <b class="pull-left">Email</b>.<a style="cursor:pointer;" id="emailModal" class="pull-right"></a>
+                      </li>
+                    </ul>
+                  </div><!-- /.box-body -->
+                </div><!-- /.box -->
+              </div>
+            </div>
+
+
+
+
+          </div>
+          <br>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- REQUIRED JS SCRIPTS -->
 
@@ -418,7 +478,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
       var selectedTutorID = null;
       var loggedInUserID = null;
       $( document ).ready(function() {
-
+          emptyTutorLogic();
           $(".hideTutorProfileWhenNoTutorSelected").hide();
 
           // Register the callback to be fired every time auth state changes
@@ -461,6 +521,18 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
               console.log("User is logged out");
             }
           }
+          $("#duration").on('change',function(){
+               //Manual Listener to change spans to match - Angular woulda helped here. Bug ,this is called way too many times
+               $("#bookingDuration").text($("#duration").text());
+               var hourly = parseInt($("#bookingHourlyCost").text());
+               var duration = parseInt($("#duration").text());
+               if(hourly && duration){
+                  var finalCost = hourly * duration;
+                  if(finalCost){
+                    $("#bookingCostTotal").text(hourly * duration);
+                  }
+               }
+          });
       });
       function updateUserImages(imgURL){
         if (imgURL){
@@ -483,8 +555,6 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
       function findTutors(){
 
         // Show Find Tutor as Header
-        $("#rightBarHeaderName").text("Tutors Near You");
-        $("#rightBarHeaderName").show();
         setSearchTutorsTabActive();
 
         //Forces Open Right Bar
@@ -553,6 +623,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         var stars = userObj.reviewAvgStars; 
         var numOfReview = userObj.numOfReviews  || "0";
         var starsHtml = "No Reviews Yet";
+        var price = userObj.costHourly ||"Not Set" ;
         if(parseFloat(stars) < 0.75){
           //0.5
           starsHtml = "<i class='fa fa-star-half-o' onclick></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i><i class='fa fa-star-o'></i>";
@@ -594,131 +665,196 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           //5.0
           starsHtml = "<i class='fa fa-star' onclick></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i><i class='fa fa-star'></i>";
         }
+        if(numOfReview == "0" || numOfReview == 0){
+          starsHtml = "No Reviews";
+        }
 
-        $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj)+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+")</p></div></a></li>");
+        $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj)+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+" ) - $"+price+"/hr </p> </div></a></li>");
       }
+      //Fix Window OnResize Bug for Right Side Bar LOL
+      var rightsidebaraside = 70;
+      var righttabcontent = 235;
       function setTutorProfileTabActive(){
+        //Hide Find Tutor Header Name
+        isTutorSelected = true;
+        emptyTutorLogic();
+        rightsidebaraside = 150;
+        righttabcontent = 315;
+        fixSideBars();
+
+        //Finished Updating Tutor Profile, Show it Now
+        $(".hideTutorProfileWhenNoTutorSelected").show();
         $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
       }
       function setSearchTutorsTabActive(){
+        rightsidebaraside = 70;
+        righttabcontent = 235;
+        fixSideBars();
+
+        $("#rightBarHeaderName").text("Tutors Near You");
+        $("#rightBarHeaderName").show();
+        $("#tutorPageDecals").hide();
         $('#rightsidetabs a[href="#control-sidebar-home-tab"]').tab('show');
       }
       function emptyTutorLogic(){
         if(isTutorSelected == false){
           $('#rightBarHeaderName').text('No Tutor Selected');
+          $("#tutorPageDecals").hide();
         }else{
           $('#rightBarHeaderName').hide();
+          $("#tutorPageDecals").show();
         }
       }
       function updateTutorProfile(_this){
-        var usrObj=JSON.parse($(_this).attr("userObj"));
+        //BUG HERE - TODO - YOU CAN NOT STORE DOUBLE OR SINGLE QUOTES INTO STRING
+        var usrObj=JSON.parse($(_this).attr("userobj"));
         console.log(usrObj);
         updateTutorProfileByObject(usrObj);
 
       }
-      function updateTutorProfileByObject(usrObj){
-        selectedTutorID = usrObj.uid;
+      var onUpdateTutorProfileChange = null;
+      function updateTutorProfileByObject(tutorObj){
+        selectedTutorID = tutorObj.uid;
+        var updateTutorProfileRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
 
-        var joinDate = moment(usrObj.joinDate).format("MMM. YYYY") || "Unknown";
-        var numOfReviews = usrObj.numOfReviews || "0";
-        var stars = parseFloat(usrObj.reviewAvgStars);
-
-        //Update Tutor Profile
-        $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
-        $("#tutorProfileName").text(usrObj.displayName);
-        $("#tutorProfileNumOfReviews").text(" ("+numOfReviews+")");
-        $("#tutorProfileMembership").text("Tutor since " + joinDate);
-        $("#tutorBiography").text(usrObj.biography);
-        if(parseFloat(stars) < 0.75){
-          //0.5
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star-half-o" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 0.75 && parseFloat(stars) < 1.25){
-          //1.0
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 1.25 && parseFloat(stars) < 1.75){
-          //1.5
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-half-o" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 1.75 && parseFloat(stars) < 2.25){
-          //2.0
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 2.25 && parseFloat(stars) < 2.75){
-          //2.5
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-half-o" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 2.75 && parseFloat(stars) < 3.25){
-          //3.0
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 3.25 && parseFloat(stars) < 3.75){
-          //3.5
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-half-o" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 3.75 && parseFloat(stars) < 4.25){
-          //4.0
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
-        }
-        if(parseFloat(stars) >= 4.25 && parseFloat(stars) < 4.75){
-          //4.5
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-half-o" );
-        }
-        if(parseFloat(stars) >= 4.75){
-          //5.0
-          $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
-          $("#tutorProfileStar5").removeClass().addClass( "fa fa-star" );
+        //Stop listener if there is already is one to prevent unneeded database calls.
+        if(onUpdateTutorProfileChange){
+          updateTutorProfileRef.off('value', onUpdateTutorProfileChange);
         }
 
-        //Hide Find Tutor Header Name
-        isTutorSelected = true;
-        $("#rightBarHeaderName").hide();
+        onUpdateTutorProfileChange = updateTutorProfileRef.child(tutorObj.uid).on("value",function(usrObjSnapshot){
+            var usrObj=usrObjSnapshot.val();
+            var joinDate = moment(usrObj.joinDate).format("MMM. YYYY") || "Unknown";
+            var numOfReviews = usrObj.numOfReviews || "0";
+            var stars = parseFloat(usrObj.reviewAvgStars);
 
-        //Finished Updating Tutor Profile, Show it Now
-        $(".hideTutorProfileWhenNoTutorSelected").show();
+            //Update Tutor Profile
+            $("#bookingDuration").text($("#duration").text());
+            $("#bookingHourlyCost").text(usrObj.costHourly || "Not Set");
+            $("#bookingCostTotal").text(parseInt($("#bookingDuration").text())*parseInt($("#bookingHourlyCost").text()));
+            $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
+            $("#tutorProfileName").text(usrObj.displayName);
+            $("#tutorProfileNumOfReviews").text(" ("+numOfReviews+")");
+            $("#tutorProfileMembership").text("Tutor since " + joinDate);
+            $("#tutorBiography").text(usrObj.biography);
+            $("#tutorProfileStar1").text("");
 
-        //Hack - This supposes that everytime we update Tutor Profile, we want to display it as well.
-        setTutorProfileTabActive();
+            //Add Listeners to view Profile Modal
+            $(document).attr("tutorObj",JSON.stringify(usrObj));
+            $("#tutorProfileName").click(function(){
+              tutorProfileModal();
+            });
+            $("#tutorProfileImageHeader").click(function(){
+              tutorProfileModal();
+            });
+            //Add Opacity hover effect
+            $('#tutorProfileName').hover(function() {
+              $(this).stop().animate({ opacity: 0.6 }, "fast"); //on mouse hover
+            },
+            function() {
+              $(this).stop().animate({ opacity: 1.0 }, "fast"); //on mouse out
+            });
+            $('#tutorProfileImageHeader').hover(function() {
+              $(this).stop().animate({ opacity: 0.6 }, "fast"); //on mouse hover
+            },
+            function() {
+              $(this).stop().animate({ opacity: 1.0 }, "fast"); //on mouse out
+            });
+
+
+            if(parseFloat(stars) == 0){
+              //0.5
+              $("#tutorProfileStar1").text("No Reviews");
+              $("#tutorProfileStar1").removeClass();
+              $("#tutorProfileStar2").removeClass();
+              $("#tutorProfileStar3").removeClass();
+              $("#tutorProfileStar4").removeClass();
+              $("#tutorProfileStar5").removeClass();
+            }
+            if(parseFloat(stars) < 0.75 && parseFloat(stars) >0){
+              //0.5
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star-half-o" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 0.75 && parseFloat(stars) < 1.25){
+              //1.0
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 1.25 && parseFloat(stars) < 1.75){
+              //1.5
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star-half-o" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 1.75 && parseFloat(stars) < 2.25){
+              //2.0
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 2.25 && parseFloat(stars) < 2.75){
+              //2.5
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star-half-o" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 2.75 && parseFloat(stars) < 3.25){
+              //3.0
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-o" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 3.25 && parseFloat(stars) < 3.75){
+              //3.5
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star-half-o" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 3.75 && parseFloat(stars) < 4.25){
+              //4.0
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-o" );
+            }
+            if(parseFloat(stars) >= 4.25 && parseFloat(stars) < 4.75){
+              //4.5
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star-half-o" );
+            }
+            if(parseFloat(stars) >= 4.75){
+              //5.0
+              $("#tutorProfileStar1").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar2").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar3").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar4").removeClass().addClass( "fa fa-star" );
+              $("#tutorProfileStar5").removeClass().addClass( "fa fa-star" );
+            }
+
+            //Hack - This supposes that everytime we update Tutor Profile, we want to display it as well.
+            setTutorProfileTabActive();
+        }); 
       }
 
       function updateFreeSchedule(){
@@ -754,19 +890,65 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         //Contact all tutors, even offline tutors 
         alert("Coming Soon. This will contact all tutors (offline or online) to get you help as soon as possible.")
       }
-      // --TODO--
+
+      function tutorProfileModal(){
+        //pop up modal and set tutor name
+        $('#tutorProfileModal').modal(); 
+        var tutorObj = JSON.parse($(document).attr("tutorObj"));
+        console.log(tutorObj);
+        $("#tutorImageModal").attr("src",tutorObj.imgUrl);
+        $("#tutorNameModal").text(tutorObj.displayName);
+        $("#memberSinceDateProfileModal").text("Member since "+ moment(tutorObj.creationDate).format("MMM. YYYY"));
+        $("#joinDateModal").text(moment(tutorObj.creationDate).format("MMMM Do, YYYY"));
+        $("#emailModal").text("Request");//(tutorObj.email);
+        $("#phoneNumberModal").text("Request");//(tutorObj.phoneNumber);
+        $("#currentStatusModal").text(tutorObj.userType.charAt(0).toUpperCase() + tutorObj.userType.slice(1) + " since " );
+        $("#educationModal").text(tutorObj.education);
+        $("#locationModal").text(tutorObj.city+", "+tutorObj.state);
+        $("#biographyModal").text(tutorObj.biography);
+        $("#courseExpertiseModal").empty();
+        $("#skillsModal").empty();
+
+        $("#emailModal").click(function(){alert("Coming Soon...");});
+        $("#phoneNumberModal").click(function(){alert("Coming Soon...");});
+    
+        var skillsArray = tutorObj.skills.split(",");
+        var courseExpertiseArray = tutorObj.courseExpertise.split(",");
+        $.each(skillsArray, function(index, value){
+          $("#skillsModal").prepend(getRandomSpan(value));
+        });
+        $.each(courseExpertiseArray, function(index, value){
+          $("#courseExpertiseModal").prepend(getRandomSpan(value));
+        });
+
+        function getRandomSpan(text){
+          //Generate Random Number between 1 and 5 inclusive
+          var randomNum = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+          switch(randomNum) {
+              case 1:
+                  return " <span class='label label-danger'>"+text+"</span> ";
+              case 2:
+                  return " <span class='label label-success'>"+text+"</span> ";
+              case 3:
+                  return " <span class='label label-info'>"+text+"</span> ";
+              case 4:
+                  return " <span class='label label-warning'>"+text+"</span> ";
+              case 5:
+                  return " <span class='label label-primary'>"+text+"</span> ";
+          }         
+        }
+      }
+
       function requestAppointment(){ 
         //get Time, Day, latlng, duration, course, questionTopic
         var time = $("#tutorTime").val();
         var day = $("#tutorDay").val();
-        var latlng = $("#eventPos").attr("latlng");
+        var latlng = $("#eventPos").attr("latlng") || loggedInUserLatLng;
         var latlngAddress = $("#eventPos").val().replace("(", "").replace(")","").replace(" ","");
         var duration = $("#duration").text();
         var courses = $("#select2ClassSelection").select2('val')+"";
-        var questionTopic = $("#topicQuestion").val();
-        if(!latlng){
-          latlng = loggedInUserLatLng;
-        }
+        var questionTopic = "Disabled For Now";//$("#topicQuestion").val();
+        var cost = parseInt(duration) * parseInt($("#bookingHourlyCost").text());
         
         //set status=AwaitingResponse, cost=null, declineMessage=null
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -780,7 +962,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           latlng: latlng,
           latlngAddress: latlngAddress,
           duration: duration,
-          cost: "null",
+          cost: cost + "",
           status: "Awaiting Response",
           courses: courses,
           declineMessage: "null",
@@ -791,7 +973,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           feedbackLeft: "false",
           feedbackMessage: "null",
           feedbackRating: "0",
-          flexibility: $("#flexibility").text()
+          flexibility: $("#flexibility").text(),
+          costHourly: $("#bookingHourlyCost").text()
         });
         var appointmentID = appointment.key();
 

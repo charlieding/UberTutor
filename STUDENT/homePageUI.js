@@ -5,7 +5,7 @@
         /* BOOTSTRAP SLIDER */
         $("#durationSlider").slider();
         $("#durationSlider").on("slide", function(slideEvt) {
-          $("#duration").text(slideEvt.value);
+          $("#duration").text(slideEvt.value).trigger('change');
         });
         
         $("#flexibilitySlider").slider();
@@ -44,7 +44,11 @@
           fixSideBars();
         });
         $('#righttabcontent').slimScroll({
-          height: 'auto'
+          height: 'auto',
+          railVisible: true,
+          alwaysVisible: true,
+          color:"#000000",
+          railColor:"#ffffff"
         });
         fixMapSize();
         fixSideBars();
@@ -54,15 +58,18 @@
         $('#googleMap').height($('#mainleftsidebar').height());
       }
       function fixSideBars(){
+        //USES THESE VARIABLES DEFINED IN INDEX.HTML GLOBALLY EG: rightsidebaraside
         $('#righttabcontent').parent().height('auto');
-        $('#rightsidebaraside').height(($(window).height()-100));
-        $('#righttabcontent').height($(window).height()-265);
-        //$('#righttabcontent').height('auto'); //NOT WORKING - MUST FIX
-        /* Bottom Menu */
+
+        /* Bottom Menu And Right Side Bar*/
         if($(window).width() <= 767){
-          $('#paddingTop').height($(window).height()-330);
-        }else{
           $('#paddingTop').height($(window).height()-280);
+          $('#rightsidebaraside').height(($(window).height()-(rightsidebaraside+55)));
+          $('#righttabcontent').height($(window).height()-(righttabcontent+55));
+        }else{
+          $('#paddingTop').height($(window).height()-230);
+          $('#rightsidebaraside').height(($(window).height()-rightsidebaraside));
+          $('#righttabcontent').height($(window).height()-righttabcontent);
         }
         /*Bug where Screen initailly has tall white spaces*/
         $('#globalwrapper').height($(window).height());
