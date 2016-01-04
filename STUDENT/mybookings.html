@@ -820,7 +820,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
 
       //pass info to chatbox
-      chatBox(_this.getAttribute("tutorID"), _this.getAttribute("studentID"), _this.getAttribute("currentUserID"),_this);
+      chatBox(_this);
     }
     function goToPayments(){
       window.location ='payment.html';
@@ -885,9 +885,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 
-var MyFireChatBox=function(currUserID){
+var MyFireChatBox=function(){
 
-     //var currUserID=currUserID;
 
      function GenChatBoxInfo(){
         var usrsObj=null;
@@ -898,8 +897,8 @@ var MyFireChatBox=function(currUserID){
           arr.sort();
           console.log(arr);
           ret.currUserID=currentUserID;
-          ret.ownerIdIndx=arr.indexOf(currUserID);
-          if(ret.ownerIdIndx<0) return alert("not find:"+currUserID);
+          ret.ownerIdIndx=arr.indexOf(currentUserID);
+          if(ret.ownerIdIndx<0) return alert("not find:"+currentUserID);
           ret.targetIdIndx=0;
           if(ret.ownerIdIndx===0){
              ret.targetIdIndx=1;
@@ -1100,16 +1099,10 @@ var MyFireChatBox=function(currUserID){
 
 };////////////////////////////////////////////
 
-      var fireChatBox=null;
-      function chatBox(tutorID, studentID, currUserID,chatElem){
+      var fireChatBox=new MyFireChatBox();
+      function chatBox(chatElem){
           $("#chatMessages").empty();
-          if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
-
-          if(null===fireChatBox){
-            fireChatBox=new MyFireChatBox(currUserID);            
-          }
           fireChatBox.SetSession(chatElem);
-
       };
 
       //add new message using set
