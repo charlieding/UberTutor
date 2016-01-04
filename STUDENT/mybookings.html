@@ -564,6 +564,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
     <!--Star Rating-->
     <script src="dist/js/star-rating.js" type="text/javascript"></script>
+
+    <script src="ChatBoxFireManager.js" type="text/javascript"></script>
+
+
     <script>
       $(function () {
         /* BOOTSTRAP SLIDER */
@@ -878,22 +882,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 /******* CHATBOX CODE - MOVE TO JS FILE *******/
-var MyFireChatUsersUti={
-  usrsObj:null,
-  FireChatUsers:function (tutorID, studentID, currUserID){
-          var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
-          usrsRef.on("value",function(snapshot){
-              var usrsObj=snapshot.val();
-              once_value_users(tutorID, studentID, currUserID,usrsObj);
-          });        
-      }
-};
+
 
 
 var MyFireChatBox=function(tutorID, studentID, currUserID){
      var sortedChatUidConnectedArr=[];
+     var usrsObj=null;
+     var currUserID=currUserID;
 
-     function GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj){
+     function GenChatBoxInfo(tutorID, studentID, currUserID){
       if(tutorID===studentID) return alert("self chat");
         var arr=[tutorID, studentID];
         arr.sort();
@@ -950,14 +947,20 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         }
       };
       function FireChatUsers(tutorID, studentID, currUserID){
-          var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
-          usrsRef.once("value",function(snapshot){
-              var usrsObj=snapshot.val();
-              once_value_users(tutorID, studentID, currUserID,usrsObj);
-          });        
+          if(null===usrsObj){
+            var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
+            usrsRef.once("value",function(snapshot){
+                usrsObj=snapshot.val();
+                fire_user(tutorID, studentID, currUserID);
+            });              
+          }else{
+            fire_user(tutorID, studentID, currUserID);
+          }
+          
+      
       }
-      function once_value_users(tutorID, studentID, currUserID, usrsObj){
-        chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj);
+      function fire_user(tutorID, studentID, currUserID){
+        chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID);
         $("#boxtitle").text(chatboxInfo.getTargetName());
         FireChatMsgs(chatboxInfo);
       };
