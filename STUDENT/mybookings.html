@@ -889,7 +889,7 @@ var MyFireChatBox=function(currUserID){
 
      var usrsObj=null;
      var currUserID=currUserID;
-     var msgBuff={};
+
 
      function GenChatBoxInfo(tutorID, studentID, currUserID){
       if(tutorID===studentID) return alert("self chat");
@@ -931,13 +931,16 @@ var MyFireChatBox=function(currUserID){
         this.getTargetName=function(){
           return ret.usrArr[ret.targetIdIndx].displayName;
         };
-
+        this.getUid=function(MsgSnderIdIndx){
+          return ret.uidArr[MsgSnderIdIndx];
+        }
      };
 
       var chatboxInfo=null;
       var onChatChange = null;
       var chatRef = null;      
       var msgChatIdRefObj = {};  
+      var chatElemMap = {};  
 
       function DisconnectChat(){
         return;
@@ -950,7 +953,7 @@ var MyFireChatBox=function(currUserID){
           chatRef=null;
         }
       };
-      function FireUsers(tutorID, studentID, currUserID){
+      function FireUsers(tutorID, studentID){
           if(null===usrsObj){
             var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
             usrsRef.once("value",function(snapshot){
@@ -958,14 +961,16 @@ var MyFireChatBox=function(currUserID){
                 once_users(tutorID, studentID, currUserID);
             });              
           }else{
-            fire_user(tutorID, studentID, currUserID);
+            once_users(tutorID, studentID, currUserID);
           }
           
       
       }
       function once_users(tutorID, studentID, currUserID){
         chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID);
-        $("#boxtitle").text(chatboxInfo.getTargetName());
+        $("#boxtitle").text(chatboxInfo.getTargetName())
+                      .attr("chatuid",chatboxInfo.data.sortedChatUid);
+
         FireChatMsgs(chatboxInfo);
       };
       function FireChatMsgs(chatboxInfo){
@@ -984,6 +989,7 @@ var MyFireChatBox=function(currUserID){
 
         chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
         msgChatIdRefObj[sortedChatUid]=chatRef;
+        chatElemMap[sortedChatUid]=chatElm;
 
         //load messages via child added
         onChatChange = chatRef.on("child_added",on_child_added_msg);
@@ -1005,21 +1011,30 @@ var MyFireChatBox=function(currUserID){
       function msgAdded2ChatBox(utc, msgObj){
         console.log("key="+utc,msgObj);
 
-        var ownerIdIndx=msgObj.ownerIdIndx;
-        var boxsides=chatboxInfo.getSides(ownerIdIndx);
-        var usr=chatboxInfo.getUser(ownerIdIndx);
+        var snderIdIndx=msgObj.ownerIdIndx;
+        var boxsides=chatboxInfo.getSides(snderIdIndx);
+        var snder=chatboxInfo.getUser(snderIdIndx);
+        var snderUid=chatboxInfo.getUid(snderIdIndx);
+
+
 
         var localTime = moment.utc(utc).toDate();
-        var datetime  = moment(localTime).format("MMM D hh:mm a");     
-        msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);         
+        var datetime  = moment(localTime).format("MMM D hh:mm a"); 
+
+
+        var chatuid=$("#boxtitle").attr("chatuid");
+        if( snderUid===currUserID){
+
+        };            
+        msgAdded2Ui(msgObj.msg, datetime,  snder, boxsides);         
       }
-      function msgAdded2Ui(msg, datetime, usr, boxsides){
+      function msgAdded2Ui(msg, datetime, snder, boxsides){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
-                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+usr.displayName+'</span> '+
+                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
                               '<span class="direct-chat-timestamp pull-'+boxsides[1]+'"> '+datetime+'</span>'+
                             '</div><!-- /.direct-chat-info -->'+
-                            '<img class="direct-chat-img" src="'+usr.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
+                            '<img class="direct-chat-img" src="'+snder.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
                             '<div class="direct-chat-text">'+
                               msg+
                             '</div><!-- /.direct-chat-text -->'+
@@ -1055,7 +1070,7 @@ var MyFireChatBox=function(currUserID){
         studentID=$(chatElem).attr("studentID");
         console.log("wei",tutorID,studentID);
 
-        FireUsers(tutorID,studentID,currUserID);
+        FireUsers(tutorID,studentID);
       }
 
 };////////////////////////////////////////////
