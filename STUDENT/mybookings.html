@@ -887,57 +887,65 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 var MyFireChatBox=function(currUserID){
 
-     var usrsObj=null;
-     var currUserID=currUserID;
+     //var currUserID=currUserID;
 
-
-     function GenChatBoxInfo(tutorID, studentID){
-        if(tutorID===studentID) return alert("self chat");
-        var arr=[tutorID, studentID];
-        arr.sort();
-        console.log(arr);
+     function GenChatBoxInfo(){
+        var usrsObj=null;
         var ret={};
-        ret.currUserID=currUserID;
-        ret.ownerIdIndx=arr.indexOf(currUserID);
-        if(ret.ownerIdIndx<0) return alert("not find:"+currUserID);
-        ret.targetIdIndx=0;
-        if(ret.ownerIdIndx===0){
-           ret.targetIdIndx=1;
+        this.Init=function(tutorID, studentID, currentUserID){
+          if(tutorID===studentID) return alert("self chat");
+          var arr=[tutorID, studentID];
+          arr.sort();
+          console.log(arr);
+          ret.currUserID=currentUserID;
+          ret.ownerIdIndx=arr.indexOf(currUserID);
+          if(ret.ownerIdIndx<0) return alert("not find:"+currUserID);
+          ret.targetIdIndx=0;
+          if(ret.ownerIdIndx===0){
+             ret.targetIdIndx=1;
+          };
+          ret.targetUserID=arr[ret.targetIdIndx];
+          ret.sortedChatUid=arr.join("_");
+
+          ret.sortedUidArr=arr;  
         };
-        ret.targetUserID=arr[ret.targetIdIndx];
-        ret.sortedChatUid=arr.join("_");
-
-
-
-        ret.uidArr=arr;
-        ret.usrArr=[];
-        for(var i=0;i<arr.length;i++){
-                var uid=arr[i];
-                ret.usrArr[i]=usrsObj[uid];
+        this.setUsersObj=function(UsrsObj){
+          usrsObj=UsrsObj;
         };
-
+        this.UpdateInfo=function(){
+          if(!usrsObj) return alert("usrsObj null");             
+          if(!ret.sortedUidArr.length) return alert("sortedUidArr null");   
+        };
+        this.getUsersObj=function(){
+          return usrsObj;
+        };
         this.data=function(){
           return ret;
         };
         this.getUser=function(ownerIdIndx){
-          return ret.usrArr[ownerIdIndx];
+          if(!usrsObj) return alert("usrsObj null");
+          var uid=ret.sortedUidArr[ownerIdIndx];
+          return usrsObj[uid];
         };
         this.getSides=function(ownerIdIndx){
           var boxsides=["left","right"];
-          if( ret.currUserID === ret.uidArr[ownerIdIndx]){
+          if( ret.currUserID === ret.sortedUidArr[ownerIdIndx]){
             boxsides=["right","left"];
           };
           return boxsides;
         };
         this.getTargetName=function(){
-          return ret.usrArr[ret.targetIdIndx].displayName;
+          if(ret.sortedUidArr.length===0) return alert("ret.sortedUidArr null");
+          var uid=ret.sortedUidArr[ret.targetIdIndx];
+          return usrsObj[uid].displayName;
         };
         this.getUid=function(MsgSnderIdIndx){
-          return ret.uidArr[MsgSnderIdIndx];
+          if(ret.sortedUidArr.length==0) return alert("ret.sortedUidArr null");
+          return ret.sortedUidArr[MsgSnderIdIndx];
         };
-     };
+     };//////////////
 
-      var chatboxInfo=null;
+      var chatboxInfo=new GenChatBoxInfo();
       var chatBind = null;
       var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/");   
       var msgChatIdRefObj = {};  
@@ -955,10 +963,11 @@ var MyFireChatBox=function(currUserID){
         }
       };
       function FireUsers(tutorID, studentID){
-          if(null===usrsObj){
+          if(null===chatboxInfo.getUsersObj() ){
             var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
             usrsRef.once("value",function(snapshot){
-                usrsObj=snapshot.val();
+                var usrsObj=snapshot.val();
+                chatboxInfo.setUsersObj(usrsObj);
                 once_users(tutorID, studentID);
             });              
           }else{
@@ -966,8 +975,7 @@ var MyFireChatBox=function(currUserID){
           }
       };
       function once_users(tutorID, studentID){
-        if(chatboxInfo) delete chatboxInfo;
-        chatboxInfo=new GenChatBoxInfo(tutorID, studentID);
+        chatboxInfo.UpdateInfo();
         $("#boxtitle").text(chatboxInfo.getTargetName())
                       .attr("chatuid",chatboxInfo.data().sortedChatUid);
 
@@ -1036,9 +1044,9 @@ var MyFireChatBox=function(currUserID){
 
         }
 
-        if( snderUid===currUserID){
+        //if( snderUid===currUserID){
 
-        };        
+        //};        
       }
       function msgAdded2ChatBox(msg, datetime, snder, boxsides){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
@@ -1082,8 +1090,10 @@ var MyFireChatBox=function(currUserID){
       this.SetSession=function(chatElem){
         chatElm=chatElem;
         var tutorID=$(chatElem).attr("tutorID"),
-        studentID=$(chatElem).attr("studentID");
-        console.log("wei",tutorID,studentID);
+        studentID=$(chatElem).attr("studentID"),
+        currentUserID=$(chatElem).attr("currentUserID");
+        console.log("wei",tutorID,studentID,currentUserID);
+        chatboxInfo.Init(tutorID, studentID,currentUserID);
 
         FireUsers(tutorID,studentID);
       }
