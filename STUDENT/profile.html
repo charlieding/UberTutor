@@ -145,10 +145,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="dist/img/l.gif" class="img-circle userImage" alt="User Image">
+              <img style="height:45px;" src="dist/img/l.gif" class="img-circle userImage" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p></p>
+              <p class="userName"></p>
               <!-- Status -->
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -276,7 +276,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Phone Number</label>
+                        <label for="inputPhoneNumber" class="col-sm-2 control-label">Phone Number</label>
                         <div class="col-sm-10">
                           <input type="tel" class="form-control" id="inputPhoneNumber" placeholder="Get Alert/Notification of Upcoming Sessions">
                         </div>
@@ -288,7 +288,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputSkills" class="col-sm-2 control-label">Education</label>
+                        <label for="inputEducation" class="col-sm-2 control-label">Education</label>
                         <div class="col-sm-10">
                           <input type="text" class="form-control" id="inputEducation" placeholder="Eg: B.S. in Computer Science from Stanford Univerity '14">
                         </div>
@@ -300,15 +300,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputSkills" class="col-sm-2 control-label">Course Expertise</label>
+                        <label for="inputCourseExpertise" class="col-sm-2 control-label">Course Expertise</label>
                         <div class="col-sm-10">
                           <input type="text" class="form-control" id="inputCourseExpertise" placeholder="Separate with a comma (Eg: CS 1001, MATH 3001, PSYC 1001)">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputExperience" class="col-sm-2 control-label">Biography</label>
+                        <label for="inputBiography" class="col-sm-2 control-label">Biography</label>
                         <div class="col-sm-10">
                           <textarea class="form-control" id="inputBiography" placeholder="Biography you want others to see"></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputImgUrl" class="col-sm-2 control-label">Profile Picture Url</label>
+                        <div class="col-sm-10">
+                          <textarea class="form-control" id="inputImgUrl" placeholder="Image Url (Eg: http://amazon.com/cool_image.jpg)"></textarea>
                         </div>
                       </div>
                       <div class="form-group">
@@ -642,13 +648,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var skills = $("#inputSkills").val();
         var courses = $("#inputCourseExpertise").val();
         var bio = $("#inputBiography").val();
-        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/displayName")).set(name);
-        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/phoneNumber")).set(phone);
-        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/email")).set(email);
-        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/education")).set(edu);
-        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/skills")).set(skills);
-        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/courseExpertise")).set(courses);
-        (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/biography")).set(bio);
+        var img = $("#inputImgUrl").val();
+        if(name)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/displayName")).set(name);
+        if(phone)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/phoneNumber")).set(phone);
+        if(email)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/email")).set(email);
+        if(edu)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/education")).set(edu);
+        if(skills)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/skills")).set(skills);
+        if(courses)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/courseExpertise")).set(courses);
+        if(bio)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/biography")).set(bio);
+        if(img)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/imgUrl")).set(img);
       }
 
     </script>
