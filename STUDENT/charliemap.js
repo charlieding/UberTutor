@@ -304,6 +304,7 @@ function MyMapMgr(){
       }, function(responses, status) {
         if (responses && responses.length > 0) {
           updateMarkerAddress(pos, responses[0].formatted_address);
+          parseCityState(responses);
         } else {
           updateMarkerAddress(pos, 'Cannot determine address at this location.');
         }
@@ -313,6 +314,40 @@ function MyMapMgr(){
       var slatlng=pos.toString();
       $("#eventPos").val(str).attr("latlng",slatlng).attr("title",slatlng);
     };
+    function parseCityState(results){
+      //break down the three dimensional array into simpler arrays
+      var City, State, county;
+          for (i = 0 ; i < results.length ; ++i)
+          {
+            var super_var1 = results[i].address_components;
+            for (j = 0 ; j < super_var1.length ; ++j)
+            {
+              var super_var2 = super_var1[j].types;
+              for (k = 0 ; k < super_var2.length ; ++k)
+              {
+                //find city
+                if (super_var2[k] == "locality")
+                {
+                  //put the city name in the form
+                  City = super_var1[j].long_name;
+                }
+                //find county
+                if (super_var2[k] == "administrative_area_level_2")
+                {
+                  //put the county name in the form
+                  county = super_var1[j].long_name;
+                }
+                //find State
+                if (super_var2[k] == "administrative_area_level_1")
+                {
+                  //put the state abbreviation in the form
+                  State = super_var1[j].short_name;
+                }
+              }
+            }
+          }
+          $("#eventPos").attr("title", City+","+ State)
+    }
 
 
 
