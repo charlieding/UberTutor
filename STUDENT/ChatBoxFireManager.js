@@ -1,117 +1,178 @@
 
 
-var ChatFireMsgManager=function(currUserID){
-  this.usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
-  this.currUserID=currUserID;
-  this.targetUserIdArr=[];
+
+var ChatBoxFireManager=function(){
 
 
-     var sortedChatUidConnectedArr=[];
-
-     function GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj){
-      if(tutorID===studentID) return alert("self chat");
-        var arr=[tutorID, studentID];
-        arr.sort();
-        console.log(arr);
+     function GenChatBoxInfo(){
+        var usrsObj=null;
         var ret={};
-        ret.currUserID=currUserID;
-        ret.ownerIdIndx=arr.indexOf(currUserID);
-        if(ret.ownerIdIndx<0) return alert("not find:"+currUserID);
-        ret.targetIdIndx=0;
-        if(ret.ownerIdIndx===0){
-           ret.targetIdIndx=1;
-        }
-        ret.targetUserID=arr[ret.targetIdIndx];
-        ret.sortedChatUid=arr.join("_");
+        this.Init=function(tutorID, studentID, currentUserID){
+          if(tutorID===studentID) return alert("self chat");
+          ret.currUserID=currentUserID;
+          ret.tutorID=tutorID;
+          ret.studentID=studentID;
+
+          var arr=[tutorID, studentID];
+          arr.sort();
+          console.log(arr);
 
 
 
-        ret.uidArr=arr;
-        ret.usrArr=[];
-        for(var i=0;i<arr.length;i++){
-                var uid=arr[i];
-                ret.usrArr[i]=usrsObj[uid];
+          ret.ownerIdIndx=arr.indexOf(currentUserID);
+          if(ret.ownerIdIndx<0) return alert("not find:"+currentUserID);
+          ret.targetIdIndx=0;
+          if(ret.ownerIdIndx===0){
+             ret.targetIdIndx=1;
+          };
+          ret.targetUserID=arr[ret.targetIdIndx];
+          ret.sortedChatUid=arr.join("_");
+
+          ret.sortedUidArr=arr;  
         };
-
-        this.data=ret;
-
+        this.setUsersObj=function(UsrsObj){
+          usrsObj=UsrsObj;
+        };
+        this.UpdateInfo=function(){
+          if(!usrsObj) return alert("usrsObj null");             
+          if(!ret.sortedUidArr.length) return alert("sortedUidArr null");   
+        };
+        this.getUsersObj=function(){
+          return usrsObj;
+        };
+        this.data=function(){
+          return ret;
+        };
         this.getUser=function(ownerIdIndx){
-          return ret.usrArr[ownerIdIndx];
+          if(!usrsObj) return alert("usrsObj null");
+          var uid=ret.sortedUidArr[ownerIdIndx];
+          return usrsObj[uid];
         };
         this.getSides=function(ownerIdIndx){
           var boxsides=["left","right"];
-          if( ret.currUserID === ret.uidArr[ownerIdIndx]){
+          if( ret.currUserID === ret.sortedUidArr[ownerIdIndx]){
             boxsides=["right","left"];
           };
           return boxsides;
         };
         this.getTargetName=function(){
-          return ret.usrArr[ret.targetIdIndx].displayName;
+          if(ret.sortedUidArr.length===0) return alert("ret.sortedUidArr null");
+          var uid=ret.sortedUidArr[ret.targetIdIndx];
+          return usrsObj[uid].displayName;
         };
+        this.getUid=function(MsgSnderIdIndx){
+          if(ret.sortedUidArr.length==0) return alert("ret.sortedUidArr null");
+          return ret.sortedUidArr[MsgSnderIdIndx];
+        };
+     };//////////////
 
-     };
+      var chatboxInfo=new GenChatBoxInfo();
+      var chatBind = null;
+      var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/");   
+      var msgChatIdRefObj = {};  
+      var chatElemMap = {};  
 
-      var chatboxInfo=null;
-      var onChatChange = null;
-      var chatRef = null;      
       function DisconnectChat(){
+        return;
         //Remove old chat box listener 
-        if(onChatChange){
-          chatRef.off("child_added", onChatChange);
-          delete onChatChange;
-          delete onChatChange;
-          onChatChange=null;
+        if(chatBind){
+          chatRef.off("child_added", chatBind);
+          delete chatBind;
+          delete chatBind;
+          chatBind=null;
           chatRef=null;
         }
       };
-      function FireChatUsers(tutorID, studentID, currUserID){
-          var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
-          usrsRef.once("value",function(snapshot){
-              var usrsObj=snapshot.val();
-              once_value_users(tutorID, studentID, currUserID,usrsObj);
-          });        
-      }
-      function once_value_users(tutorID, studentID, currUserID, usrsObj){
-        chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID, usrsObj);
-        $("#boxtitle").text(chatboxInfo.getTargetName());
+      function FireUsers(){
+          if(null===chatboxInfo.getUsersObj() ){
+            var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
+            usrsRef.once("value",function(snapshot){
+                var usrsObj=snapshot.val();
+                chatboxInfo.setUsersObj(usrsObj);
+                once_users();
+            });              
+          }else{
+            once_users();
+          }
+      };
+      function once_users(){
+        chatboxInfo.UpdateInfo();
+        $("#boxtitle").text(chatboxInfo.getTargetName())
+                      .attr("chatuid",chatboxInfo.data().sortedChatUid);
+
         FireChatMsgs(chatboxInfo);
       };
       function FireChatMsgs(chatboxInfo){
 
         //DisconnectChat();
         //Sort which id is first to generate unique ID
-        var sortedChatUid = chatboxInfo.data.sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
+        var sortedChatUid = chatboxInfo.data().sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
         console.log("sortedChatUid",sortedChatUid);
-        if(sortedChatUidConnectedArr.indexOf(sortedChatUid)>=0){
+
+
+        if(!chatElemMap[sortedChatUid]){
+          chatElemMap[sortedChatUid]=chatElm;
+        }
+
+        if(msgChatIdRefObj[sortedChatUid]){
+          //var msgsRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
+          chatRef.child(sortedChatUid).once("value",on_child_value_msg);
           return;
         };
-        sortedChatUidConnectedArr.push(sortedChatUid);
 
+        //chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
+        //msgChatIdRefObj[sortedChatUid]=chatRef;
 
-        chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
         //load messages via child added
-        onChatChange = chatRef.on("child_added",on_child_added_msg);
+        chatBind = chatRef.child(sortedChatUid).on("child_added",on_child_added_msg);
+        msgChatIdRefObj[sortedChatUid]=chatBind;
+      };
+
+      function on_child_value_msg(snapshot){
+        var key=snapshot.key();
+        console.log('hi, key',key);
+        var val=snapshot.val();
+        console.log(val);
+        $.each(val, function(utc,msgObj){
+          msgAdded2page(key, utc,msgObj);   
+        });
       };
       function on_child_added_msg(snapshot){
+        var chatUid=snapshot.ref().parent().key();
+        var utc = snapshot.key();
         var msgObj = snapshot.val();
-        var utc=snapshot.key();
+        msgAdded2page(chatUid, utc,msgObj);  
+      };
+      function msgAdded2page(chatUid, utc, msgObj){
         console.log("key="+utc,msgObj);
 
-        var ownerIdIndx=msgObj.ownerIdIndx;
-        var boxsides=chatboxInfo.getSides(ownerIdIndx);
-        var usr=chatboxInfo.getUser(ownerIdIndx);
+        var snderIdIndx=msgObj.ownerIdIndx;
+        var boxsides=chatboxInfo.getSides(snderIdIndx);
+        var snder=chatboxInfo.getUser(snderIdIndx);
+        var snderUid=chatboxInfo.getUid(snderIdIndx);
 
         var localTime = moment.utc(utc).toDate();
-        var datetime  = moment(localTime).format("MMM D hh:mm a");     
-        msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);    
+        var datetime  = moment(localTime).format("MMM D hh:mm a"); 
+
+
+        var currChatuid=$("#boxtitle").attr("chatuid");
+
+
+        if( currChatuid===chatUid){
+          msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides);            
+          return;
+        }
+        else{
+          $("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
+        };  
       };
-      function msgAdded2Ui(msg, datetime, usr, boxsides){
+      function msgAdded2ChatBox(msg, datetime, snder, boxsides){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
-                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+usr.displayName+'</span> '+
+                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
                               '<span class="direct-chat-timestamp pull-'+boxsides[1]+'"> '+datetime+'</span>'+
                             '</div><!-- /.direct-chat-info -->'+
-                            '<img class="direct-chat-img" src="'+usr.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
+                            '<img class="direct-chat-img" src="'+snder.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
                             '<div class="direct-chat-text">'+
                               msg+
                             '</div><!-- /.direct-chat-text -->'+
@@ -126,7 +187,7 @@ var ChatFireMsgManager=function(currUserID){
 
 
       this.SendMsg=function(msg){
-        var ownerIdIndx=""+chatboxInfo.data.ownerIdIndx;
+        var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         //var timestamp=Firebase.ServerValue.TIMESTAMP;
 
         // Record the current time immediately, and queue an event to
@@ -135,52 +196,27 @@ var ChatFireMsgManager=function(currUserID){
 //var mySessionRef = sessionsRef.push();
 //mySessionRef.onDisconnect().update({ endedAt: Firebase.ServerValue.TIMESTAMP });
 //mySessionRef.update({ startedAt: Firebase.ServerValue.TIMESTAMP });
+
+        var currChatuid=$("#boxtitle").attr("chatuid");
         var utc=moment.utc().format();
-        chatRef.child(utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
-      };
-      FireChatUsers(tutorID, studentID, currUserID);
 
-};////
-
-      var fireChatBox=null;
-      function chatBox(tutorID, studentID, currUserID){
-          $("#chatMessages").empty();
-          if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
-
-          if(null===fireChatBox){
-            fireChatBox=new MyFireChatBox(tutorID, studentID, currUserID);            
-          }
-
+        chatRef.child(currChatuid+"/"+utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
 
-      //add new message using set
-      function sendMsg(){
-        var msg=$("#msg").val();
-        msg=$.trim(msg);
-        if(msg.length===0)return;
-        //var ownerIdIndx=mfcb.chatboxInfo.data.ownerIdIndx;
-        var datetime=moment().format();
-        console.log(datetime);
-        //chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
-        fireChatBox.SendMsg(msg);
-        $("#msg").val('');
-      };
-      function msgkeydwn(e){
-        //console.log(e);
-        if(e.keyCode===13 || e.which===13){
-           sendMsg();
-        };
-        return true;
-      };
 
-  $(document).ready(function() {
-  $(window).keydown(function(event){
-    if(event.keyCode == 13) {
-      event.preventDefault();
-      return false;
-    }
-  });
-});
+      var chatElm=null;
+      this.SetSession=function(chatElem){
+        chatElm=chatElem;
+        var tutorID=$(chatElem).attr("tutorID"),
+        studentID=$(chatElem).attr("studentID"),
+        currentUserID=$(chatElem).attr("currentUserID");
+        console.log("wei",tutorID,studentID,currentUserID);
+        chatboxInfo.Init(tutorID, studentID,currentUserID);
 
+        FireUsers();
 
-   
+        var chatuid = chatboxInfo.data().sortedChatUid;
+        return chatuid;
+      }
+
+};////////////////////////////////////////////
