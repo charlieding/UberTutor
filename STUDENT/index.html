@@ -312,9 +312,9 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           <!-- Settings tab content -->
           <div class="tab-pane" id="control-sidebar-settings-tab">
                   <div class="hideTutorProfileWhenNoTutorSelected" style="text-align:center;">
-                    <img id="tutorProfileImageHeader" src="dist/img/photo1.png" style="width:70%;" class="user-image img-circle" alt="User Image">
+                    <img id="tutorProfileImageHeader" src="dist/img/photo1.png" style="width:70%; cursor:pointer;" class="user-image img-circle" alt="User Image">
                     <p>
-                      <h4 id="tutorProfileName" class="control-sidebar-subheading">Langdon Chen</h4>
+                      <h4 id="tutorProfileName" style="cursor:pointer" class="control-sidebar-subheading">Langdon Chen</h4>
                       <p style="margin-top: -8px;"><i id="tutorProfileStar1" class="fa fa-star"></i><i id="tutorProfileStar2" class="fa fa-star"></i><i id="tutorProfileStar3" class="fa fa-star"></i><i id="tutorProfileStar4" class="fa fa-star"></i><i id="tutorProfileStar5" class="fa fa-star"></i><span id="tutorProfileNumOfReviews"> (13)</span></p>
                       <p id="tutorProfileMembership" style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
                     </p>
@@ -344,6 +344,97 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
            immediately after the control sidebar -->
       <div id="controlsidebarbg" class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
+
+    <!-- Modals
+    ===================================================== -->
+    <!--Feedback Modal -->
+    <div class="modal fade" id="tutorProfileModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"><strong style="color: black">Tutor Profile</strong> <small> Asap<strong style="color: grey">Tutor </strong></small></h4>
+          </div>
+          <div class="modal-body" style="padding-bottom: 0px; text-align:center;">
+
+
+
+
+            <div class="row">
+              <div class="col-md-12">
+
+                <!-- Profile Image -->
+                <div class="box box-primary">
+                  <div class="box-body box-profile">
+                    <img id="tutorImageModal" class="profile-user-img img-responsive img-circle userImage" src="dist/img/l.gif" alt="User profile picture">
+                    <h3 id="tutorNameModal" class="profile-username text-center userName"></h3>
+                    <p id="currentStatusModal" class="text-muted text-center"></p>
+                  </div><!-- /.box-body -->
+                </div><!-- /.box -->
+              </div>
+              <div class="col-md-12">
+                <!-- About Me Box -->
+                <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">About Me</h3>
+                  </div><!-- /.box-header -->
+                  <div class="box-body">
+                    <strong><i class="fa fa-university margin-r-5"></i>  Education</strong>
+                    <p id="educationModal" class="text-muted">
+                    </p>
+
+                    <hr>
+
+                    <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+                    <p id="locationModal" class="text-muted"></p>
+
+                    <hr>
+
+                    <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+                    <p id="skillsModal">
+                      <span class="label label-danger">UI Design</span>
+                      <span class="label label-success">Coding</span>
+                      <span class="label label-info">Javascript</span>
+                      <span class="label label-warning">PHP</span>
+                      <span class="label label-primary">Node.js</span>
+                    </p>
+                    <hr>
+                    <strong><i class="fa fa-book margin-r-5"></i> Courses Expertise</strong>
+                    <p id="courseExpertiseModal">
+                      <span class="label label-danger">CS 1001</span>
+                      <span class="label label-success">PSYC 2001</span>
+                      <span class="label label-info">MATH 3001</span>
+                      <span class="label label-warning">MATH 2001</span>
+                      <span class="label label-primary">CS 2001</span>
+                    </p>
+                    <hr>
+
+                    <strong><i class="fa fa-file-text-o margin-r-5"></i> Biography</strong>
+                    <p id="biographyModal" ></p>
+                    <ul class="list-group list-group-unbordered">
+                      <li class="list-group-item">
+                        <b class="pull-left">Phone Number</b>.<a id="phoneNumberModal" class="pull-right"></a>
+                      </li>
+                      <li class="list-group-item">
+                        <b class="pull-left">Email</b>.<a id="emailModal" class="pull-right"></a>
+                      </li>
+                    </ul>
+                  </div><!-- /.box-body -->
+                </div><!-- /.box -->
+              </div>
+            </div>
+
+
+
+
+          </div>
+          <br>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- REQUIRED JS SCRIPTS -->
 
@@ -646,6 +737,15 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
             $("#tutorProfileMembership").text("Tutor since " + joinDate);
             $("#tutorBiography").text(usrObj.biography);
             $("#tutorProfileStar1").text("");
+
+            //Add Listeners to view Profile Modal
+            $(document).attr("tutorObj",JSON.stringify(usrObj));
+            $("#tutorProfileName").click(function(){
+              tutorProfileModal();
+            });
+            $("#tutorProfileImageHeader").click(function(){
+              tutorProfileModal();
+            });
             if(parseFloat(stars) == 0){
               //0.5
               $("#tutorProfileStar1").text("No Reviews");
@@ -774,7 +874,54 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         //Contact all tutors, even offline tutors 
         alert("Coming Soon. This will contact all tutors (offline or online) to get you help as soon as possible.")
       }
-      // --TODO--
+
+      function tutorProfileModal(){
+        //pop up modal and set tutor name
+        $('#tutorProfileModal').modal(); 
+        var tutorObj = JSON.parse($(document).attr("tutorObj"));
+        console.log(tutorObj);
+        $("#tutorImageModal").attr("src",tutorObj.imgUrl);
+        $("#tutorNameModal").text(tutorObj.displayName);
+        $("#memberSinceDateProfileModal").text("Member since "+ moment(tutorObj.creationDate).format("MMM. YYYY"));
+        $("#emailModal").text("Request");//(tutorObj.email);
+        $("#phoneNumberModal").text("Request");//(tutorObj.phoneNumber);
+        $("#currentStatusModal").text(tutorObj.userType.charAt(0).toUpperCase()+tutorObj.userType.slice(1)+" since "+moment(tutorObj.creationDate).format("MMMM Do, YYYY"));
+        $("#educationModal").text(tutorObj.education);
+        $("#locationModal").text(tutorObj.city+", "+tutorObj.state);
+        $("#biographyModal").text(tutorObj.biography);
+        $("#courseExpertiseModal").empty();
+        $("#skillsModal").empty();
+
+        $("#emailModal").click(function(){alert("Coming Soon...");});
+        $("#phoneNumberModal").click(function(){alert("Coming Soon...");});
+    
+        var skillsArray = tutorObj.skills.split(",");
+        var courseExpertiseArray = tutorObj.courseExpertise.split(",");
+        $.each(skillsArray, function(index, value){
+          $("#skillsModal").prepend(getRandomSpan(value));
+        });
+        $.each(courseExpertiseArray, function(index, value){
+          $("#courseExpertiseModal").prepend(getRandomSpan(value));
+        });
+
+        function getRandomSpan(text){
+          //Generate Random Number between 1 and 5 inclusive
+          var randomNum = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+          switch(randomNum) {
+              case 1:
+                  return " <span class='label label-danger'>"+text+"</span> ";
+              case 2:
+                  return " <span class='label label-success'>"+text+"</span> ";
+              case 3:
+                  return " <span class='label label-info'>"+text+"</span> ";
+              case 4:
+                  return " <span class='label label-warning'>"+text+"</span> ";
+              case 5:
+                  return " <span class='label label-primary'>"+text+"</span> ";
+          }         
+        }
+      }
+
       function requestAppointment(){ 
         //get Time, Day, latlng, duration, course, questionTopic
         var time = $("#tutorTime").val();
