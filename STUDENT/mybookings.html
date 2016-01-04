@@ -891,8 +891,8 @@ var MyFireChatBox=function(currUserID){
      var currUserID=currUserID;
 
 
-     function GenChatBoxInfo(tutorID, studentID, currUserID){
-      if(tutorID===studentID) return alert("self chat");
+     function GenChatBoxInfo(tutorID, studentID){
+        if(tutorID===studentID) return alert("self chat");
         var arr=[tutorID, studentID];
         arr.sort();
         console.log(arr);
@@ -903,7 +903,7 @@ var MyFireChatBox=function(currUserID){
         ret.targetIdIndx=0;
         if(ret.ownerIdIndx===0){
            ret.targetIdIndx=1;
-        }
+        };
         ret.targetUserID=arr[ret.targetIdIndx];
         ret.sortedChatUid=arr.join("_");
 
@@ -916,8 +916,9 @@ var MyFireChatBox=function(currUserID){
                 ret.usrArr[i]=usrsObj[uid];
         };
 
-        this.data=ret;
-
+        this.data=function(){
+          return ret;
+        };
         this.getUser=function(ownerIdIndx){
           return ret.usrArr[ownerIdIndx];
         };
@@ -933,7 +934,7 @@ var MyFireChatBox=function(currUserID){
         };
         this.getUid=function(MsgSnderIdIndx){
           return ret.uidArr[MsgSnderIdIndx];
-        }
+        };
      };
 
       var chatboxInfo=null;
@@ -958,18 +959,17 @@ var MyFireChatBox=function(currUserID){
             var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
             usrsRef.once("value",function(snapshot){
                 usrsObj=snapshot.val();
-                once_users(tutorID, studentID, currUserID);
+                once_users(tutorID, studentID);
             });              
           }else{
-            once_users(tutorID, studentID, currUserID);
+            once_users(tutorID, studentID);
           }
-          
-      
-      }
-      function once_users(tutorID, studentID, currUserID){
-        chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID);
+      };
+      function once_users(tutorID, studentID){
+        if(chatboxInfo) delete chatboxInfo;
+        chatboxInfo=new GenChatBoxInfo(tutorID, studentID);
         $("#boxtitle").text(chatboxInfo.getTargetName())
-                      .attr("chatuid",chatboxInfo.data.sortedChatUid);
+                      .attr("chatuid",chatboxInfo.data().sortedChatUid);
 
         FireChatMsgs(chatboxInfo);
       };
@@ -977,7 +977,7 @@ var MyFireChatBox=function(currUserID){
 
         //DisconnectChat();
         //Sort which id is first to generate unique ID
-        var sortedChatUid = chatboxInfo.data.sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
+        var sortedChatUid = chatboxInfo.data().sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
         console.log("sortedChatUid",sortedChatUid);
 
 
@@ -1005,16 +1005,16 @@ var MyFireChatBox=function(currUserID){
         var val=snapshot.val();
         console.log(val);
         $.each(val, function(utc,msgObj){
-          msgAdded2ChatBox(key, utc,msgObj);   
+          msgAdded2page(key, utc,msgObj);   
         });
       };
       function on_child_added_msg(snapshot){
         var chatUid=snapshot.ref().parent().key();
         var utc = snapshot.key();
         var msgObj = snapshot.val();
-        msgAdded2ChatBox(chatUid, utc,msgObj);  
+        msgAdded2page(chatUid, utc,msgObj);  
       };
-      function msgAdded2ChatBox(chatUid, utc, msgObj){
+      function msgAdded2page(chatUid, utc, msgObj){
         console.log("key="+utc,msgObj);
 
         var snderIdIndx=msgObj.ownerIdIndx;
@@ -1028,15 +1028,19 @@ var MyFireChatBox=function(currUserID){
 
         var currChatuid=$("#boxtitle").attr("chatuid");
         if( currChatuid===chatUid){
-          msgAdded2Ui(msgObj.msg, datetime,  snder, boxsides);            
+          msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides);            
           return;
+        }
+        else{
+
+
         }
 
         if( snderUid===currUserID){
 
         };        
       }
-      function msgAdded2Ui(msg, datetime, snder, boxsides){
+      function msgAdded2ChatBox(msg, datetime, snder, boxsides){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
                               '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
@@ -1057,7 +1061,7 @@ var MyFireChatBox=function(currUserID){
 
 
       this.SendMsg=function(msg){
-        var ownerIdIndx=""+chatboxInfo.data.ownerIdIndx;
+        var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         //var timestamp=Firebase.ServerValue.TIMESTAMP;
 
         // Record the current time immediately, and queue an event to
