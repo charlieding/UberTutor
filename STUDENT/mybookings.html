@@ -885,7 +885,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 
-var MyFireChatBox=function(tutorID, studentID, currUserID){
+var MyFireChatBox=function(currUserID){
 
      var usrsObj=null;
      var currUserID=currUserID;
@@ -1065,7 +1065,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
           if(tutorID===studentID) return alert("self chat:",tutorID,studentID,currUserID);
 
           if(null===fireChatBox){
-            fireChatBox=new MyFireChatBox(tutorID, studentID, currUserID);            
+            fireChatBox=new MyFireChatBox(currUserID);            
           }
           fireChatBox.SetSession(chatElem);
 
