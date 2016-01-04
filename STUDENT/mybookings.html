@@ -993,16 +993,15 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         var val=snapshot.val();
         console.log(val);
         $.each(val, function(utc,msgObj){
-          var datetime  = moment(utc).format("MMM D hh:mm a"); 
-          var ownerIdIndx=msgObj.ownerIdIndx;
-          var boxsides=chatboxInfo.getSides(ownerIdIndx);
-          var usr=chatboxInfo.getUser(ownerIdIndx);
-          msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides); 
+          msgAdded2ChatBox(utc,msgObj);   
         });
       };
       function on_child_added_msg(snapshot){
         var msgObj = snapshot.val();
         var utc=snapshot.key();
+        msgAdded2ChatBox(utc,msgObj);   
+      };
+      function msgAdded2ChatBox(utc, msgObj){
         console.log("key="+utc,msgObj);
 
         var ownerIdIndx=msgObj.ownerIdIndx;
@@ -1011,8 +1010,8 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
 
         var localTime = moment.utc(utc).toDate();
         var datetime  = moment(localTime).format("MMM D hh:mm a");     
-        msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);    
-      };
+        msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides);         
+      }
       function msgAdded2Ui(msg, datetime, usr, boxsides){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
