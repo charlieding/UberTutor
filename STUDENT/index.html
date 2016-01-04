@@ -368,7 +368,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                   <div class="box-body box-profile">
                     <img id="tutorImageModal" class="profile-user-img img-responsive img-circle userImage" src="dist/img/l.gif" alt="User profile picture">
                     <h3 id="tutorNameModal" class="profile-username text-center userName"></h3>
-                    <p id="currentStatusModal" class="text-muted text-center"></p>
+                    <p id="currentStatusModal" class="text-muted text-center"> since <span id="joinDateModal"></span></p>
                   </div><!-- /.box-body -->
                 </div><!-- /.box -->
               </div>
@@ -706,7 +706,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         }
       }
       function updateTutorProfile(_this){
-        var usrObj=JSON.parse($(_this).attr("userObj"));
+        alert(_this);
+        var usrObj=JSON.parse($(_this).attr("userobj"));
         console.log(usrObj);
         updateTutorProfileByObject(usrObj);
 
@@ -883,9 +884,10 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         $("#tutorImageModal").attr("src",tutorObj.imgUrl);
         $("#tutorNameModal").text(tutorObj.displayName);
         $("#memberSinceDateProfileModal").text("Member since "+ moment(tutorObj.creationDate).format("MMM. YYYY"));
+        $("#joinDateModal").text(moment(tutorObj.creationDate).format("MMMM Do, YYYY"));
         $("#emailModal").text("Request");//(tutorObj.email);
         $("#phoneNumberModal").text("Request");//(tutorObj.phoneNumber);
-        $("#currentStatusModal").text(tutorObj.userType.charAt(0).toUpperCase()+tutorObj.userType.slice(1)+" since "+moment(tutorObj.creationDate).format("MMMM Do, YYYY"));
+        $("#currentStatusModal").text(tutorObj.userType.charAt(0).toUpperCase() + tutorObj.userType.slice(1) + " since " );
         $("#educationModal").text(tutorObj.education);
         $("#locationModal").text(tutorObj.city+", "+tutorObj.state);
         $("#biographyModal").text(tutorObj.biography);
