@@ -893,10 +893,16 @@ var MyFireChatBox=function(){
         var ret={};
         this.Init=function(tutorID, studentID, currentUserID){
           if(tutorID===studentID) return alert("self chat");
+          ret.currUserID=currentUserID;
+          ret.tutorID=tutorID;
+          ret.studentID=studentID;
+
           var arr=[tutorID, studentID];
           arr.sort();
           console.log(arr);
-          ret.currUserID=currentUserID;
+
+
+
           ret.ownerIdIndx=arr.indexOf(currentUserID);
           if(ret.ownerIdIndx<0) return alert("not find:"+currentUserID);
           ret.targetIdIndx=0;
@@ -961,19 +967,19 @@ var MyFireChatBox=function(){
           chatRef=null;
         }
       };
-      function FireUsers(tutorID, studentID){
+      function FireUsers(){
           if(null===chatboxInfo.getUsersObj() ){
             var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
             usrsRef.once("value",function(snapshot){
                 var usrsObj=snapshot.val();
                 chatboxInfo.setUsersObj(usrsObj);
-                once_users(tutorID, studentID);
+                once_users();
             });              
           }else{
-            once_users(tutorID, studentID);
+            once_users();
           }
       };
-      function once_users(tutorID, studentID){
+      function once_users(){
         chatboxInfo.UpdateInfo();
         $("#boxtitle").text(chatboxInfo.getTargetName())
                       .attr("chatuid",chatboxInfo.data().sortedChatUid);
@@ -1094,7 +1100,7 @@ var MyFireChatBox=function(){
         console.log("wei",tutorID,studentID,currentUserID);
         chatboxInfo.Init(tutorID, studentID,currentUserID);
 
-        FireUsers(tutorID,studentID);
+        FireUsers();
       }
 
 };////////////////////////////////////////////
