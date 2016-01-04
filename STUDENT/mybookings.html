@@ -237,8 +237,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <tr>
                           <td><img src="dist/img/l.gif" class="img-circle userImage" style="height:65px;" alt="User Image"></td>
                           <td>
-                            <div><b>CS 1234</b> on <b>Jan 3, 5:00PM</b></div>
-                            <div>with <b>Inez Raharjo</b>, 1hr</div>
+                            <div><b id="mainCourse">CS 1234</b> on <b id="mainDate">Jan 3, 5:00PM</b></div>
+                            <div>with <b id="mainTutor">Inez Raharjo</b>, 1hr(s)</div>
                             <span class="btn btn-sm btn-primary label" style="cursor:pointer;"><i class="fa fa-comments-o"> Chat</i></span>
                             <span data-toggle="tooltip" title="" class="badge bg-yellow" data-original-title="3 New Messages">3</span>
                           </td>
@@ -283,7 +283,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Action Item(s)</th>
                         </tr>
                       </thead>
-                      <tbody id="bookings">
+                      <tbody id="upcomingBookings">
                         <tr>
                           <td><a href="pages/examples/invoice.html">OR9842</a></td>
                           <td>CS 1001</td>
@@ -300,10 +300,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </table>
                   </div><!-- /.table-responsive -->
                 </div><!-- /.box-body -->
-                <div class="box-footer clearfix">
-                  <a href="index.html" class="btn btn-sm btn-info btn-flat pull-left">Find a Tutor</a>
-                  <a href="#" onclick="alert('Coming Soon...');" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
-                </div><!-- /.box-footer -->
               </div><!-- /.box -->
             </div> <!-- /.bookings -->
           </div><!-- /.row -->
@@ -330,61 +326,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Date</th>
                           <th>Location</th>
                           <th>Class</th>
+                          <th>Status</th>
                           <th>Price Paid</th>
                           <th>Action Item(s)</th>
                         </tr>
                       </thead>
-                      <tbody id="bookings">
-                        <tr>
-                          <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                          <td>CS 1001</td>
-                          <td><span class="label label-info">In Session</span></td>
-                          <td><div class="sparkbar" data-color="#00a65a" data-height="20">Julie Holmes</div></td>
-                        </tr>
-                        <tr>
-                          <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                          <td>Math 3001</td>
-                          <td><span class="label label-warning">Pending Payment</span></td>
-                          <td><div class="sparkbar" data-color="#f39c12" data-height="20">Brian Oliasko</div></td>
-                        </tr>
-                        <tr>
-                          <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                          <td>CS 2001</td>
-                          <td><span class="label label-danger">Cancelled</span></td>
-                          <td><div class="sparkbar" data-color="#f56954" data-height="20">Inez Raharjo</div></td>
-                        </tr>
-                        <tr>
-                          <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                          <td>PSYC 1001</td>
-                          <td><span class="label label-warning">Pending Payment</span></td>
-                          <td><div class="sparkbar" data-color="#00c0ef" data-height="20">James Parker</div></td>
-                        </tr>
-                        <tr>
-                          <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                          <td>ECON 1002</td>
-                          <td><span class="label label-primary">Awaiting Response</span></td>
-                          <td><div class="sparkbar" data-color="#f39c12" data-height="20">Will Jones</div></td>
-                        </tr>
-                        <tr>
-                          <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                          <td>HIST 1001</td>
-                          <td><span class="label label-success">Finished</span></td>
-                          <td><div class="sparkbar" data-color="#f56954" data-height="20">David Zanes</div></td>
-                        </tr>
-                        <tr>
-                          <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                          <td>CS 2034</td>
-                          <td><span class="label label-success">Finished</span></td>
-                          <td><div class="sparkbar" data-color="#00a65a" data-height="20">Ray Chang</div></td>
-                        </tr>
+                      <tbody id="pastBookings">
                       </tbody>
                     </table>
                   </div><!-- /.table-responsive -->
                 </div><!-- /.box-body -->
-                <div class="box-footer clearfix">
-                  <a href="index.html" class="btn btn-sm btn-info btn-flat pull-left">Find a Tutor</a>
-                  <a href="#" onclick="alert('Coming Soon...');" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
-                </div><!-- /.box-footer -->
               </div><!-- /.box -->
             </div> <!-- /.bookings -->
           </div><!-- /.row -->
@@ -720,8 +671,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           //console.log(allAppointments);
 
 
-          //Clear list before showing
-          $("#bookings").empty();
+          //Clear lists before showing
+          $("#upcomingBookings").empty();
+          $("#pastBookings").empty();
           //Go through every appointment for the user, map it to a real appointment, the display it all
           if(userAppointments && allAppointments){
             $.each(userAppointments, function(uid, appointmentMapObj){
@@ -735,35 +687,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 //Default Unknown Status Style
                 var statusStyle = "bg-gray-active color-palette";
                 var actionItem = "None";
+                var upcomingPastOrNow = "#pastBookings";
 
                 if(appointmentSnapshot.val().status == "Awaiting Response"){
-                  var statusStyle = "label-primary";
-                  var actionItem = "<span onclick='cancelAppointment(this);' appointmentId='"+appointmentSnapshot.key()+"' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
+                  upcomingPastOrNow = "#upcomingBookings";
+                  statusStyle = "label-primary";
+                  actionItem = "<span onclick='cancelAppointment(this);' appointmentId='"+appointmentSnapshot.key()+"' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "Accepted"){
-                  var statusStyle = "label-info";
-                  var actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
+                  upcomingPastOrNow = "#upcomingBookings";
+                  statusStyle = "label-info";
+                  actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "On the Way"){
-                  var statusStyle = "label-info";
+                  upcomingPastOrNow = "#now";
+                  statusStyle = "label-info";
                 }
                 if(appointmentSnapshot.val().status == "In Session"){
-                  var statusStyle = "label-info";
+                  upcomingPastOrNow = "#now";
+                  statusStyle = "label-info";
                 }
                 if(appointmentSnapshot.val().status == "Pending Payment"){
-                  var statusStyle = "label-warning";
-                  var actionItem = "<span onclick='goToPayments();' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
+                  upcomingPastOrNow = "#now";
+                  statusStyle = "label-warning";
+                  actionItem = "<span onclick='goToPayments();' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
                 }
                 if(appointmentSnapshot.val().status == "Finished"){
-                  var statusStyle = "label-success";
+                  upcomingPastOrNow = "#pastBookings";
+                  statusStyle = "label-success";
                   if(appointmentSnapshot.val().feedbackLeft == "true"){
-                    var actionItem = "Feedback Left";
+                    actionItem = "Feedback Left";
                   } else {
-                    var actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentSnapshot.val().tutorDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentSnapshot.val().tutorDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
                   }
                 }
                 if(appointmentSnapshot.val().status == "Cancelled"){
-                  var statusStyle = "label-danger";
+                  statusStyle = "label-danger";
                 }
 
                 //Update Actual Bookings on UI
@@ -773,7 +732,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 } else {
                   //Doesn't Exist yet, just add
                   uids = uids+uid;
-                  $("#bookings").prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span></div></td><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>$"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+
+                  if(upcomingPastOrNow == "#now"){
+
+                  } else if(upcomingPastOrNow == "#upcomingBookings"){
+                    $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span></div></td><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>$"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                  } else if(upcomingPastOrNow == "#pastBookings"){
+                    $(upcomingPastOrNow).prepend("<tr><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>$"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                  }
                 }
 
               },function (errorObject) {
@@ -781,7 +747,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               });
             });
           } else{
-            $("#bookings").prepend("<tr><td>"+"Empty"+"</td><td>"+
+            $("#upcomingBookings").prepend("<tr><td>"+"Empty"+"</td><td>"+
               "</td><td><span class='label label-info'>"+
               "</span></td><td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+
               "<a href="+"/STUDENT/index.html"+">"+"Find A Tutor"+"</a>"

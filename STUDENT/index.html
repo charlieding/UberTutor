@@ -589,8 +589,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         emptyTutorLogic();
         rightsidebaraside = 150;
         righttabcontent = 315;
-        $('#rightsidebaraside').height(($(window).height()-rightsidebaraside));
-        $('#righttabcontent').height($(window).height()-righttabcontent);
+        fixSideBars();
 
         //Finished Updating Tutor Profile, Show it Now
         $(".hideTutorProfileWhenNoTutorSelected").show();
@@ -599,8 +598,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
       function setSearchTutorsTabActive(){
         rightsidebaraside = 70;
         righttabcontent = 235;
-        $('#rightsidebaraside').height(($(window).height()-rightsidebaraside));
-        $('#righttabcontent').height($(window).height()-righttabcontent);
+        fixSideBars();
 
         $("#rightBarHeaderName").text("Tutors Near You");
         $("#rightBarHeaderName").show();
@@ -812,7 +810,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           feedbackMessage: "null",
           feedbackRating: "0",
           flexibility: $("#flexibility").text(),
-          costHourly: $("#costHourly").text()
+          costHourly: $("#bookingHourlyCost").text()
         });
         var appointmentID = appointment.key();
 

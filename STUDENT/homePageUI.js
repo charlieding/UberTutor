@@ -58,18 +58,18 @@
         $('#googleMap').height($('#mainleftsidebar').height());
       }
       function fixSideBars(){
-        //USES THESE VARIABLES DEFINED IN INDEX.HTML GLOBALLY
+        //USES THESE VARIABLES DEFINED IN INDEX.HTML GLOBALLY EG: rightsidebaraside
         $('#righttabcontent').parent().height('auto');
-        $('#rightsidebaraside').height(($(window).height()-rightsidebaraside));
-        $('#righttabcontent').height($(window).height()-righttabcontent);
-        //$('#rightsidebaraside').height(($(window).height()-100));
-        //$('#righttabcontent').height($(window).height()-265);
-        //$('#righttabcontent').height('auto'); //NOT WORKING - MUST FIX
-        /* Bottom Menu */
+
+        /* Bottom Menu And Right Side Bar*/
         if($(window).width() <= 767){
           $('#paddingTop').height($(window).height()-280);
+          $('#rightsidebaraside').height(($(window).height()-(rightsidebaraside+55)));
+          $('#righttabcontent').height($(window).height()-(righttabcontent+55));
         }else{
           $('#paddingTop').height($(window).height()-230);
+          $('#rightsidebaraside').height(($(window).height()-rightsidebaraside));
+          $('#righttabcontent').height($(window).height()-righttabcontent);
         }
         /*Bug where Screen initailly has tall white spaces*/
         $('#globalwrapper').height($(window).height());
