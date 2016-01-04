@@ -886,7 +886,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 var MyFireChatBox=function(tutorID, studentID, currUserID){
-     var sortedChatUidConnectedArr=[];
+
      var usrsObj=null;
      var currUserID=currUserID;
      var msgBuff={};
@@ -975,12 +975,12 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         console.log("sortedChatUid",sortedChatUid);
 
 
-        if(sortedChatUidConnectedArr.indexOf(sortedChatUid)>=0){
+        if(msgChatIdRefObj[sortedChatUid]){
           //var msgsRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
           msgChatIdRefObj[sortedChatUid].once("value",on_child_added_msg_all);
           return;
         };
-        sortedChatUidConnectedArr.push(sortedChatUid);
+
         chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
         msgChatIdRefObj[sortedChatUid]=chatRef;
 
