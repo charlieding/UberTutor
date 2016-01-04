@@ -1040,19 +1040,16 @@ var MyFireChatBox=function(){
 
 
         var currChatuid=$("#boxtitle").attr("chatuid");
+
+
         if( currChatuid===chatUid){
           msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides);            
           return;
         }
         else{
-
-
-        }
-
-        //if( snderUid===currUserID){
-
-        //};        
-      }
+          $("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
+        };  
+      };
       function msgAdded2ChatBox(msg, datetime, snder, boxsides){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
@@ -1101,6 +1098,9 @@ var MyFireChatBox=function(){
         chatboxInfo.Init(tutorID, studentID,currentUserID);
 
         FireUsers();
+
+        var chatuid = chatboxInfo.data().sortedChatUid;
+        return chatuid;
       }
 
 };////////////////////////////////////////////
@@ -1108,8 +1108,11 @@ var MyFireChatBox=function(){
       var fireChatBox=new MyFireChatBox();
       function chatBox(chatElem){
           $("#chatMessages").empty();
-          fireChatBox.SetSession(chatElem);
+          var chatuid=fireChatBox.SetSession(chatElem);
+          $(chatElem).attr("chatuid",chatuid);
       };
+
+      
 
       //add new message using set
       function sendMsg(){
