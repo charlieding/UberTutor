@@ -937,19 +937,19 @@ var MyFireChatBox=function(currUserID){
      };
 
       var chatboxInfo=null;
-      var onChatChange = null;
-      var chatRef = null;      
+      var chatBind = null;
+      var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/");   
       var msgChatIdRefObj = {};  
       var chatElemMap = {};  
 
       function DisconnectChat(){
         return;
         //Remove old chat box listener 
-        if(onChatChange){
-          chatRef.off("child_added", onChatChange);
-          delete onChatChange;
-          delete onChatChange;
-          onChatChange=null;
+        if(chatBind){
+          chatRef.off("child_added", chatBind);
+          delete chatBind;
+          delete chatBind;
+          chatBind=null;
           chatRef=null;
         }
       };
@@ -981,34 +981,40 @@ var MyFireChatBox=function(currUserID){
         console.log("sortedChatUid",sortedChatUid);
 
 
+        if(!chatElemMap[sortedChatUid]){
+          chatElemMap[sortedChatUid]=chatElm;
+        }
+
         if(msgChatIdRefObj[sortedChatUid]){
           //var msgsRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
-          msgChatIdRefObj[sortedChatUid].once("value",on_child_added_msg_all);
+          chatRef.child(sortedChatUid).once("value",on_child_value_msg);
           return;
         };
 
-        chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
-        msgChatIdRefObj[sortedChatUid]=chatRef;
-        chatElemMap[sortedChatUid]=chatElm;
+        //chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
+        //msgChatIdRefObj[sortedChatUid]=chatRef;
 
         //load messages via child added
-        onChatChange = chatRef.on("child_added",on_child_added_msg);
+        chatBind = chatRef.child(sortedChatUid).on("child_added",on_child_added_msg);
+        msgChatIdRefObj[sortedChatUid]=chatBind;
       };
-      function on_child_added_msg_all(snapshot){
+
+      function on_child_value_msg(snapshot){
         var key=snapshot.key();
         console.log('hi, key',key);
         var val=snapshot.val();
         console.log(val);
         $.each(val, function(utc,msgObj){
-          msgAdded2ChatBox(utc,msgObj);   
+          msgAdded2ChatBox(key, utc,msgObj);   
         });
       };
       function on_child_added_msg(snapshot){
+        var chatUid=snapshot.ref().parent().key();
+        var utc = snapshot.key();
         var msgObj = snapshot.val();
-        var utc=snapshot.key();
-        msgAdded2ChatBox(utc,msgObj);   
+        msgAdded2ChatBox(chatUid, utc,msgObj);  
       };
-      function msgAdded2ChatBox(utc, msgObj){
+      function msgAdded2ChatBox(chatUid, utc, msgObj){
         console.log("key="+utc,msgObj);
 
         var snderIdIndx=msgObj.ownerIdIndx;
@@ -1016,17 +1022,19 @@ var MyFireChatBox=function(currUserID){
         var snder=chatboxInfo.getUser(snderIdIndx);
         var snderUid=chatboxInfo.getUid(snderIdIndx);
 
-
-
         var localTime = moment.utc(utc).toDate();
         var datetime  = moment(localTime).format("MMM D hh:mm a"); 
 
 
-        var chatuid=$("#boxtitle").attr("chatuid");
+        var currChatuid=$("#boxtitle").attr("chatuid");
+        if( currChatuid===chatUid){
+          msgAdded2Ui(msgObj.msg, datetime,  snder, boxsides);            
+          return;
+        }
+
         if( snderUid===currUserID){
 
-        };            
-        msgAdded2Ui(msgObj.msg, datetime,  snder, boxsides);         
+        };        
       }
       function msgAdded2Ui(msg, datetime, snder, boxsides){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
@@ -1058,8 +1066,11 @@ var MyFireChatBox=function(currUserID){
 //var mySessionRef = sessionsRef.push();
 //mySessionRef.onDisconnect().update({ endedAt: Firebase.ServerValue.TIMESTAMP });
 //mySessionRef.update({ startedAt: Firebase.ServerValue.TIMESTAMP });
+
+        var currChatuid=$("#boxtitle").attr("chatuid");
         var utc=moment.utc().format();
-        chatRef.child(utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
+
+        chatRef.child(currChatuid+"/"+utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
 
 
