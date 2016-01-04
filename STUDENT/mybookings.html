@@ -889,6 +889,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
      var sortedChatUidConnectedArr=[];
      var usrsObj=null;
      var currUserID=currUserID;
+     var msgBuff={};
 
      function GenChatBoxInfo(tutorID, studentID, currUserID){
       if(tutorID===studentID) return alert("self chat");
@@ -936,6 +937,8 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
       var chatboxInfo=null;
       var onChatChange = null;
       var chatRef = null;      
+      var msgChatIdRefObj = {};  
+
       function DisconnectChat(){
         //Remove old chat box listener 
         if(onChatChange){
@@ -970,15 +973,32 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         //Sort which id is first to generate unique ID
         var sortedChatUid = chatboxInfo.data.sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
         console.log("sortedChatUid",sortedChatUid);
+
+
         if(sortedChatUidConnectedArr.indexOf(sortedChatUid)>=0){
+          //var msgsRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
+          msgChatIdRefObj[sortedChatUid].once("value",on_child_added_msg_all);
           return;
         };
         sortedChatUidConnectedArr.push(sortedChatUid);
-
-
         chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
+        msgChatIdRefObj[sortedChatUid]=chatRef;
+
         //load messages via child added
         onChatChange = chatRef.on("child_added",on_child_added_msg);
+      };
+      function on_child_added_msg_all(snapshot){
+        var key=snapshot.key();
+        console.log('hi, key',key);
+        var val=snapshot.val();
+        console.log(val);
+        $.each(val, function(utc,msgObj){
+          var datetime  = moment(utc).format("MMM D hh:mm a"); 
+          var ownerIdIndx=msgObj.ownerIdIndx;
+          var boxsides=chatboxInfo.getSides(ownerIdIndx);
+          var usr=chatboxInfo.getUser(ownerIdIndx);
+          msgAdded2Ui(msgObj.msg, datetime,  usr, boxsides); 
+        });
       };
       function on_child_added_msg(snapshot){
         var msgObj = snapshot.val();
@@ -1026,7 +1046,7 @@ var MyFireChatBox=function(tutorID, studentID, currUserID){
         var utc=moment.utc().format();
         chatRef.child(utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
       };
-      //FireChatUsers(tutorID, studentID, currUserID);
+
 
       var chatElm=null;
       this.SetSession=function(chatElem){
