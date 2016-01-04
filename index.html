@@ -472,28 +472,25 @@
             <button class="btn btn-primary btnfb"  onclick="fbregister();" type="button">
                 <i class="fa fa-facebook-official"></i><span> Sign up with Facebook</span>
             </button>
-            <hr>
-            <form class="form-horizontal">
+            <br><br>
+            <div class="or-spacer">  
+                <div class="mask"></div>  
+                <span><i>or</i></span>
+            </div>
+            <br>
+            <form class="form-horizontal" style="padding-left:50px; padding-right:50px;">
               <div class="form-group">
-                <label for="inputName" class="col-lg-2 control-label">Full Name</label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" id="fullname" placeholder="Enter Your First and Last Name">
-                </div>
+                <label for="inputName"><small style="color:grey;">Full Name</small></label>
+                <input type="text" class="form-control" id="fullname" placeholder="Enter Your First and Last Name">
               </div>
               <div class="form-group">
-                <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" id="registerEmail" placeholder="Email">
-                </div>
+                <label for="inputEmail"><small style="color:grey;">Email Address</small></label>
+                <input type="text" class="form-control" id="registerEmail" placeholder="Email">
               </div>
               <div class="form-group">
-                <label for="inputPassword" class="col-lg-2 control-label">Password</label>
-                <div class="col-lg-10">
+                <label for="inputPassword"><small style="color:grey;">Password</small></label>
                   <input type="password" class="form-control" id="Password1" placeholder="Password">
-                  <input type="password" class="form-control" id="Password2" placeholder="Re-type Password">
-                  <div class="checkbox">
-                  </div>
-                </div>
+                  <input type="password" class="form-control" id="Password2" style="margin-top:5px;" placeholder="Enter Password Again">
               </div>
             </form>
           </div>
