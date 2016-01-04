@@ -940,6 +940,7 @@ var MyFireChatBox=function(currUserID){
       var msgChatIdRefObj = {};  
 
       function DisconnectChat(){
+        return;
         //Remove old chat box listener 
         if(onChatChange){
           chatRef.off("child_added", onChatChange);
@@ -949,12 +950,12 @@ var MyFireChatBox=function(currUserID){
           chatRef=null;
         }
       };
-      function FireChatUsers(tutorID, studentID, currUserID){
+      function FireUsers(tutorID, studentID, currUserID){
           if(null===usrsObj){
             var usrsRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/");
             usrsRef.once("value",function(snapshot){
                 usrsObj=snapshot.val();
-                fire_user(tutorID, studentID, currUserID);
+                once_users(tutorID, studentID, currUserID);
             });              
           }else{
             fire_user(tutorID, studentID, currUserID);
@@ -962,7 +963,7 @@ var MyFireChatBox=function(currUserID){
           
       
       }
-      function fire_user(tutorID, studentID, currUserID){
+      function once_users(tutorID, studentID, currUserID){
         chatboxInfo=new GenChatBoxInfo(tutorID, studentID, currUserID);
         $("#boxtitle").text(chatboxInfo.getTargetName());
         FireChatMsgs(chatboxInfo);
@@ -1054,7 +1055,7 @@ var MyFireChatBox=function(currUserID){
         studentID=$(chatElem).attr("studentID");
         console.log("wei",tutorID,studentID);
 
-        FireChatUsers(tutorID,studentID,currUserID);
+        FireUsers(tutorID,studentID,currUserID);
       }
 
 };////////////////////////////////////////////
