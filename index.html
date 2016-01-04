@@ -661,6 +661,7 @@
 
     <script>
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
+        var authenticatedIosRedirectFlag = false;
         $( document ).ready(function() {
             // Register the callback to be fired every time auth state changes
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -671,8 +672,10 @@
         function authDataCallback(authData) {
           if (authData) {
             console.log("User " + authData.uid + " is logged in with " + authData.provider);
+            authenticatedIosRedirectFlag = true;
           } else {
             console.log("User is logged out");
+            authenticatedIosRedirectFlag = false;
           }
         }
 
@@ -708,7 +711,12 @@
               alert(errorRetry);
               $(".overlay").hide();
             } else {
-              checkIfUserExistsLogin(authDataRetry.uid, authDataRetry);
+                //Hack for IOS Mobile View - TODO, DEBUG & FIX
+                if(authenticatedIosRedirectFlag){
+                    alert("This Device is not supported. Please use Desktop for best Experience.")
+                    window.location = 'STUDENT/index.html';
+                }
+                checkIfUserExistsLogin(authDataRetry.uid, authDataRetry);
             }
           }
         }
@@ -768,7 +776,13 @@
             console.log(error, authData);
           }
           function fbRegisterRetryAuthHandler(errorRetry, authDataRetry){
+
             if (authDataRetry){
+                //Hack for IOS Mobile View
+                if(authenticatedIosRedirectFlag){
+                    alert("This Device is not supported. Please use Desktop for best Experience.")
+                    window.location = 'STUDENT/index.html';
+                }
               if(authDataRetry.provider = "facebook"){
                   checkIfUserExistsRegister(authDataRetry.uid, authDataRetry);
               }else{
