@@ -696,11 +696,20 @@
         // Create a callback to handle the result of the authentication
         function loginAuthHandler(error, authData) {
           if (error) {
-            console.log("Login Failed!", error);
-            alert(error);
-            $(".overlay").hide();
+            if(error.code = "TRANSPORT_UNAVAILABLE"){
+                (new Firebase("https://ubertutoralpha.firebaseio.com")).authWithOAuthRedirect("facebook",fbLoginRetryWithOutPopUpsAuthHandler);
+            }
           } else {
             checkIfUserExistsLogin(authData.uid, authData);
+          }
+          function fbLoginRetryWithOutPopUpsAuthHandler(errorRetry, authDataRetry){
+            if (errorRetry) {
+              console.log("Login Failed!", errorRetry);
+              alert(errorRetry);
+              $(".overlay").hide();
+            } else {
+              checkIfUserExistsLogin(authDataRetry.uid, authDataRetry);
+            }
           }
         }
         function successLogin(authData){
@@ -748,17 +757,32 @@
             if(authData.provider = "facebook"){
                 checkIfUserExistsRegister(authData.uid, authData);
             }else{
-                //Traditional Username password register
-                console.log("User Already Exists!");
-                userExistRegister(authData);
+                //Other future support for Google Github login 
             }
           } else if (error == "Error: The specified user does not exist."){
             persistNewUserDB("traditionalEmailPassword");
           } else if (error) {
-            alert(error);
-            $(".overlay").hide();
+            if(error.code=="TRANSPORT_UNAVAILABLE")
+                (new Firebase("https://ubertutoralpha.firebaseio.com")).authWithOAuthRedirect("facebook", fbRegisterRetryAuthHandler);
           }else {
             console.log(error, authData);
+          }
+          function fbRegisterRetryAuthHandler(errorRetry, authDataRetry){
+            if (authDataRetry){
+              if(authDataRetry.provider = "facebook"){
+                  checkIfUserExistsRegister(authDataRetry.uid, authDataRetry);
+              }else{
+                  //Other future support for Google Github login 
+              }
+            } else if (errorRetry == "Error: The specified user does not exist."){
+              persistNewUserDB("traditionalEmailPassword");
+            } else if (errorRetry) {
+              if(errorRetry.code=="TRANSPORT_UNAVAILABLE")
+                alert(errorRetry);
+                $(".overlay").hide();
+            }else {
+              console.log(errorRetry, authDataRetry);
+            }
           }
         }
 
