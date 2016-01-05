@@ -890,6 +890,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           var chatuid=fireChatBox.SetSession(chatElem);
           $(chatElem).attr("chatuid",chatuid);
 
+          fireChatBox.ClearMyStats();
+
           $("span[chatuid='"+chatuid+"']").css("background-color","ff0000");
       };
 
