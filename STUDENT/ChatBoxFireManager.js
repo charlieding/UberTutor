@@ -58,6 +58,7 @@ var ChatBoxFireManager=function(){
         this.getTargetName=function(){
           if(ret.sortedUidArr.length===0) return alert("ret.sortedUidArr null");
           var uid=ret.sortedUidArr[ret.targetIdIndx];
+          if(!usrsObj) return alert("usrsObj not readu yet");
           return usrsObj[uid].displayName;
         };
         this.getUid=function(MsgSnderIdIndx){
@@ -98,8 +99,13 @@ var ChatBoxFireManager=function(){
       };
       function once_users(){
         chatboxInfo.UpdateInfo();
+
+
+        ///////////////////////////////////////////////////////////////
+        //this ui should be handled by html client users.
         $("#boxtitle").text(chatboxInfo.getTargetName())
                       .attr("chatuid",chatboxInfo.data().sortedChatUid);
+        ////////////////////////////////////////////////////////////////
 
         FireChatMsgs(chatboxInfo);
       };
@@ -107,7 +113,7 @@ var ChatBoxFireManager=function(){
 
         //DisconnectChat();
         //Sort which id is first to generate unique ID
-        var sortedChatUid = chatboxInfo.data().sortedChatUid;//"facebook:10205542375624024_facebook:1129363767081285";
+        var sortedChatUid = chatboxInfo.data().sortedChatUid;
         console.log("sortedChatUid",sortedChatUid);
 
 
@@ -177,17 +183,12 @@ var ChatBoxFireManager=function(){
         var datetime  = moment(localTime).format("MMM D hh:mm a"); 
 
 
-        //var currChatuid=$("#boxtitle").attr("chatuid");
+        msgAdded2ChatBox(chatUid, datetime, msgObj.msg, snder, boxsides, bScroolToView);            
 
-
-        //if( currChatuid===chatUid){
-          msgAdded2ChatBox(chatUid, msgObj.msg, datetime,  snder, boxsides, bScroolToView);            
-         // return;
-        //}; 
       };
-      function msgAdded2ChatBox(chatUid, msg, datetime, snder, boxsides,bScroolToView){
+      function msgAdded2ChatBox(chatUid, datetime, msg, snder, boxsides,bScroolToView){
         if(chatboxInfo.on_msg2chatbox){
-          chatboxInfo.on_msg2chatbox(chatUid, msg, datetime, snder, boxsides,bScroolToView);
+          chatboxInfo.on_msg2chatbox(chatUid, datetime, msg, snder, boxsides,bScroolToView);
         }
         return;
 
@@ -200,19 +201,11 @@ var ChatBoxFireManager=function(){
       }    
 
 
-      this.SendMsg=function(msg){
+      this.SendMsg=function(currChatuid, msg){
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         var targetIdIndx=""+chatboxInfo.data().targetIdIndx;
-        //var timestamp=Firebase.ServerValue.TIMESTAMP;
 
-        // Record the current time immediately, and queue an event to
-// record the time at which the user disconnects.
-//var sessionsRef = chatRef;//new Firebase('https://samplechat.firebaseio-demo.com/sessions/');
-//var mySessionRef = sessionsRef.push();
-//mySessionRef.onDisconnect().update({ endedAt: Firebase.ServerValue.TIMESTAMP });
-//mySessionRef.update({ startedAt: Firebase.ServerValue.TIMESTAMP });
 
-        var currChatuid=$("#boxtitle").attr("chatuid");
         var utc=moment.utc().format();
 
         chatRef.child(currChatuid+"/utc/"+utc).set({msg:msg, ownerIdIndx:ownerIdIndx});
@@ -248,8 +241,8 @@ var ChatBoxFireManager=function(){
       this.SetNotifications=function(callbackfunc){
         chatboxInfo.notifyStats=callbackfunc;
       };
-      this.ClearMyStats=function(){
-        var currChatuid=$("#boxtitle").attr("chatuid");
+      this.ClearMyStats=function(currChatuid){
+
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         chatRef.child(currChatuid+"/stats/"+ownerIdIndx).transaction(function(count){          
           console.log("ClearMyStats");
@@ -260,5 +253,9 @@ var ChatBoxFireManager=function(){
       //api bind to a button.
       this.Set_FireMsg2Chatbox=function(callbackfunc){
         chatboxInfo.on_msg2chatbox=callbackfunc;
+      };
+
+      this.GetChatboxInfo=function(){
+        return chatboxInfo;
       };
 };////////////////////////////////////////////

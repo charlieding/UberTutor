@@ -885,20 +885,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
       var fireChatBox=new ChatBoxFireManager();
+
+
       function chatBox(chatElem){
           $("#chatMessages").empty();
 
-        var tutorID=$(chatElem).attr("tutorID"),
-        studentID=$(chatElem).attr("studentID"),
-        currentUserID=$(chatElem).attr("currentUserID");
-        console.log("wei",tutorID,studentID,currentUserID);
+          var tutorID=$(chatElem).attr("tutorID"),
+          studentID=$(chatElem).attr("studentID"),
+          currentUserID=$(chatElem).attr("currentUserID");
+          console.log("wei",tutorID,studentID,currentUserID);
 
 
           var chatuid=fireChatBox.SetChatRoom(tutorID,studentID,currentUserID);
 
           $(chatElem).attr("chatuid",chatuid).next().text("");
 
-          fireChatBox.ClearMyStats();
+
+          //////////////////////////////////////////////////////////
+          // This is not synched GetChatboxInfo().
+          // user should get targetName.
+          var targetUserName=fireChatBox.GetChatboxInfo().getTargetName();
+                  $("#boxtitle").text(targetUserName)
+                      .attr("chatuid",chatuid);
+          /////////////////////////////////////////////////////////
+
+
+
+          var currChatuid=$("#boxtitle").attr("chatuid");
+          fireChatBox.ClearMyStats(currChatuid);
 
           $("span[chatuid='"+chatuid+"']").css("background-color","");
           //$(chatElem).parent().next().text("").css("background-color","#00ff00");
@@ -918,6 +932,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       //add new message using set
       function sendMsg(){
+        var currChatuid=$("#boxtitle").attr("chatuid");
+
         var msg=$("#msg").val();
         msg=$.trim(msg);
         if(msg.length===0)return;
@@ -925,7 +941,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var datetime=moment().format();
         console.log(datetime);
         //chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
-        fireChatBox.SendMsg(msg);
+        fireChatBox.SendMsg(currChatuid, msg);
         $("#msg").val('');
       };
       function msgkeydwn(e){
@@ -938,7 +954,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       };
 
 
-       fireChatBox.Set_FireMsg2Chatbox(function(chatUid, msg, datetime, snder, boxsides,bScroolToView){
+       fireChatBox.Set_FireMsg2Chatbox(function(chatUid, datetime, msg, snder, boxsides,bScroolToView){
             var currChatuid=$("#boxtitle").attr("chatuid");
             if( currChatuid!=chatUid){
               return;
