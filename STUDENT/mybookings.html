@@ -895,7 +895,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
           var chatuid=fireChatBox.SetChatRoom(tutorID,studentID,currentUserID);
-          
+
           $(chatElem).attr("chatuid",chatuid).next().text("");
 
           fireChatBox.ClearMyStats();
@@ -936,6 +936,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         return true;
       };
+
+
+       fireChatBox.Set_FireMsg2Chatbox(function(chatUid, msg, datetime, snder, boxsides,bScroolToView){
+            var currChatuid=$("#boxtitle").attr("chatuid");
+            if( currChatuid!=chatUid){
+              return;
+            }
+
+            ////following is the sample codes.
+            var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
+                            '<div class="direct-chat-info clearfix">'+
+                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
+                              '<span class="direct-chat-timestamp pull-'+boxsides[1]+'"> '+datetime+'</span>'+
+                            '</div><!-- /.direct-chat-info -->'+
+                            '<img class="direct-chat-img" src="'+snder.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
+                            '<div class="direct-chat-text">'+
+                              msg+
+                            '</div><!-- /.direct-chat-text -->'+
+                        '</div><!-- /.direct-chat-msg -->';
+           var ele=$(chatMsg).appendTo("#chatMessages");
+           if(bScroolToView){
+             ele[0].scrollIntoView();
+           }
+       });
 
   $(document).ready(function() {
   $(window).keydown(function(event){

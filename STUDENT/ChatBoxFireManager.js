@@ -177,29 +177,20 @@ var ChatBoxFireManager=function(){
         var datetime  = moment(localTime).format("MMM D hh:mm a"); 
 
 
-        var currChatuid=$("#boxtitle").attr("chatuid");
+        //var currChatuid=$("#boxtitle").attr("chatuid");
 
 
-        if( currChatuid===chatUid){
-          msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides, bScroolToView);            
-          return;
-        }; 
+        //if( currChatuid===chatUid){
+          msgAdded2ChatBox(chatUid, msgObj.msg, datetime,  snder, boxsides, bScroolToView);            
+         // return;
+        //}; 
       };
-      function msgAdded2ChatBox(msg, datetime, snder, boxsides,bScroolToView){
-            var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
-                            '<div class="direct-chat-info clearfix">'+
-                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
-                              '<span class="direct-chat-timestamp pull-'+boxsides[1]+'"> '+datetime+'</span>'+
-                            '</div><!-- /.direct-chat-info -->'+
-                            '<img class="direct-chat-img" src="'+snder.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
-                            '<div class="direct-chat-text">'+
-                              msg+
-                            '</div><!-- /.direct-chat-text -->'+
-                        '</div><!-- /.direct-chat-msg -->';
-           var ele=$(chatMsg).appendTo("#chatMessages");
-           if(bScroolToView){
-             ele[0].scrollIntoView();
-           }
+      function msgAdded2ChatBox(chatUid, msg, datetime, snder, boxsides,bScroolToView){
+        if(chatboxInfo.on_msg2chatbox){
+          chatboxInfo.on_msg2chatbox(chatUid, msg, datetime, snder, boxsides,bScroolToView);
+        }
+        return;
+
           
       };
 
@@ -266,4 +257,8 @@ var ChatBoxFireManager=function(){
         });
       };
 
+      //api bind to a button.
+      this.Set_FireMsg2Chatbox=function(callbackfunc){
+        chatboxInfo.on_msg2chatbox=callbackfunc;
+      };
 };////////////////////////////////////////////
