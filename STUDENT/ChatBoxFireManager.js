@@ -125,9 +125,6 @@ var ChatBoxFireManager=function(){
           return;
         };
 
-        //chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
-        //msgChatIdRefObj[sortedChatUid]=chatRef;
-
         //load messages via child added
         chatBind = chatRef.child(sortedChatUid).child("utc").on("child_added",on_child_added_msg);
         msgChatIdRefObj[sortedChatUid]=chatBind;
@@ -182,18 +179,13 @@ var ChatBoxFireManager=function(){
         var localTime = moment.utc(utc).toDate();
         var datetime  = moment(localTime).format("MMM D hh:mm a"); 
 
-
-        msgAdded2ChatBox(chatUid, datetime, msgObj.msg, snder, boxsides, bScroolToView);            
-
-      };
-      function msgAdded2ChatBox(chatUid, datetime, msg, snder, boxsides,bScroolToView){
+         
         if(chatboxInfo.on_msg2chatbox){
-          chatboxInfo.on_msg2chatbox(chatUid, datetime, msg, snder, boxsides,bScroolToView);
+           chatboxInfo.on_msg2chatbox(chatUid, datetime, msg, snder, boxsides,bScroolToView);
         }
         return;
-
-          
       };
+
 
 
       this.CloseChatBox=function(){
