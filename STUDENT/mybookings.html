@@ -897,7 +897,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       };
 
       fireChatBox.SetNotifications(function(chatuid,count){
-        if(!count) return;
+        if(!count) count="";
         var btn=$("span[chatuid='"+chatuid+"']");
         btn.css("background-color","#ff0000");
 
