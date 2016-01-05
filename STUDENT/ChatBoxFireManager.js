@@ -137,7 +137,7 @@ var ChatBoxFireManager=function(){
         var chatuid=snapshot.ref().parent().parent().key();
         console.log('child_changed_msg_stats, chatuid',chatuid);
         var val=snapshot.val();
-        console.log(child_changed_msg_stats, val);
+        console.log('child_changed_msg_stats', val);
       };
 
       function on_child_value_msg(snapshot){
