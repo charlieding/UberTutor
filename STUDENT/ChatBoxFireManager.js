@@ -134,16 +134,16 @@ var ChatBoxFireManager=function(){
         var val=snapshot.val();
         console.log(val);
         $.each(val, function(utc,msgObj){
-          msgAdded2page(key, utc,msgObj);   
+          msgAdded2page(key, utc,msgObj,false);   
         });
       };
       function on_child_added_msg(snapshot){
         var chatUid=snapshot.ref().parent().key();
         var utc = snapshot.key();
         var msgObj = snapshot.val();
-        msgAdded2page(chatUid, utc,msgObj);  
+        msgAdded2page(chatUid, utc,msgObj,true);  
       };
-      function msgAdded2page(chatUid, utc, msgObj){
+      function msgAdded2page(chatUid, utc, msgObj, bScroolToView){
         console.log("key="+utc,msgObj);
 
         var snderIdIndx=msgObj.ownerIdIndx;
@@ -159,14 +159,17 @@ var ChatBoxFireManager=function(){
 
 
         if( currChatuid===chatUid){
-          msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides);            
+          msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides, bScroolToView);            
           return;
         }
         else{
-          $("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
+          if(chatboxInfo.callbackfunc){
+             chatboxInfo.callbackfunc(chatUid);
+          }
+          //$("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
         };  
       };
-      function msgAdded2ChatBox(msg, datetime, snder, boxsides){
+      function msgAdded2ChatBox(msg, datetime, snder, boxsides,bScroolToView){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
                               '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
@@ -177,7 +180,11 @@ var ChatBoxFireManager=function(){
                               msg+
                             '</div><!-- /.direct-chat-text -->'+
                         '</div><!-- /.direct-chat-msg -->';
-           $(chatMsg).appendTo("#chatMessages")[0].scrollIntoView();
+           var ele=$(chatMsg).appendTo("#chatMessages");
+           if(bScroolToView){
+             ele[0].scrollIntoView();
+           }
+          
       };
 
 
@@ -217,6 +224,10 @@ var ChatBoxFireManager=function(){
 
         var chatuid = chatboxInfo.data().sortedChatUid;
         return chatuid;
-      }
+      };
+      
+      this.SetNotifications=function(callbackfunc){
+        chatboxInfo.callbackfunc=callbackfunc;
+      };
 
 };////////////////////////////////////////////

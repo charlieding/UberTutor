@@ -891,6 +891,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           $(chatElem).attr("chatuid",chatuid);
       };
 
+      fireChatBox.SetNotifications=function(chatUid){
+        $("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
+        console.log("fireChatBox.SetNotifications"+chatUid);
+      };
 
 
       //add new message using set
@@ -910,6 +914,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         if(e.keyCode===13 || e.which===13){
            sendMsg();
         };
+
+        $("span[chatUid='"+chatUid+"']").css("background-color","");
         return true;
       };
 
