@@ -69,11 +69,15 @@ var ChatBoxFireManager=function(){
 
       var chatboxInfo=new GenChatBoxInfo();
 
-      var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/");   
+      var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"); 
+
       var chatMsgAddRefs = {};  
-      var chatElemMap = {};  
+      var chatNofiyChangeRefs = {};  
+      var chatNofiyAddRefs = {};  
+
       var chatStats="stats" ;
 
+      //not tested yet.
       function DisconnectChat(chatuid){
         var chatBind = chatMsgAddRefs[sortedChatUid];
         //return;
@@ -81,6 +85,9 @@ var ChatBoxFireManager=function(){
         if(chatBind){
           chatRef.off("child_added", chatBind).remove();
           chatMsgAddRefs[sortedChatUid]=null;
+
+          chatRef.off("child_added", chatNofiyChangeRefs[sortedChatUid]).remove();
+          chatRef.off("child_added", chatNofiyAddRefs   [sortedChatUid]).remove();          
         }
       };
       function FireUsers(){
@@ -131,8 +138,10 @@ var ChatBoxFireManager=function(){
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         var spath="./"+sortedChatUid+"/"+chatStats+"/"+ownerIdIndx;
         console.log(spath);
-        chatRef.child(sortedChatUid).child(chatStats).on("child_changed",child_changed_msg_stats);
-        chatRef.child(sortedChatUid).child(chatStats).on("child_added",child_changed_msg_stats);
+        chatNofiyChangeRefs[sortedChatUid]=chatRef.child(sortedChatUid).child(chatStats).on("child_changed",child_changed_msg_stats);
+        chatNofiyAddRefs   [sortedChatUid]=chatRef.child(sortedChatUid).child(chatStats).on("child_added",child_changed_msg_stats);
+
+
       };
 
       function child_changed_msg_stats(snapshot){
@@ -186,8 +195,8 @@ var ChatBoxFireManager=function(){
 
 
 
-      this.CloseChatBox=function(){
-        DisconnectChat();
+      this.CloseChatBox=function(chatuid){
+        DisconnectChat(chatuid);
       }    
 
 
