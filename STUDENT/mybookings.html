@@ -887,7 +887,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
       var fireChatBox=new ChatBoxFireManager();
       function chatBox(chatElem){
           $("#chatMessages").empty();
-          var chatuid=fireChatBox.SetSession(chatElem);
+
+        var tutorID=$(chatElem).attr("tutorID"),
+        studentID=$(chatElem).attr("studentID"),
+        currentUserID=$(chatElem).attr("currentUserID");
+        console.log("wei",tutorID,studentID,currentUserID);
+
+
+          var chatuid=fireChatBox.SetChatRoom(tutorID,studentID,currentUserID);
+          
           $(chatElem).attr("chatuid",chatuid).next().text("");
 
           fireChatBox.ClearMyStats();

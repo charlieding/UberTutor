@@ -111,9 +111,7 @@ var ChatBoxFireManager=function(){
         console.log("sortedChatUid",sortedChatUid);
 
 
-        if(!chatElemMap[sortedChatUid]){
-          chatElemMap[sortedChatUid]=chatElm;
-        }
+
 
         if(msgChatIdRefObj[sortedChatUid]){
           //var msgsRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
@@ -240,26 +238,25 @@ var ChatBoxFireManager=function(){
       };
 
 
-      var chatElm=null;
-      this.SetSession=function(chatElem){
-        chatElm=chatElem;
-        var tutorID=$(chatElem).attr("tutorID"),
-        studentID=$(chatElem).attr("studentID"),
-        currentUserID=$(chatElem).attr("currentUserID");
-        console.log("wei",tutorID,studentID,currentUserID);
+      function setConnect(tutorID, studentID,currentUserID){
         chatboxInfo.Init(tutorID, studentID,currentUserID);
-
         FireUsers();
-
         var chatuid = chatboxInfo.data().sortedChatUid;
         return chatuid;
+      };
+
+
+
+
+
+      //api bind to a button.
+      this.SetChatRoom=function(tutorID, studentID,currentUserID){
+        return setConnect(tutorID, studentID,currentUserID);
       };
       
       this.SetNotifications=function(callbackfunc){
         chatboxInfo.notifyStats=callbackfunc;
       };
-
-
       this.ClearMyStats=function(){
         var currChatuid=$("#boxtitle").attr("chatuid");
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
