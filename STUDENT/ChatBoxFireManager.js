@@ -5,9 +5,10 @@ var ChatBoxFireManager=function(){
 
 
      function GenChatBoxInfo(){
-        var usrsObj=null;
-        var ret={};
-        this.Init=function(tutorID, studentID, currentUserID){
+         var usrsObj=null;
+         var ret={};
+
+         this.Init=function(tutorID, studentID, currentUserID){
           if(tutorID===studentID) return alert("self chat");
           ret.currUserID=currentUserID;
           ret.tutorID=tutorID;
@@ -16,8 +17,6 @@ var ChatBoxFireManager=function(){
           var arr=[tutorID, studentID];
           arr.sort();
           console.log(arr);
-
-
 
           ret.ownerIdIndx=arr.indexOf(currentUserID);
           if(ret.ownerIdIndx<0) return alert("not find:"+currentUserID);
@@ -211,7 +210,7 @@ var ChatBoxFireManager=function(){
 
 
         //stats target incremental.
-        chatRef.child(currChatuid+"/stats/"+targetIdIndx).transaction(function(count){
+        chatRef.child(currChatuid+"/"+chatStats+"/"+targetIdIndx).transaction(function(count){
           if(count===null){
             return 1;
           }
@@ -243,7 +242,7 @@ var ChatBoxFireManager=function(){
       this.ClearMyStats=function(currChatuid){
 
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
-        chatRef.child(currChatuid+"/stats/"+ownerIdIndx).transaction(function(count){          
+        chatRef.child(currChatuid+"/"+chatStats+"/"+ownerIdIndx).transaction(function(count){          
           console.log("ClearMyStats");
           return 0;
         });
