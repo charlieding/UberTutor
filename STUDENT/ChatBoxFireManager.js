@@ -145,6 +145,9 @@ var ChatBoxFireManager=function(){
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         if(uidIdx===ownerIdIndx){
           console.log("its count is for me.");
+          if(chatboxInfo.notifyStats){
+            chatboxInfo.notifyStats(chatuid, count);
+          }
         };
       };
 
@@ -182,13 +185,7 @@ var ChatBoxFireManager=function(){
         if( currChatuid===chatUid){
           msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides, bScroolToView);            
           return;
-        }
-        else{
-          if(chatboxInfo.callbackfunc){
-             chatboxInfo.callbackfunc(chatUid);
-          }
-          //$("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
-        };  
+        }; 
       };
       function msgAdded2ChatBox(msg, datetime, snder, boxsides,bScroolToView){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
@@ -259,7 +256,7 @@ var ChatBoxFireManager=function(){
       };
       
       this.SetNotifications=function(callbackfunc){
-        chatboxInfo.callbackfunc=callbackfunc;
+        chatboxInfo.notifyStats=callbackfunc;
       };
 
 

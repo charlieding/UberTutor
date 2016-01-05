@@ -892,13 +892,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           fireChatBox.ClearMyStats();
 
-          $("span[chatuid='"+chatuid+"']").css("background-color","ff0000");
+          $("span[chatuid='"+chatuid+"']").css("background-color","");
       };
 
-      fireChatBox.SetNotifications=function(chatuid){
-        $("span[chatUid='"+chatuid+"']").css("background-color","#ff0000");
-        console.log("fireChatBox.SetNotifications:"+chatuid);
-      };
+      fireChatBox.SetNotifications(function(chatuid,count){
+        $("span[chatuid='"+chatuid+"']").css("background-color","#ff0000");
+        console.log("fireChatBox.SetNotifications:"+chatuid,count);
+      });
 
 
       //add new message using set
