@@ -889,11 +889,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
           $("#chatMessages").empty();
           var chatuid=fireChatBox.SetSession(chatElem);
           $(chatElem).attr("chatuid",chatuid);
+
+          $("span[chatuid='"+chatuid+"']").css("background-color","ff0000");
       };
 
-      fireChatBox.SetNotifications=function(chatUid){
-        $("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
-        console.log("fireChatBox.SetNotifications"+chatUid);
+      fireChatBox.SetNotifications=function(chatuid){
+        $("span[chatUid='"+chatuid+"']").css("background-color","#ff0000");
+        console.log("fireChatBox.SetNotifications:"+chatuid);
       };
 
 
@@ -915,7 +917,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
            sendMsg();
         };
 
-        $("span[chatUid='"+chatUid+"']").css("background-color","");
         return true;
       };
 
