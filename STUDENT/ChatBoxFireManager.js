@@ -68,21 +68,19 @@ var ChatBoxFireManager=function(){
      };//////////////
 
       var chatboxInfo=new GenChatBoxInfo();
-      var chatBind = null;
+
       var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/");   
       var msgChatIdRefObj = {};  
       var chatElemMap = {};  
       var chatStats="stats" ;
 
-      function DisconnectChat(){
-        return;
+      function DisconnectChat(chatuid){
+        var chatBind = msgChatIdRefObj[sortedChatUid];
+        //return;
         //Remove old chat box listener 
         if(chatBind){
-          chatRef.off("child_added", chatBind);
-          delete chatBind;
-          delete chatBind;
-          chatBind=null;
-          chatRef=null;
+          chatRef.off("child_added", chatBind).remove();
+          msgChatIdRefObj[sortedChatUid]=null;
         }
       };
       function FireUsers(){
@@ -126,7 +124,7 @@ var ChatBoxFireManager=function(){
         };
 
         //load messages via child added
-        chatBind = chatRef.child(sortedChatUid).child("utc").on("child_added",on_child_added_msg);
+        var chatBind = chatRef.child(sortedChatUid).child("utc").on("child_added",on_child_added_msg);
         msgChatIdRefObj[sortedChatUid]=chatBind;
 
         //stats 
@@ -181,7 +179,7 @@ var ChatBoxFireManager=function(){
 
          
         if(chatboxInfo.on_msg2chatbox){
-           chatboxInfo.on_msg2chatbox(chatUid, datetime, msg, snder, boxsides,bScroolToView);
+           chatboxInfo.on_msg2chatbox(chatUid, datetime, msgObj, snder, boxsides,bScroolToView);
         }
         return;
       };
