@@ -86,7 +86,10 @@ var ChatBoxFireManager=function(){
           chatMsgAddRefs[sortedChatUid]=null;
 
           chatRef.off("child_added", chatNofiyChangeRefs[sortedChatUid]).remove();
-          chatRef.off("child_added", chatNofiyAddRefs   [sortedChatUid]).remove();          
+          chatRef.off("child_added", chatNofiyAddRefs   [sortedChatUid]).remove();  
+          
+          chatNofiyChangeRefs[sortedChatUid]=null;  
+          chatNofiyAddRefs   [sortedChatUid]=null;      
         }
       };
       function FireUsers(){
