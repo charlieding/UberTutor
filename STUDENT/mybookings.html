@@ -888,17 +888,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
       function chatBox(chatElem){
           $("#chatMessages").empty();
           var chatuid=fireChatBox.SetSession(chatElem);
-          $(chatElem).attr("chatuid",chatuid);
+          $(chatElem).attr("chatuid",chatuid).next().text("");
 
           fireChatBox.ClearMyStats();
 
-          $("span[chatuid='"+chatuid+"']").css("background-color","ff0000");
+          $("span[chatuid='"+chatuid+"']").css("background-color","");
+          //$(chatElem).parent().next().text("").css("background-color","#00ff00");
       };
 
-      fireChatBox.SetNotifications=function(chatuid){
-        $("span[chatUid='"+chatuid+"']").css("background-color","#ff0000");
-        console.log("fireChatBox.SetNotifications:"+chatuid);
-      };
+      fireChatBox.SetNotifications(function(chatuid,count){
+        if(!count) return;
+        var btn=$("span[chatuid='"+chatuid+"']");
+        btn.css("background-color","#ff0000");
+
+        $(btn).next().text(count).css("background-color","#ff0000");
+        var pa=$(btn).parent();
+        pa.find(".badge").css("background-color","#ff0000");
+        console.log("fireChatBox.SetNotifications:"+chatuid,count);
+      });
 
 
       //add new message using set

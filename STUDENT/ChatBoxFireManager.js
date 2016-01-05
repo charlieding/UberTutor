@@ -130,14 +130,25 @@ var ChatBoxFireManager=function(){
 
         //stats 
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
-        chatRef.child(sortedChatUid+"/stats/"+ownerIdIndx).on("child_changed",child_changed_msg_stats);
+        var spath="./"+sortedChatUid+"/"+chatStats+"/"+ownerIdIndx;
+        console.log(spath);
+        chatRef.child(sortedChatUid).child(chatStats).on("child_changed",child_changed_msg_stats);
+        chatRef.child(sortedChatUid).child(chatStats).on("child_added",child_changed_msg_stats);
       };
 
       function child_changed_msg_stats(snapshot){
         var chatuid=snapshot.ref().parent().parent().key();
-        console.log('child_changed_msg_stats, chatuid',chatuid);
-        var val=snapshot.val();
-        console.log('child_changed_msg_stats', val);
+        var uidIdx=snapshot.key();
+        var count=snapshot.val();
+        console.log('child_changed_msg_stats', chatuid,uidIdx,count);
+
+        var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
+        if(uidIdx===ownerIdIndx){
+          console.log("its count is for me.");
+          if(chatboxInfo.notifyStats){
+            chatboxInfo.notifyStats(chatuid, count);
+          }
+        };
       };
 
       function on_child_value_msg(snapshot){
@@ -145,6 +156,7 @@ var ChatBoxFireManager=function(){
         console.log('hi, key',key);
         var val=snapshot.val();
         console.log(val);
+        if(null===val) return;
         $.each(val, function(utc,msgObj){
           msgAdded2page(key, utc,msgObj,false);   
         });
@@ -173,13 +185,7 @@ var ChatBoxFireManager=function(){
         if( currChatuid===chatUid){
           msgAdded2ChatBox(msgObj.msg, datetime,  snder, boxsides, bScroolToView);            
           return;
-        }
-        else{
-          if(chatboxInfo.callbackfunc){
-             chatboxInfo.callbackfunc(chatUid);
-          }
-          //$("span[chatUid='"+chatUid+"']").css("background-color","#ff0000");
-        };  
+        }; 
       };
       function msgAdded2ChatBox(msg, datetime, snder, boxsides,bScroolToView){
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
@@ -250,7 +256,7 @@ var ChatBoxFireManager=function(){
       };
       
       this.SetNotifications=function(callbackfunc){
-        chatboxInfo.callbackfunc=callbackfunc;
+        chatboxInfo.notifyStats=callbackfunc;
       };
 
 
@@ -259,7 +265,7 @@ var ChatBoxFireManager=function(){
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         chatRef.child(currChatuid+"/stats/"+ownerIdIndx).transaction(function(count){          
           console.log("ClearMyStats");
-          return null;
+          return 0;
         });
       };
 
