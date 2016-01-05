@@ -145,6 +145,7 @@ var ChatBoxFireManager=function(){
         console.log('hi, key',key);
         var val=snapshot.val();
         console.log(val);
+        if(null===val) return;
         $.each(val, function(utc,msgObj){
           msgAdded2page(key, utc,msgObj,false);   
         });
