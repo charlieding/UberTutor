@@ -70,17 +70,17 @@ var ChatBoxFireManager=function(){
       var chatboxInfo=new GenChatBoxInfo();
 
       var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/");   
-      var msgChatIdRefObj = {};  
+      var chatMsgAddRefs = {};  
       var chatElemMap = {};  
       var chatStats="stats" ;
 
       function DisconnectChat(chatuid){
-        var chatBind = msgChatIdRefObj[sortedChatUid];
+        var chatBind = chatMsgAddRefs[sortedChatUid];
         //return;
         //Remove old chat box listener 
         if(chatBind){
           chatRef.off("child_added", chatBind).remove();
-          msgChatIdRefObj[sortedChatUid]=null;
+          chatMsgAddRefs[sortedChatUid]=null;
         }
       };
       function FireUsers(){
@@ -117,7 +117,7 @@ var ChatBoxFireManager=function(){
 
 
 
-        if(msgChatIdRefObj[sortedChatUid]){
+        if(chatMsgAddRefs[sortedChatUid]){
           //var msgsRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+sortedChatUid);
           chatRef.child(sortedChatUid).child("utc").once("value",on_child_value_msg);
           return;
@@ -125,7 +125,7 @@ var ChatBoxFireManager=function(){
 
         //load messages via child added
         var chatBind = chatRef.child(sortedChatUid).child("utc").on("child_added",on_child_added_msg);
-        msgChatIdRefObj[sortedChatUid]=chatBind;
+        chatMsgAddRefs[sortedChatUid]=chatBind;
 
         //stats 
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
