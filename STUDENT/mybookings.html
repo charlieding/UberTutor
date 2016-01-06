@@ -740,7 +740,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             "<div class='col-md-8 center-block' style='float:none;'>"+
               "<div class='box box-info'>"+
                 "<div class='box-header with-border'>"+
-                  "<h1 class='box-title' ><b>"+appointmentSnapshot.val().status+"</b> - "+paymentText+": $"+appointmentSnapshot.val().cost+"</h1>"+
+                  "<h1 class='box-title' ><b>"+appointmentSnapshot.val().status+"</b> - "+paymentText+": $"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost))+"</h1>"+
                   "<div class='box-tools pull-right'>"+
                     actionItem+
                   "</div>"+
@@ -753,7 +753,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           "<td><img src='"+imgUrl+"' class='img-circle userImage' style='height:65px;' alt='User Image'></td>"+
                           "<td>"+
                             "<div><b>"+appointmentSnapshot.val().courses+"</b> on <b>"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mmA")+"</b></div>"+
-                            "<div>with <b>"+appointmentSnapshot.val().tutorDisplayName+"</b>, "+appointmentSnapshot.val().duration+"hr(s) - $"+appointmentSnapshot.val().costHourly+"/hr</div>"+
+                            "<div>with <b>"+appointmentSnapshot.val().tutorDisplayName+"</b>, "+round_nearest_tenth(parseFloat(appointmentSnapshot.val().duration))+"hr(s) - $"+appointmentSnapshot.val().costHourly+"/hr</div>"+
                             "<span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+
                             " <span data-toggle='tooltip' title='3 New Messages' class='badge bg-yellow'>3</span>"+
                           "</td>"+
@@ -868,6 +868,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       //Close Chat Listeners
       fireChatBox.CloseChatBox();
     }
+    function round_nearest_tenth(num) {
+      return Math.round(num * 100) / 100;
+    }
 
 
 /******* CHATBOX CODE - MOVE TO JS FILE : ChatBoxFireManager.js *******/
@@ -974,6 +977,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
     }
   });
 });
+
+
+
+/**********TUTOR CODE APIs *************/
+function acceptTutorRequest(appointmentId){
+  (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("Accepted");
+}
+function alertStudentYourOnTheWay(appointmentId){
+  (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("On the Way");
+}
+function beginTutorSession(appointmentId){
+  (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/sessionStartTime")).set(moment().format());
+  (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("In Session");
+}
+function endTutorSession(appointmentId){
+  (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/sessionStartTime")).once('value', function (sessionStartTimeSnapshot) {
+    (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/costHourly")).once('value', function (costHourlySnapshot) {
+      var startTime = sessionStartTimeSnapshot.val();
+      var endTime = moment();
+
+      var duration = moment.duration(endTime.diff(startTime));
+      var hours = duration.asHours();
+
+      var totalCost = parseFloat(costHourlySnapshot.val()) * hours;
+
+      //Update Appointment with new Duration, new Total Price, and session End Time
+      (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/duration")).set(hours+"");
+      (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/cost")).set(totalCost+"");
+      (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/sessionEndTime")).set(endTime.format());
+      
+    });
+  });
+
+}
+
+
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.

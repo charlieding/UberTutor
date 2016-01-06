@@ -963,7 +963,9 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           feedbackMessage: "null",
           feedbackRating: "0",
           flexibility: $("#flexibility").text(),
-          costHourly: $("#bookingHourlyCost").text()
+          costHourly: $("#bookingHourlyCost").text(),
+          sessionStartTime: "",
+          sessionEndTime: ""
         });
         var appointmentID = appointment.key();
 
