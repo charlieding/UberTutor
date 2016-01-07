@@ -225,7 +225,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div><b id="mainCourse">CS 1234</b> on <b id="mainDate">Jan 3, 5:00PM</b></div>
                             <div>with <b id="mainTutor">Inez Raharjo</b>, 1hr(s)</div>
                             <span class="btn btn-sm btn-primary label" style="cursor:pointer;"><i class="fa fa-comments-o"> Chat</i></span>
-                            <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>
+                            <span data-toggle="tooltip" title="" class="badge bg-yellow">3</span>
                           </td>
                           <td>
                             <div>Location</div>
@@ -362,7 +362,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="box-header with-border">
                       <h3 class="box-title" id="boxtitle">Direct Chat</h3>
                       <div class="box-tools pull-right">
-                        <!--<span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>-->
+                        <!--<span data-toggle="tooltip" title="" class="badge bg-yellow">3</span>-->
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
                         <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
@@ -628,6 +628,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       }
 
     /******* MyBooking CODE - MOVE TO JS FILE *******/
+      var totalChats = 0;
       var onUsersAppointmentChange = null;
       var refAndOnAppointmentChangeMap = {};
 
@@ -657,6 +658,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           var userAppointments = currUserSnapshot.val().appointmentIDs;
           var allAppointments = snapshot.val();
           var uids = "";
+          totalChats = 0;
+          waitTime = 600; //85 works 50% of the time
 
           //console.log(userAppointments);
           //console.log(allAppointments);
@@ -734,6 +737,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   if(upcomingPastOrNow == "#mainContentSection"){
                     (new Firebase("https://ubertutoralpha.firebaseio.com/users/"+appointmentSnapshot.val().tutorID+"/imgUrl")).once('value', function (imgUrlSnapshot) {
                       var imgUrl = imgUrlSnapshot.val();
+totalChats++;
+//alert("Initialized, Total Chats:" + totalChats);
+setTimeout(function(){
+
+                      //Initialize Chat Room Unread Messages for everyone
+                      var mainchatuid=fireChatBox.SetChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
+
 
         $(upcomingPastOrNow).prepend(""+
           "<div class='row refreshable'>"+
@@ -754,8 +764,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           "<td>"+
                             "<div><b>"+appointmentSnapshot.val().courses+"</b> on <b>"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mmA")+"</b></div>"+
                             "<div>with <b>"+appointmentSnapshot.val().tutorDisplayName+"</b>, "+round_nearest_tenth(parseFloat(appointmentSnapshot.val().duration))+"hr(s) - $"+appointmentSnapshot.val().costHourly+"/hr</div>"+
-                            "<span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+
-                            " <span data-toggle='tooltip' title='3 New Messages' class='badge bg-yellow'>3</span>"+
+                            "<span chatuid='"+mainchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+
+                            " <span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+
                           "</td>"+
                           "<td>"+
                             "<div>Location</div>"+
@@ -769,7 +779,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             "</div>"+
           "</div>");
 
-
+}, totalChats*waitTime-waitTime);
                     }, function (err) {
                       // code to handle read error
                       console.log(err);
@@ -779,7 +789,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
                   } else if(upcomingPastOrNow == "#upcomingBookings"){
-                    $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='3 New Messages' class='badge bg-yellow'>3</span>"+"</div></td><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                    totalChats++;
+                    //aalert("Initialized, Total Chats:" + totalChats);
+                    setTimeout(function(){
+                    //Initialize Chat Room Unread Messages for everyone
+                    var upcomingchatuid=fireChatBox.SetChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
+                    $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span chatuid='"+upcomingchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+"</div></td><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                  }, totalChats*waitTime-waitTime);
                   } else if(upcomingPastOrNow == "#pastBookings"){
                     $(upcomingPastOrNow).prepend("<tr><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
                   }
@@ -866,7 +882,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     function closeChat(){
       $.AdminLTE.controlSidebar.close();
       //Close Chat Listeners
-      fireChatBox.CloseChatBox();
+      //fireChatBox.CloseChatBox(); //needs chatuid
     }
     function round_nearest_tenth(num) {
       return Math.round(num * 100) / 100;
@@ -878,7 +894,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       var fireChatBox=new ChatBoxFireManager();
 
-
+      //Click on Chat Button
       function chatBox(chatElem){
           $("#chatMessages").empty();
 
@@ -901,25 +917,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       .attr("chatuid",chatuid);
           /////////////////////////////////////////////////////////
 
-
-
-          var currChatuid=$("#boxtitle").attr("chatuid");
-          fireChatBox.ClearMyStats(currChatuid);
+          fireChatBox.ClearMyStats(chatuid);
 
           $("span[chatuid='"+chatuid+"']").css("background-color","");
           //$(chatElem).parent().next().text("").css("background-color","#00ff00");
       };
+      function test(chatElem){
 
-      fireChatBox.SetNotifications(function(chatuid,count){
-        if(!count) count="";
-        var btn=$("span[chatuid='"+chatuid+"']");
-        btn.css("background-color","#ff0000");
+          var tutorID=$(chatElem).attr("tutorID"),
+          studentID=$(chatElem).attr("studentID"),
+          currentUserID=$(chatElem).attr("currentUserID");
+          console.log("wei",tutorID,studentID,currentUserID);
 
-        $(btn).next().text(count).css("background-color","#ff0000");
-        var pa=$(btn).parent();
-        pa.find(".badge").css("background-color","#ff0000");
-        console.log("fireChatBox.SetNotifications:"+chatuid,count);
-      });
+
+          var chatuid=fireChatBox.SetChatRoom(tutorID,studentID,currentUserID);
+
+          $(chatElem).attr("chatuid",chatuid);//.next().text("");
+      }
+
+      fireChatBox.SetNotifications(chatBoxNotification); //Call Back whenever there is a new message - Defaults to update message
+      function chatBoxNotification(chatuid,count){
+
+          if(!count) count="";
+          var btn=$("span[chatuid='"+chatuid+"']");
+          //btn.css("background-color","#ff0000");
+
+          $(btn).next().attr("title",count+" New Message(s)");
+          $(btn).next().text(count);//.css("background-color","#ff0000");
+          //var pa=$(btn).parent();
+          //pa.find(".badge").css("background-color","#ff0000");
+          //console.log("fireChatBox.SetNotifications:"+chatuid,count);
+          //alert("CALL BACK UI");
+  
+      }
 
 
       //add new message using set
@@ -934,6 +964,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         console.log(datetime);
         //chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
         fireChatBox.SendMsg(currChatuid, msg);
+        //Clears UI and Server Unread Messages when you send a message
+        fireChatBox.ClearMyStats(currChatuid);
+        chatBoxNotification(currChatuid,0);
         $("#msg").val('');
       };
       function msgkeydwn(e){
@@ -950,6 +983,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             var currChatuid=$("#boxtitle").attr("chatuid");
             if( currChatuid!=chatUid){
               return;
+            }
+            //OPENS chat box, Clears UI and Server Unread Messages when you reveive a message and have chatbox open
+            if(totalChats == 1){
+              $.AdminLTE.controlSidebar.open();
+              $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
+              fireChatBox.ClearMyStats(chatUid);
+              chatBoxNotification(chatUid,0);
             }
 
             ////following is the sample codes.
