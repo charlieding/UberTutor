@@ -116,13 +116,6 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           <!-- Class Selection -->
           <div id="classSelection" class="form-group" style="position:absolute;">
             <select id="select2ClassSelection" class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
-              <option>CS 1001</option>
-              <option>Psyc 1001</option>
-              <option>Calc 2654</option>
-              <option>CS 2003</option>
-              <option>EE 3300</option>
-              <option>CS 2001</option>
-              <option>CS 2345</option>
             </select>
           </div><!-- /.form-group -->
           <!-- Navbar Right Menu -->
@@ -470,6 +463,31 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           emptyTutorLogic();
           $(".hideTutorProfileWhenNoTutorSelected").hide();
 
+          //Populate Dropdown with all unique skills and courses
+          (new Firebase("https://ubertutoralpha.firebaseio.com/users/")).once('value', function (coursesSnapshot) {
+            var coursesArray=[];
+            //Go through every user
+            $.each(coursesSnapshot.val(), function(uid, userObj){
+              //Loop through each course skill and add them to array
+              var skillsArr = userObj.skills.split(",");
+              var coursesArr = userObj.courseExpertise.split(",");
+              $.each(coursesArr, function(index, value){
+                if(value) coursesArray.push(value);
+              });
+              $.each(skillsArr, function(index, value){
+                if(value) coursesArray.push(value);
+              });
+            });
+
+            //add all uniqueue skills and courses to the course selector
+            coursesArray = $.unique(coursesArray);
+            $.each(coursesArray, function(index, value){
+              $("#select2ClassSelection").append($('<option>', {value: value, text: value}));
+            });
+
+          });
+
+
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
           ref.onAuth(authDataCallback);
@@ -555,6 +573,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         var hour = parseInt(moment($("#tutorDay").val()+" "+$("#tutorTime").val()).format("H"));
         var day = moment($("#tutorDay").val()+" "+$("#tutorTime").val()).format("dddd").toLowerCase();
 
+        var coursesArr = ($("#select2ClassSelection").select2('val')+"").split(",");
+
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com/users");
 
         //Stop listener if there is already is one to prevent unneeded database calls.
@@ -571,8 +591,26 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           //Go through every user, and if they are tutor, and if is available, show on map/search
           $.each(userArr, function(uid, userObj){
             if(userObj.userType == "tutor"){
+              var isTutorFree = false;
+              if(coursesArr[0] != "null")
+              {
+                //Only show Tutors that match Courses Selected when selected courses is not empty
+                $.each(coursesArr, function(index, value){
+                  console.log("skills: ", userObj.skills );
+                  console.log(" value: ",value);
+                  console.log(" course: " , userObj.courseExpertise);
+                  if($.inArray(value,userObj.courseExpertise.split(","))== -1 && $.inArray(value,userObj.skills.split(","))== -1){
+                    //do nothing... do not display tutor, because his courses do not match selected courses
+                  }else{
+                    isTutorFree = true;
+                  }
+                });
+              } else {
+                //Show all tutors, as no courses are selected
+                isTutorFree = true;
+              }
+
               var freeHoursArr = userObj.freeSchedule[day].freehours.split(",");
-              var isTutorFree = true;
               for(var a = 0; a<duration; a++){
                 if(hour+a<24 && $.inArray(hour+a+"", freeHoursArr) == -1){ //-1 if doesn't exist, returns the index otherwise
                   isTutorFree = false;
