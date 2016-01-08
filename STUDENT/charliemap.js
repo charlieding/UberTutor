@@ -190,9 +190,8 @@ function FbaseUserMarkImgs(map){
     function allowShowup(userObj){
 
       /*CHARLIE's CODE --- HARDCODED TO ONLY SHOW TUTORS THAT ARE SELECTED IN THE TOP NEED HELP... NOT WORKING!!!! TODO*/
-      console.log(userObj.userType == "tutor");
-      if(userObj.userType == "tutor" && isSelectedInCourses(userObj)){
-        alert("TRUE");
+      console.log("isTutor: "+(userObj.userType == "tutor")+" isSelected: "+ isSelectedInCourses(userObj)+"FINAL STATUS: "+((userObj.userType == "tutor") && isSelectedInCourses(userObj)));
+      if((userObj.userType == "tutor") && isSelectedInCourses(userObj)){
         return true;
       } else {
         return false;
@@ -219,6 +218,7 @@ function FbaseUserMarkImgs(map){
       };     
       return ret;
       function isSelectedInCourses(obj){
+        var isSelected = false;
         var selectedCourses = ($("#select2ClassSelection").select2('val')+"").split(",");
         if("null" == selectedCourses){
           return true;
@@ -230,12 +230,12 @@ function FbaseUserMarkImgs(map){
                     // console.log(" value: ",value);
                     // console.log(" course: " , obj.courseExpertise, $.inArray(value,obj.courseExpertise.split(","))== -1);
             if($.inArray(value,obj.courseExpertise.split(","))== -1 && $.inArray(value,obj.skills.split(","))== -1){
-              //do nothing... do not display tutor, because his courses do not match selected courses
+                //do nothing... do not display tutor, because his courses do not match selected courses
             }else{
-              return true;
+              isSelected = true;
             }
           });
-        return false;
+        return isSelected;
       }
     };
     function updateImgOnMap(uid,userObj,map){
