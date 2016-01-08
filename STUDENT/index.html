@@ -571,12 +571,53 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           //Go through every user, and if they are tutor, and if is available, show on map/search
           $.each(userArr, function(uid, userObj){
             if(userObj.userType == "tutor"){
-
               var freeHoursArr = userObj.freeSchedule[day].freehours.split(",");
               var isTutorFree = true;
               for(var a = 0; a<duration; a++){
-                if($.inArray(hour+a+"", freeHoursArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                if(hour+a<24 && $.inArray(hour+a+"", freeHoursArr) == -1){ //-1 if doesn't exist, returns the index otherwise
                   isTutorFree = false;
+                }
+                if(hour+a>=24 && day=="monday"){
+                  var freeHoursNextDayArr = userObj.freeSchedule["tuesday"].freehours.split(",");
+                  if($.inArray(hour+a-24+"", freeHoursNextDayArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                    isTutorFree = false;
+                  }                  
+                }
+                if(hour+a>=24 && day=="tuesday"){
+                  var freeHoursNextDayArr = userObj.freeSchedule["wednesday"].freehours.split(",");
+                  if($.inArray(hour+a-24+"", freeHoursNextDayArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                    isTutorFree = false;
+                  }                  
+                }
+                if(hour+a>=24 && day=="wednesday"){
+                  var freeHoursNextDayArr = userObj.freeSchedule["thursday"].freehours.split(",");
+                  if($.inArray(hour+a-24+"", freeHoursNextDayArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                    isTutorFree = false;
+                  }                  
+                }
+                if(hour+a>=24 && day=="thursday"){
+                  var freeHoursNextDayArr = userObj.freeSchedule["friday"].freehours.split(",");
+                  if($.inArray(hour+a-24+"", freeHoursNextDayArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                    isTutorFree = false;
+                  }                  
+                }
+                if(hour+a>=24 && day=="friday"){
+                  var freeHoursNextDayArr = userObj.freeSchedule["saturday"].freehours.split(",");
+                  if($.inArray(hour+a-24+"", freeHoursNextDayArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                    isTutorFree = false;
+                  }  
+                }
+                if(hour+a>=24 && day=="saturday"){
+                  var freeHoursNextDayArr = userObj.freeSchedule["sunday"].freehours.split(",");
+                  if($.inArray(hour+a-24+"", freeHoursNextDayArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                    isTutorFree = false;
+                  } 
+                }
+                if(hour+a>=24 && day=="sunday"){
+                  var freeHoursNextDayArr = userObj.freeSchedule["monday"].freehours.split(",");
+                  if($.inArray(hour+a-24+"", freeHoursNextDayArr) == -1){ //-1 if doesn't exist, returns the index otherwise
+                    isTutorFree = false;
+                  }               
                 }
               }
 

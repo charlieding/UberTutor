@@ -366,6 +366,7 @@ function MyMapMgr(){
       //map.setCenter(centerLatLng);
       map.m_initialCenterLatLng=centerLatLng;
       google.maps.event.addListener(map, 'click', function(event) {
+        $( "#cursorChange > i" ).removeClass("fa-spin");
         //markerApptment.setMap(map);
         if(null!=draggableCursor){
            draggableCursor=null;
@@ -380,6 +381,7 @@ function MyMapMgr(){
       });
       //MOUSE UP TRIGGER TO ALLOW DRAG DROP!!! -CHARLES
       google.maps.event.addListener(map, 'mouseup', function(event) {
+        $( "#cursorChange > i" ).removeClass("fa-spin");
         //markerApptment.setMap(map);
         if(null!=draggableCursor){
            draggableCursor=null;
@@ -514,11 +516,11 @@ function startGMap(latlng){
     });  
     $("#cursorChange").click(function () {
        mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
-       $( "#cursorChange" ).first().addClass("fa-spin");
+       $( "#cursorChange > i" ).addClass("fa-spin");
     });
     $( "#cursorChange" ).mousedown(function() {
       mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
-      $( "#cursorChange" ).first().addClass("fa-spin");
+      $( "#cursorChange > i" ).addClass("fa-spin");
     });
     //$("#tables_container").append(archinfo01.GetTable());  
     //$("#tables_container").append(archinfo01.GetFreqTable({scale:10}));
