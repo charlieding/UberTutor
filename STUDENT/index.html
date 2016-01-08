@@ -463,31 +463,6 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           emptyTutorLogic();
           $(".hideTutorProfileWhenNoTutorSelected").hide();
 
-          //Populate Dropdown with all unique skills and courses
-          (new Firebase("https://ubertutoralpha.firebaseio.com/users/")).once('value', function (coursesSnapshot) {
-            var coursesArray=[];
-            //Go through every user
-            $.each(coursesSnapshot.val(), function(uid, userObj){
-              //Loop through each course skill and add them to array
-              var skillsArr = userObj.skills.split(",");
-              var coursesArr = userObj.courseExpertise.split(",");
-              $.each(coursesArr, function(index, value){
-                if(value) coursesArray.push(value);
-              });
-              $.each(skillsArr, function(index, value){
-                if(value) coursesArray.push(value);
-              });
-            });
-
-            //add all uniqueue skills and courses to the course selector
-            coursesArray = $.unique(coursesArray);
-            $.each(coursesArray, function(index, value){
-              $("#select2ClassSelection").append($('<option>', {value: value, text: value}));
-            });
-
-          });
-
-
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
           ref.onAuth(authDataCallback);
@@ -513,6 +488,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
               updateUserName(snapshot.val().displayName);
               $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserLatLng = snapshot.val().latlng;
+              updateCoursesSkillsSelection();
 
               startGMap(loggedInUserLatLng);
             }, function (errorObject) {
@@ -553,6 +529,31 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           $(".studentName").text(userName);
         }
       }
+      function updateCoursesSkillsSelection(){
+          //Populate Dropdown with all unique skills and courses
+          (new Firebase("https://ubertutoralpha.firebaseio.com/users")).once('value', function (coursesSnapshot) {
+            var coursesArray=[];
+            //Go through every user
+            $.each(coursesSnapshot.val(), function(uid, userObj){
+              //Loop through each course skill and add them to array
+              var skillsArr = userObj.skills.split(",");
+              var coursesArr = userObj.courseExpertise.split(",");
+              $.each(coursesArr, function(index, value){
+                if(value) coursesArray.push(value);
+              });
+              $.each(skillsArr, function(index, value){
+                if(value) coursesArray.push(value);
+              });
+            });
+
+            //add all uniqueue skills and courses to the course selector
+            coursesArray = $.unique(coursesArray);
+            $.each(coursesArray, function(index, value){
+              $("#select2ClassSelection").append($('<option>', {value: value, text: value}));
+            });
+
+          });
+      }
       function signOut(){
         var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
         ref.unauth();
@@ -560,7 +561,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
       }
       var onFindTutorChange = null;
       function findTutors(){
-
+        
         // Show Find Tutor as Header
         setSearchTutorsTabActive();
 
@@ -596,9 +597,9 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
               {
                 //Only show Tutors that match Courses Selected when selected courses is not empty
                 $.each(coursesArr, function(index, value){
-                  console.log("skills: ", userObj.skills );
-                  console.log(" value: ",value);
-                  console.log(" course: " , userObj.courseExpertise);
+                  // console.log("skills: ", userObj.skills );
+                  // console.log(" value: ",value);
+                  // console.log(" course: " , userObj.courseExpertise);
                   if($.inArray(value,userObj.courseExpertise.split(","))== -1 && $.inArray(value,userObj.skills.split(","))== -1){
                     //do nothing... do not display tutor, because his courses do not match selected courses
                   }else{
@@ -667,6 +668,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         }, function (errorObject) {
           console.log("The read failed: " + errorObject.code);
         });
+          startGMap(loggedInUserLatLng);
       }
       function addTutorToDisplay(userObj, uid){
         //User Image Loaction

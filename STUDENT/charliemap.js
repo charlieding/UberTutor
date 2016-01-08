@@ -188,9 +188,20 @@ function FbaseUserMarkImgs(map){
 
     var userShowCondition=null;
     function allowShowup(userObj){
+
+      /*CHARLIE's CODE --- HARDCODED TO ONLY SHOW TUTORS THAT ARE SELECTED IN THE TOP NEED HELP... NOT WORKING!!!! TODO*/
+      console.log(userObj.userType == "tutor");
+      if(userObj.userType == "tutor" && isSelectedInCourses(userObj)){
+        alert("TRUE");
+        return true;
+      } else {
+        return false;
+      }
+
       if(null===userShowCondition){//no any cpmditions.
         return true;
       }
+      //Bug here in Dad's Logic... if there is multiple conditions, only one of them needs to be true... lol
       var ret=false;
       $.each(userShowCondition,function(key,val){
           if( userObj[key] && userObj[key] === val){
@@ -205,8 +216,27 @@ function FbaseUserMarkImgs(map){
         break;        
         default:
         break;
-      };        
+      };     
       return ret;
+      function isSelectedInCourses(obj){
+        var selectedCourses = ($("#select2ClassSelection").select2('val')+"").split(",");
+        if("null" == selectedCourses){
+          return true;
+        }
+        //console.log(selectedCourses);
+        //Only show Tutors that match Courses Selected when selected courses is not empty
+          $.each(selectedCourses, function(index, value){
+                    // console.log("skills: ", obj.skills , $.inArray(value,obj.skills.split(","))== -1);
+                    // console.log(" value: ",value);
+                    // console.log(" course: " , obj.courseExpertise, $.inArray(value,obj.courseExpertise.split(","))== -1);
+            if($.inArray(value,obj.courseExpertise.split(","))== -1 && $.inArray(value,obj.skills.split(","))== -1){
+              //do nothing... do not display tutor, because his courses do not match selected courses
+            }else{
+              return true;
+            }
+          });
+        return false;
+      }
     };
     function updateImgOnMap(uid,userObj,map){
         var mark=markImgArr[uid];
@@ -473,6 +503,28 @@ function MyMapMgr(){
         }
     };
 
+    // Sets the map on all markers in the array.
+    function setMapOnAll(map) {
+      console.log(fbum);
+      for (var i = 0; i < fbum.length; i++) {
+        fbum[i].setMap(map);
+        console.log(fbum);
+      }
+    };
+
+    // Removes the markers from the map, but keeps them in the array.
+    this.clearMarkers = function() {
+      //setMapOnAll(null);
+      console.log("SHOWING ONLY TUTORS");
+      fbum.setConditions({userShowCondition:{userType:"tutor"}});
+    };
+    // Shows any markers currently in the array.
+    this.showMarkers= function() {
+      //setMapOnAll(map);
+      console.log("SHOWING ALL");
+      fbum.setConditions({userShowCondition:{}});
+    };
+
 
 
 };//MyMapMgr//
@@ -513,10 +565,12 @@ function startGMap(latlng){
   $(document).ready(function(){ 
     $("#resetMap").click(function(){
       mmm.resetMap();
+      mmm.showMarkers();
     });  
     $("#cursorChange").click(function () {
-       mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
-       $( "#cursorChange > i" ).addClass("fa-spin");
+      mmm.clearMarkers();
+      mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
+      $( "#cursorChange > i" ).addClass("fa-spin");
     });
     $( "#cursorChange" ).mousedown(function() {
       mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
