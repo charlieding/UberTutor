@@ -355,16 +355,31 @@ function MyMapMgr(){
     this.initialize=function(lat,lng, labeltxt) {
       centerLatLng = new google.maps.LatLng(lat, lng);
       var mapProp = {
+        styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }]}],
         center:centerLatLng,
         zoom:15,
         mapTypeId:google.maps.MapTypeId.TERRAIN,
-        mapTypeControl:false 
+        mapTypeControl:true 
       };
       map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
       //map.panTo(centerLatLng);
       //map.setCenter(centerLatLng);
       map.m_initialCenterLatLng=centerLatLng;
       google.maps.event.addListener(map, 'click', function(event) {
+        //markerApptment.setMap(map);
+        if(null!=draggableCursor){
+           draggableCursor=null;
+           map.setOptions({draggableCursor:null});
+           markerApptment.setOptions({map:map,position:event.latLng});
+
+           //$("#eventPos").val(event.latLng.toString());
+           geocodePosition(event.latLng);
+        }
+        //infowindow.close();
+        //mark.setMap(null);
+      });
+      //MOUSE UP TRIGGER TO ALLOW DRAG DROP!!! -CHARLES
+      google.maps.event.addListener(map, 'mouseup', function(event) {
         //markerApptment.setMap(map);
         if(null!=draggableCursor){
            draggableCursor=null;
@@ -499,6 +514,11 @@ function startGMap(latlng){
     });  
     $("#cursorChange").click(function () {
        mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
+       $( "#cursorChange" ).first().addClass("fa-spin");
+    });
+    $( "#cursorChange" ).mousedown(function() {
+      mmm.setMeetingPlace();//getMap().setOptions({draggableCursor:'crosshair'});
+      $( "#cursorChange" ).first().addClass("fa-spin");
     });
     //$("#tables_container").append(archinfo01.GetTable());  
     //$("#tables_container").append(archinfo01.GetFreqTable({scale:10}));

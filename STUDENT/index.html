@@ -248,7 +248,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                     <div style="float:left; width:60%;">
                       <div class="input-group">
                         <input type="text" id='eventPos' class="form-control" placeholder="Where to meet? Eg: Library (Default: Your Current Location)">
-                        <span style="cursor:pointer" id="cursorChange" class="input-group-addon"><i class="fa fa-map-pin fa-spin"></i></span>
+                        <span style="cursor:pointer" id="cursorChange" class="input-group-addon"><i class="fa fa-map-pin"></i></span>
                       </div>
                     </div>
                     <div style="float:right; width:35%; text-align:center;">
@@ -301,19 +301,19 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           <!-- Settings tab content -->
           <div class="tab-pane" id="control-sidebar-settings-tab">
                   <div class="hideTutorProfileWhenNoTutorSelected" style="text-align:center;">
-                    <img id="tutorProfileImageHeader" src="dist/img/photo1.png" style="width:70%; cursor:pointer;" class="user-image img-circle" alt="User Image">
+                    <img id="tutorProfileImageHeader" src="dist/img/img.png" style="width:70%; cursor:pointer;" class="user-image img-circle" alt="User Image">
                     <p>
-                      <h4 id="tutorProfileName" style="cursor:pointer" class="control-sidebar-subheading">Langdon Chen</h4>
-                      <p style="margin-top: -8px;"><i id="tutorProfileStar1" class="fa fa-star"></i><i id="tutorProfileStar2" class="fa fa-star"></i><i id="tutorProfileStar3" class="fa fa-star"></i><i id="tutorProfileStar4" class="fa fa-star"></i><i id="tutorProfileStar5" class="fa fa-star"></i><span id="tutorProfileNumOfReviews"> (13)</span></p>
-                      <p id="tutorProfileMembership" style="font-size:11px; margin-top:-10px;">Tutor since Nov. 2012</p>
+                      <h4 id="tutorProfileName" style="cursor:pointer" class="control-sidebar-subheading">No Tutor Selected</h4>
+                      <p style="margin-top: -8px;"><i id="tutorProfileStar1" class="fa fa-star"></i><i id="tutorProfileStar2" class="fa fa-star"></i><i id="tutorProfileStar3" class="fa fa-star"></i><i id="tutorProfileStar4" class="fa fa-star"></i><i id="tutorProfileStar5" class="fa fa-star"></i><span id="tutorProfileNumOfReviews">(0)</span></p>
+                      <p id="tutorProfileMembership" style="font-size:11px; margin-top:-10px;"></p>
                     </p>
                     <h4 class="control-sidebar-subheading">Pricing</h4>
                     <p style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
-                      $<span id="bookingCostTotal" >150</span> for <span id="bookingDuration" >3</span> Hour(s) @ $<span id="bookingHourlyCost">30</span>/hr 
+                      $<span id="bookingCostTotal" >_</span> for <span id="bookingDuration" >_</span> Hour(s) @ $<span id="bookingHourlyCost">_</span>/hr 
                     </p>
                     <h4 class="control-sidebar-subheading">Biography</h4>
                     <p id="tutorBiography"  style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
-                      I am aasdba nsbaisbasdng aosdgaso dfa asfihuasd fuah duiasfa sdfasdf.
+                      None
                     </p>
                   </div>
           </div><!-- /.tab-pane -->
@@ -949,11 +949,11 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           time: time,
           day: day,
           latlng: latlng,
-          latlngAddress: latlngAddress,
+          latlngAddress: latlngAddress || "Latitute, Longitude: "+latlng,
           duration: duration,
           cost: cost + "",
           status: "Awaiting Response",
-          courses: courses,
+          courses: courses || "None Selected",
           declineMessage: "null",
           questionTopic:  questionTopic,
           creationDate: moment().format("M/D/YYYY h:m:s a"),
