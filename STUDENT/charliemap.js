@@ -189,10 +189,10 @@ function FbaseUserMarkImgs(map){
     var userShowCondition=null;
     function allowShowup(userObj){
 
-      /*CHARLIE's CODE --- HARDCODED TO ONLY SHOW TUTORS THAT ARE SELECTED IN THE TOP NEED HELP... NOT WORKING!!!! TODO*/
+      /*CHARLIE's CODE --- HARDCODED TO ONLY SHOW TUTORS THAT ARE SELECTED IN THE TOP NEED HELP*/
       console.log("isTutor: "+(userObj.userType == "tutor")+" isSelected: "+ isSelectedInCourses(userObj)+"FINAL STATUS: "+((userObj.userType == "tutor") && isSelectedInCourses(userObj)));
       if((userObj.userType == "tutor") && isSelectedInCourses(userObj)){
-        return true;
+        return isTutorAvailableOnFreeSchedule(true, userObj);
       } else {
         return false;
       }
