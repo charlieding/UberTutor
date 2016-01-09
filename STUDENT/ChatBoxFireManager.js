@@ -124,13 +124,13 @@ var ChatBoxFireManager=function(){
           return alert(chatuid+" is not added into rooms yet");
         }
 
-        if(options.currentChatUid===chatuid){
+        if(options && options.currentChatUid===chatuid){
           if( options.initChatBoxFunc ){
               options.initChatBoxFunc(chatuid);
           }                  
         };           
         if(chatMsgAddRefs[chatuid]){
-              if(options.currentChatUid===chatuid){              
+              if( options && options.currentChatUid===chatuid){              
                 chatRef.child(chatuid).child("utc").once("value",on_child_value_msg);
               }                         
               return;

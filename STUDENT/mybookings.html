@@ -981,7 +981,7 @@ setTimeout(function(){
       }
 
       fireChatBox.SetNotifications(chatBoxNotification); //Call Back whenever there is a new message - Defaults to update message
-      function chatBoxNotification(chatuid,count){
+      function chatBoxNotification(chatuid,count){        
 
           if(!count) count="";
           var btn=$("span[chatuid='"+chatuid+"']");
@@ -989,9 +989,9 @@ setTimeout(function(){
 
           $(btn).next().attr("title",count+" New Message(s)");
           $(btn).next().text(count);//.css("background-color","#ff0000");
-          //var pa=$(btn).parent();
-          //pa.find(".badge").css("background-color","#ff0000");
-          //console.log("fireChatBox.SetNotifications:"+chatuid,count);
+          var pa=$(btn).parent();
+          pa.find(".badge").css("background-color","#ff0000").text(count);
+          console.log("fireChatBox.SetNotifications="+chatuid,"count=",count);
           //alert("CALL BACK UI");
   
       }
