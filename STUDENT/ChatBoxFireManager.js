@@ -15,19 +15,8 @@ var ChatBoxUti={
 
           return ret; 
   },
-};
-
-var ChatBoxFireManager=function(){
-
-     function GenChatBoxInfo(){
-         var usrsObj=null;
-         var ret={};
-
-         this.Init=function(tutorID, studentID, currentUserID){
-          ret = ChatBoxUti.GenSortedChatUID(tutorID, studentID);
-
+  SetCurrentUserID:function(ret, currentUserID){
           ret.currUserID=currentUserID;
-
           ret.ownerIdIndx=ret.sortedUidArr.indexOf(currentUserID);
           if(ret.ownerIdIndx<0) return alert("not find:"+currentUserID);
           ret.targetIdIndx=0;
@@ -35,6 +24,18 @@ var ChatBoxFireManager=function(){
              ret.targetIdIndx=1;
           };
           ret.targetUserID=ret.sortedUidArr[ret.targetIdIndx];
+  },  
+};
+
+var ChatBoxFireManager=function(){
+
+     function GenChatBoxInfo(){
+        var usrsObj=null;
+        var ret={};
+
+        this.Init=function(tutorID, studentID, currentUserID){
+          ret = ChatBoxUti.GenSortedChatUID(tutorID, studentID);
+          ChatBoxUti.SetCurrentUserID(ret,currentUserID);
         };
         this.setUsersObj=function(UsrsObj){
           usrsObj=UsrsObj;
