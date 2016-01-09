@@ -149,8 +149,8 @@ var ChatBoxFireManager=function(){
         var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
         if(uidIdx===ownerIdIndx){
           console.log("its count is for me.");
-          if(notifyStats){
-            notifyStats(chatuid, count);
+          if(callbackfun.notifyStats){
+             callbackfun.notifyStats(chatuid, count);
           }
         };
       };
@@ -194,8 +194,8 @@ var ChatBoxFireManager=function(){
         var datetime  = moment(localTime).format("MMM D hh:mm a"); 
 
          
-        if(on_msg2chatbox){
-           on_msg2chatbox(chatUid, datetime, msgObj, snder, boxsides,bScroolToView);
+        if(callbackfun.on_msg2chatbox){
+           callbackfun.on_msg2chatbox(chatUid, datetime, msgObj, snder, boxsides,bScroolToView);
         }
         return;
       };
@@ -251,9 +251,9 @@ var ChatBoxFireManager=function(){
           return count+1;
         });
       };      
-      var notifyStats=null;
+      var callbackfun={};
       this.SetNotifications=function(callbackfunc){
-        notifyStats=callbackfunc;
+        callbackfun.notifyStats=callbackfunc;
       };
       this.ClearMyStats=function(currChatuid){
         var chatboxInfo=chatRooms[currChatuid].Info;
@@ -265,9 +265,8 @@ var ChatBoxFireManager=function(){
       };
 
       //api bind to a button.
-      var on_msg2chatbox=null;
       this.Set_FireMsg2Chatbox=function(callbackfunc){
-        on_msg2chatbox=callbackfunc;
+        callbackfun.on_msg2chatbox=callbackfunc;
       };
 
       this.GetChatboxInfo=function(chatuid){
