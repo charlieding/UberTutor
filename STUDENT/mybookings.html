@@ -598,7 +598,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
               isLoggedInUserTutor = (snapshot.val().userType == "tutor");
-              if(isLoggedInUserTutor) $(".userTypeOpposite").text("Student"); $(".tutorRemoveItems").remove();
+              if(isLoggedInUserTutor) {
+                $(".userTypeOpposite").text("Student");
+                $(".tutorRemoveItems").remove();
+              }
               loadBookings(snapshot);
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
