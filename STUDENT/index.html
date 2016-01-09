@@ -538,15 +538,21 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
             var coursesArray=[];
             //Go through every user
             $.each(coursesSnapshot.val(), function(uid, userObj){
-              //Loop through each course skill and add them to array
-              var skillsArr = userObj.skills.split(",");
-              var coursesArr = userObj.courseExpertise.split(",");
-              $.each(coursesArr, function(index, value){
-                if(value) coursesArray.push(value);
-              });
-              $.each(skillsArr, function(index, value){
-                if(value) coursesArray.push(value);
-              });
+              //Loop through each course skill and add them to array if they are tutor
+              if(userObj.userType == "tutor"){
+                var skillsArr = userObj.skills.split(",");
+                var coursesArr = userObj.courseExpertise.split(",");
+                if(coursesArr){
+                  $.each(coursesArr, function(index, value){
+                    if(value) coursesArray.push(value);
+                  });
+                }
+                if(skillsArr){
+                  $.each(skillsArr, function(index, value){
+                    if(value) coursesArray.push(value);
+                  });
+                }
+              }
             });
 
             //add all uniqueue skills and courses to the course selector
