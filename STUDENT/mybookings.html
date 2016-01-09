@@ -789,7 +789,7 @@ totalChats++;
 setTimeout(function(){
 
                       //Initialize Chat Room Unread Messages for everyone - HACK FIX -- For Chat to Show up
-                      var mainchatuid=fireChatBox.SetChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
+                      var mainchatuid=fireChatBox.AddChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
                      
 
 
@@ -842,7 +842,7 @@ setTimeout(function(){
                     setTimeout(function(){
 
                     //Initialize Chat Room Unread Messages for everyone - HACK FIX Messages dont show the first time...
-                    var upcomingchatuid=fireChatBox.SetChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
+                    var upcomingchatuid=fireChatBox.AddChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
 
                     $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span chatuid='"+upcomingchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+"</div></td><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
                   }, totalChats*waitTime-waitTime);
@@ -876,7 +876,7 @@ setTimeout(function(){
 
       //pass info to chatbox
       chatBox(_this);
-      chatBox(_this);
+      //chatBox(_this);
     }
     function goToPayments(){
       window.location ='payment.html';
@@ -948,30 +948,20 @@ setTimeout(function(){
       //Click on Chat Button
       function chatBox(chatElem){
           $("#chatMessages").empty();
+          $(chatElem).next().text("");
 
-          var tutorID=$(chatElem).attr("tutorID"),
-          studentID=$(chatElem).attr("studentID"),
-          currentUserID=$(chatElem).attr("currentUserID");
-          console.log("wei",tutorID,studentID,currentUserID);
+          var chatuid=$(chatElem).attr("chatuid");          
 
-
-          var chatuid=fireChatBox.SetChatRoom(tutorID,studentID,currentUserID);
-
-          $(chatElem).attr("chatuid",chatuid).next().text("");
-
-
-          //////////////////////////////////////////////////////////
-          // This is not synched GetChatboxInfo().
-          // user should get targetName.
-          var targetUserName=fireChatBox.GetChatboxInfo().getTargetName();
+          function initChatBoxFunc(chatuid){              
+                  var targetUserName=fireChatBox.GetChatboxInfo(chatuid).getTargetName();
                   $("#boxtitle").text(targetUserName)
                       .attr("chatuid",chatuid);
-          /////////////////////////////////////////////////////////
+          }
+          var options={currentChatUid:chatuid, initChatBoxFunc:initChatBoxFunc};
+
+          fireChatBox.FireChatRooms(options);
 
           fireChatBox.ClearMyStats(chatuid);
-
-          $("span[chatuid='"+chatuid+"']").css("background-color","");
-          //$(chatElem).parent().next().text("").css("background-color","#00ff00");
       };
       function test(chatElem){
 
@@ -1028,9 +1018,9 @@ setTimeout(function(){
 
         return true;
       };
+      fireChatBox.Set_FireMsg2Chatbox(Msg2Box);
 
-
-       fireChatBox.Set_FireMsg2Chatbox(function(chatUid, datetime, msg, snder, boxsides,bScroolToView){
+      function Msg2Box(chatUid, datetime, msg, snder, boxsides,bScroolToView){
             var currChatuid=$("#boxtitle").attr("chatuid");
             if( currChatuid!=chatUid){
               return;
@@ -1059,7 +1049,7 @@ setTimeout(function(){
            if(bScroolToView){
              ele[0].scrollIntoView();
            }
-       });
+       };
 
   $(document).ready(function() {
   $(window).keydown(function(event){
