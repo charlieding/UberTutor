@@ -1,33 +1,40 @@
 
 
-
-var ChatBoxFireManager=function(){
-
-
-     function GenChatBoxInfo(){
-         var usrsObj=null;
-         var ret={};
-
-         this.Init=function(tutorID, studentID, currentUserID){
-          if(tutorID===studentID) return alert("self chat");
-          ret.currUserID=currentUserID;
+var ChatBoxUti={
+  GenSortedChatUID:function(tutorID, studentID){
+          if(tutorID===studentID) return alert("err: self chat not allowed");
+          var ret={};
           ret.tutorID=tutorID;
           ret.studentID=studentID;
 
           var arr=[tutorID, studentID];
           arr.sort();
           console.log(arr);
+          ret.sortedUidArr=arr; 
+          ret.sortedChatUid=arr.join("_");
 
-          ret.ownerIdIndx=arr.indexOf(currentUserID);
+          return ret; 
+  },
+};
+
+var ChatBoxFireManager=function(){
+
+     function GenChatBoxInfo(){
+         var usrsObj=null;
+         var ret={};
+
+         this.Init=function(tutorID, studentID, currentUserID){
+          ret = ChatBoxUti.GenSortedChatUID(tutorID, studentID);
+
+          ret.currUserID=currentUserID;
+
+          ret.ownerIdIndx=ret.sortedUidArr.indexOf(currentUserID);
           if(ret.ownerIdIndx<0) return alert("not find:"+currentUserID);
           ret.targetIdIndx=0;
           if(ret.ownerIdIndx===0){
              ret.targetIdIndx=1;
           };
-          ret.targetUserID=arr[ret.targetIdIndx];
-          ret.sortedChatUid=arr.join("_");
-
-          ret.sortedUidArr=arr;  
+          ret.targetUserID=ret.sortedUidArr[ret.targetIdIndx];
         };
         this.setUsersObj=function(UsrsObj){
           usrsObj=UsrsObj;
@@ -232,7 +239,12 @@ var ChatBoxFireManager=function(){
 
 
 
-
+      //api bind to a button.
+      this.AddChatRoom=function(tutorID, studentID,currentUserID){
+        var gcb=new GenChatBoxInfo();
+        gcb.Init(tutorID, studentID,currentUserID);
+        return setConnect(tutorID, studentID,currentUserID);
+      };
 
       //api bind to a button.
       this.SetChatRoom=function(tutorID, studentID,currentUserID){
