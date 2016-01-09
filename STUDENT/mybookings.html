@@ -639,6 +639,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       var refAndOnAppointmentChangeMap = {};
 
       function loadBookings(currUserSnapshot){
+        $("#chatMessages").empty();
         //console.log(currUserSnapshot.key());
 
         var usersRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+currUserSnapshot.key()+"/appointmentIDs");
@@ -786,8 +787,9 @@ totalChats++;
 //alert("Initialized, Total Chats:" + totalChats);
 setTimeout(function(){
 
-                      //Initialize Chat Room Unread Messages for everyone
+                      //Initialize Chat Room Unread Messages for everyone - HACK FIX -- For Chat to Show up
                       var mainchatuid=fireChatBox.SetChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
+                     
 
 
         $(upcomingPastOrNow).prepend(""+
@@ -837,8 +839,10 @@ setTimeout(function(){
                     totalChats++;
                     //aalert("Initialized, Total Chats:" + totalChats);
                     setTimeout(function(){
-                    //Initialize Chat Room Unread Messages for everyone
+
+                    //Initialize Chat Room Unread Messages for everyone - HACK FIX Messages dont show the first time...
                     var upcomingchatuid=fireChatBox.SetChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
+
                     $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span chatuid='"+upcomingchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+"</div></td><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
                   }, totalChats*waitTime-waitTime);
                   } else if(upcomingPastOrNow == "#pastBookings"){
@@ -870,6 +874,7 @@ setTimeout(function(){
       $('#rightsidetabs a[href="#control-sidebar-settings-tab"]').tab('show');
 
       //pass info to chatbox
+      chatBox(_this);
       chatBox(_this);
     }
     function goToPayments(){
@@ -1029,6 +1034,7 @@ setTimeout(function(){
             if( currChatuid!=chatUid){
               return;
             }
+            console.error(currChatuid);
             //OPENS chat box, Clears UI and Server Unread Messages when you reveive a message and have chatbox open
             if(totalChats == 1){
               $.AdminLTE.controlSidebar.open();

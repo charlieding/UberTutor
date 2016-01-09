@@ -110,8 +110,8 @@ var ChatBoxFireManager=function(){
 
         ///////////////////////////////////////////////////////////////
         //this ui should be handled by html client users.
-        $("#boxtitle").text(chatboxInfo.getTargetName())
-                      .attr("chatuid",chatboxInfo.data().sortedChatUid);
+        // $("#boxtitle").text(chatboxInfo.getTargetName())
+        //               .attr("chatuid",chatboxInfo.data().sortedChatUid);
         ////////////////////////////////////////////////////////////////
 
         FireChatMsgs(chatboxInfo);
