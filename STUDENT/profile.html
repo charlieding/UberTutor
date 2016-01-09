@@ -118,7 +118,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <a href="help.html">Need Help?</a>
                     </div>
                     <div class="col-xs-6 text-center">
-                      <a href="becometutor.html">Become a Tutor</a>
+                      <a class="tutorRemoveItems" href="becometutor.html">Become a Tutor</a>
                     </div>
                   </li>
                   <!-- Menu Footer-->
@@ -158,11 +158,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <ul class="sidebar-menu">
             <li class="header">MENU</li>
             <!-- Optionally, you can add icons to the links -->
-            <li><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
+            <li class="tutorRemoveItems"><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
             <li><a href="mybookings.html"><i class="fa fa-calendar"></i> <span>My Bookings</span></a></li>
-            <li><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
+            <li class="tutorRemoveItems"><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
             <li><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
-            <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
+            <li class="tutorRemoveItems"><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
           </ul><!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->
@@ -176,7 +176,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <small href="#" data-toggle="control-sidebar">Put in Email and Phone to get Alerts/Notifications</small>
           </h1>
           <ol class="breadcrumb">
-            <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="tutorRemoveItems"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
             <li class="active">Profile</li>
           </ol>
         </section>
@@ -562,6 +562,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               initProfile(snapshot);
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
+              if(snapshot.val().userType == "tutor") $(".tutorRemoveItems").remove();
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });

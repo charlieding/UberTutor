@@ -92,7 +92,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </a>
 
           <!-- Class Selection -->
-          <div id="classSelection" class="form-group" style="position:absolute;">
+          <div id="classSelection" class="form-group tutorRemoveItems" style="position:absolute;">
             <select class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
               <option>CS 1001</option>
               <option>Psyc 1001</option>
@@ -130,7 +130,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <a href="help.html">Need Help?</a>
                     </div>
                     <div class="col-xs-6 text-center">
-                      <a href="becometutor.html">Become a Tutor</a>
+                      <a class="tutorRemoveItems" href="becometutor.html">Become a Tutor</a>
                     </div>
                   </li>
                   <!-- Menu Footer-->
@@ -170,11 +170,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <ul class="sidebar-menu">
             <li class="header">MENU</li>
             <!-- Optionally, you can add icons to the links -->
-            <li><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
+            <li class="tutorRemoveItems"><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
             <li><a href="mybookings.html"><i class="fa fa-calendar"></i> <span>My Bookings</span></a></li>
-            <li><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
+            <li class="tutorRemoveItems"><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
             <li class="active"><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
-            <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
+            <li class="tutorRemoveItems"><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
 
             <li class="header" style="position:absolute; bottom:0px; width:100%; font-size: 9.5px; text-align: center;"> <!-- To the right -->
               <!-- Default to the left -->
@@ -194,7 +194,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <small>Having a problem?</small>
           </h1>
           <ol class="breadcrumb">
-            <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="tutorRemoveItems"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
             <li class="active">Help</li>
           </ol>
         </section>
@@ -296,6 +296,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
+              if(snapshot.val().userType == "tutor") $(".tutorRemoveItems").remove();
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });

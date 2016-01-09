@@ -100,7 +100,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </a>
 
           <!-- Class Selection -->
-          <div id="classSelection" class="form-group" style="position:absolute;">
+          <div id="classSelection" class="form-group tutorRemoveItems" style="position:absolute;">
             <select class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
               <option>CS 1001</option>
               <option>Psyc 1001</option>
@@ -138,7 +138,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <a href="help.html">Need Help?</a>
                     </div>
                     <div class="col-xs-6 text-center">
-                      <a href="becometutor.html">Become a Tutor</a>
+                      <a class="tutorRemoveItems" href="becometutor.html">Become a Tutor</a>
                     </div>
                   </li>
                   <!-- Menu Footer-->
@@ -178,11 +178,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <ul class="sidebar-menu">
             <li class="header">MENU</li>
             <!-- Optionally, you can add icons to the links -->
-            <li><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
+            <li class="tutorRemoveItems"><a href="index.html"><i class="fa fa-book"></i> <span>Find Tutors</span></a></li>
             <li class="active"><a href="mybookings.html"><i class="fa fa-calendar"></i> <span>My Bookings</span></a></li>
-            <li><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
+            <li class="tutorRemoveItems"><a href="payment.html"><i class="fa fa-money"></i> <span>Payment</span></a></li>
             <li><a href="help.html"><i class="fa fa-question"></i> <span>Help</span></a></li>
-            <li><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
+            <li class="tutorRemoveItems"><a href="becometutor.html"><i class="fa fa-graduation-cap"></i> <span>Become a Tutor</span></a></li>
 
           </ul><!-- /.sidebar-menu -->
         </section>
@@ -197,7 +197,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <small>View Your Tutor Sessions</small>
           </h1>
           <ol class="breadcrumb">
-            <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+            <li class="tutorRemoveItems"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
             <li class="active">My Bookings</li>
           </ol>
         </section>
@@ -259,7 +259,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <thead>
                         <tr>
                           <th>Message</th>
-                          <th>Tutor</th>
+                          <th class="userTypeOpposite">Tutor</th>
                           <th>Date</th>
                           <th>Location</th>
                           <th>Class</th>
@@ -307,12 +307,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <table class="table no-margin table-hover">
                       <thead>
                         <tr>
-                          <th>Tutor</th>
+                          <th class="userTypeOpposite">Tutor</th>
                           <th>Date</th>
                           <th>Location</th>
                           <th>Class</th>
                           <th>Status</th>
-                          <th>Duration / Price</th>
+                          <th id="tutorPastPriceDisplay" >Duration / Price</th>
                           <th>Action Item(s)</th>
                         </tr>
                       </thead>
@@ -575,6 +575,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
       var loggedInUserLatLng = null;
       var loggedInUserID = null;
+      var isLoggedInUserTutor = false;
       $( document ).ready(function() {
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -596,6 +597,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
+              isLoggedInUserTutor = (snapshot.val().userType == "tutor");
+              if(isLoggedInUserTutor) $(".userTypeOpposite").text("Student"); $(".tutorRemoveItems").remove();
               loadBookings(snapshot);
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
@@ -634,6 +637,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       function loadBookings(currUserSnapshot){
         //console.log(currUserSnapshot.key());
+
         var usersRef = new Firebase("https://ubertutoralpha.firebaseio.com/users/"+currUserSnapshot.key()+"/appointmentIDs");
         
         //Remove listener if it already exists to prevent duplicate database calls
@@ -660,7 +664,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
           var uids = "";
           totalChats = 0;
           waitTime = 600; //85 works 50% of the time
-
           //console.log(userAppointments);
           //console.log(allAppointments);
 
@@ -685,33 +688,62 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 var actionItem = "None";
                 var upcomingPastOrNow = "#pastBookings";
                 var paymentText = "Price Estimate";
+                var appointmentDisplayName = appointmentSnapshot.val().tutorDisplayName || "Not Defined";
+                var appointmentDisplayStatus = appointmentSnapshot.val().status;
+                var durationPriceDisplay = appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr";
+                if (isLoggedInUserTutor){
+                  appointmentDisplayName = appointmentSnapshot.val().studentDisplayName;
+                  durationPriceDisplay = "$"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost));
+                  $("#tutorPastPriceDisplay").text("Amount");
+                  //alert(appointmentDisplayName);
+                  //Edge Case Bug, If Tutor somehow books appointment, then everything is screwed up :P
+                }
 
                 if(appointmentSnapshot.val().status == "Awaiting Response"){
                   upcomingPastOrNow = "#upcomingBookings";
                   statusStyle = "label-primary";
-                  actionItem = "<span onclick='cancelAppointment(this);' appointmentId='"+appointmentSnapshot.key()+"' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
+                  actionItem = "<span onclick='cancelAppointment(this);' appointmentId='"+appointmentSnapshot.key()+"' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-times-circle-o'> Cancel</i></span>";
+                  if(isLoggedInUserTutor){
+                    actionItem = "<span onclick='acceptTutorRequest(this);' appointmentId='"+appointmentSnapshot.key()+"' class='btn btn-sm btn btn-success label' style='cursor:pointer;'><i class='fa fa-check'> Accept</i></span>";
+                    actionItem = actionItem + "<span onclick='rejectAppointment(this);' appointmentId='"+appointmentSnapshot.key()+"' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-times'> Decline</i></span>";
+                  }
+
                 }
                 if(appointmentSnapshot.val().status == "Accepted"){
                   upcomingPastOrNow = "#upcomingBookings";
                   statusStyle = "label-info";
-                  actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-comments-o'> Cancel</i></span>";
+                  actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='cancelAppointment(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-times'> Cancel</i></span>";
+                  if(isLoggedInUserTutor){ 
+                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='alertStudentYourOnTheWay(this);' class='btn btn-sm btn btn-success label' style='cursor:pointer;'><i class='fa fa-car'> I'm Enroute</i></span>" + actionItem;
+                  }
                 }
                 if(appointmentSnapshot.val().status == "On the Way"){
                   upcomingPastOrNow = "#mainContentSection";
                   statusStyle = "label-info";
                   actionItem = "<button class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button>";
+                  if(isLoggedInUserTutor){ 
+                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='beginTutorSession(this);' class='btn btn-sm btn btn-success label' style='cursor:pointer;'><i class='fa fa-clock-o'> Begin Tutoring</i></span>" + actionItem;
+                  }
                 }
                 if(appointmentSnapshot.val().status == "In Session"){
                   upcomingPastOrNow = "#mainContentSection";
                   statusStyle = "label-info";
                   actionItem = "<button class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button>";
+                  if(isLoggedInUserTutor){ 
+                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' onclick='endTutorSession(this);' class='btn btn-sm btn btn-danger label' style='cursor:pointer;'><i class='fa fa-clock-o'> Finish Tutoring</i></span>" + actionItem;
+                  }
                 }
                 if(appointmentSnapshot.val().status == "Pending Payment"){
 
                   upcomingPastOrNow = "#mainContentSection";
                   paymentText = "Amount Due";
                   statusStyle = "label-warning";
-                  actionItem = "<span onclick='goToPayments();' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
+                  if(isLoggedInUserTutor){
+                    paymentText = "To Be Paid Amount";
+                    actionItem = "";
+                  } else {
+                    actionItem = "<span onclick='goToPayments();' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Pay Now</i></span>";
+                  }
                 }
                 if(appointmentSnapshot.val().status == "Finished"){
                   upcomingPastOrNow = "#pastBookings";
@@ -719,10 +751,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   if(appointmentSnapshot.val().feedbackLeft == "true"){
                     actionItem = "Feedback Left";
                   } else {
-                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentSnapshot.val().tutorDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                  }
+                  if(isLoggedInUserTutor && "False"==appointmentSnapshot.val().isTutorPaid){ 
+                    appointmentDisplayStatus = "Processing";
+                    statusStyle = "label-warning";
+                  } else {
+                    appointmentDisplayStatus = "Paid";
+                    statusStyle = "label-success";
                   }
                 }
                 if(appointmentSnapshot.val().status == "Cancelled"){
+                  statusStyle = "label-danger";
+                }
+                if(appointmentSnapshot.val().status == "Declined"){
                   statusStyle = "label-danger";
                 }
 
@@ -750,7 +792,7 @@ setTimeout(function(){
             "<div class='col-md-8 center-block' style='float:none;'>"+
               "<div class='box box-info'>"+
                 "<div class='box-header with-border'>"+
-                  "<h1 class='box-title' ><b>"+appointmentSnapshot.val().status+"</b> - "+paymentText+": $"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost))+"</h1>"+
+                  "<h1 class='box-title' ><b>"+appointmentDisplayStatus+"</b> - "+paymentText+": $"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost))+"</h1>"+
                   "<div class='box-tools pull-right'>"+
                     actionItem+
                   "</div>"+
@@ -763,7 +805,7 @@ setTimeout(function(){
                           "<td><img src='"+imgUrl+"' class='img-circle userImage' style='height:65px;' alt='User Image'></td>"+
                           "<td>"+
                             "<div><b>"+appointmentSnapshot.val().courses+"</b> on <b>"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mmA")+"</b></div>"+
-                            "<div>with <b>"+appointmentSnapshot.val().tutorDisplayName+"</b>, "+round_nearest_tenth(parseFloat(appointmentSnapshot.val().duration))+"hr(s) - $"+appointmentSnapshot.val().costHourly+"/hr</div>"+
+                            "<div>with <b>"+appointmentDisplayName+"</b>, "+round_nearest_tenth(parseFloat(appointmentSnapshot.val().duration))+"hr(s) - $"+appointmentSnapshot.val().costHourly+"/hr</div>"+
                             "<span chatuid='"+mainchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+
                             " <span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+
                           "</td>"+
@@ -794,10 +836,10 @@ setTimeout(function(){
                     setTimeout(function(){
                     //Initialize Chat Room Unread Messages for everyone
                     var upcomingchatuid=fireChatBox.SetChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
-                    $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span chatuid='"+upcomingchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+"</div></td><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                    $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span chatuid='"+upcomingchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+"</div></td><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
                   }, totalChats*waitTime-waitTime);
                   } else if(upcomingPastOrNow == "#pastBookings"){
-                    $(upcomingPastOrNow).prepend("<tr><td>"+appointmentSnapshot.val().tutorDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr</td><td>"+actionItem+"</td></tr>");
+                    $(upcomingPastOrNow).prepend("<tr><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
                   }
                 }
 
@@ -1021,17 +1063,25 @@ setTimeout(function(){
 
 
 /**********TUTOR CODE APIs *************/
-function acceptTutorRequest(appointmentId){
+function rejectAppointment(_this){
+  //console.log("appointmentId:" + _this.getAttribute("appointmentId"));
+  (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+_this.getAttribute("appointmentId")+"/status")).set('Declined');
+}
+function acceptTutorRequest(_this){
+  var appointmentId = _this.getAttribute("appointmentId");
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("Accepted");
 }
-function alertStudentYourOnTheWay(appointmentId){
+function alertStudentYourOnTheWay(_this){
+  var appointmentId = _this.getAttribute("appointmentId");
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("On the Way");
 }
-function beginTutorSession(appointmentId){
+function beginTutorSession(_this){
+  var appointmentId = _this.getAttribute("appointmentId");
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/sessionStartTime")).set(moment().format());
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("In Session");
 }
-function endTutorSession(appointmentId){
+function endTutorSession(_this){
+  var appointmentId = _this.getAttribute("appointmentId");
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/sessionStartTime")).once('value', function (sessionStartTimeSnapshot) {
     (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/costHourly")).once('value', function (costHourlySnapshot) {
       var startTime = sessionStartTimeSnapshot.val();
@@ -1046,6 +1096,8 @@ function endTutorSession(appointmentId){
       (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/duration")).set(hours+"");
       (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/cost")).set(totalCost+"");
       (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/sessionEndTime")).set(endTime.format());
+      (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("Pending Payment");
+      (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/isTutorPaid")).set("False");
       
     });
   });
