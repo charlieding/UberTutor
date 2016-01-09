@@ -698,7 +698,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 var durationPriceDisplay = appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr";
                 if (isLoggedInUserTutor){
                   appointmentDisplayName = appointmentSnapshot.val().studentDisplayName;
-                  durationPriceDisplay = "$"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost));
+                  if(appointmentSnapshot.val().status == "Finished" || appointmentSnapshot.val().status == "Declined" || appointmentSnapshot.val().status == "Cancelled"){
+                    durationPriceDisplay = "$"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost));
+                  }
                   $("#tutorPastPriceDisplay").text("Amount");
                   //alert(appointmentDisplayName);
                   //Edge Case Bug, If Tutor somehow books appointment, then everything is screwed up :P
