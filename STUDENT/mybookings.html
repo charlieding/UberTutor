@@ -795,8 +795,6 @@ totalChats++;
 
                       fireChatBox.FireChatRooms(null);
                      
-
-
         $(upcomingPastOrNow).prepend(""+
           "<div class='row refreshable'>"+
             "<div class='col-md-8 center-block' style='float:none;'>"+
@@ -831,6 +829,17 @@ totalChats++;
             "</div>"+
           "</div>");
 
+//Bug Hack to display unread messages after status changes
+(new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+mainchatuid+"/stats")).once('value', function (unreadMessagesSnapshot) {
+  var leftOrRight = 1; //0 is Left
+  if(appointmentSnapshot.val().tutorID < appointmentSnapshot.val().studentID){
+    if (loggedInUserID == appointmentSnapshot.val().tutorID){
+      leftOrRight = 0;
+    }
+  }
+  if(unreadMessagesSnapshot.val()) chatBoxNotification(mainchatuid,unreadMessagesSnapshot.val()[leftOrRight]);
+});
+
 //}, totalChats*waitTime-waitTime);
                     }, function (err) {
                       // code to handle read error
@@ -850,6 +859,18 @@ totalChats++;
                     fireChatBox.FireChatRooms(null);
 
                     $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span chatuid='"+upcomingchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+"</div></td><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
+
+//Bug Hack to display unread messages after status changes
+(new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+upcomingchatuid+"/stats")).once('value', function (unreadMessagesSnapshot) {
+  var leftOrRight = 1; //0 is Left
+  if(appointmentSnapshot.val().tutorID < appointmentSnapshot.val().studentID){
+    if (loggedInUserID == appointmentSnapshot.val().tutorID){
+      leftOrRight = 0;
+    }
+  }
+  if(unreadMessagesSnapshot.val()) chatBoxNotification(upcomingchatuid,unreadMessagesSnapshot.val()[leftOrRight]);
+});
+
                   //}, totalChats*waitTime-waitTime);
                   } else if(upcomingPastOrNow == "#pastBookings"){
                     $(upcomingPastOrNow).prepend("<tr><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
@@ -984,7 +1005,7 @@ totalChats++;
 
       fireChatBox.SetNotifications(chatBoxNotification); //Call Back whenever there is a new message - Defaults to update message
       function chatBoxNotification(chatuid,count){        
-
+          //alert(count);
           if(!count) count="";
           var btn=$("span[chatuid='"+chatuid+"']");
           //btn.css("background-color","#ff0000");
