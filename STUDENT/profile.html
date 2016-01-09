@@ -196,10 +196,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                   <ul class="list-group list-group-unbordered">
                     <li class="list-group-item">
-                      <b>Phone Number</b> <a id="phoneNumber" class="pull-right"></a>
+                      <i class="fa fa-linkedin-square"></i><b> LinkedIn</b> <a id="linkedinUrl" class="pull-right"></a>
                     </li>
                     <li class="list-group-item">
-                      <b>Email</b> <a id="email" class="pull-right"></a>
+                      <b>Phone Number</b> (<i class="fa fa-lock"></i> Only You Can See) <a id="phoneNumber" class="pull-right"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Email</b> (<i class="fa fa-lock"></i> Only You Can See) <a id="email" class="pull-right"></a>
                     </li>
                     <li class="list-group-item">
                       <b>Member Since</b> <a id="joinDate" class="pull-right"></a>
@@ -247,6 +250,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                   <strong><i class="fa fa-file-text-o margin-r-5"></i> Biography</strong>
                   <p id="biography" ></p>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+            <div class="col-md-12 tutorDisplayOnly">
+              <!-- About Me Box -->
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Deposit Method</h3>  ( <i style="font-size:15px;" class="fa fa-lock"></i>Only You Can See)
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                      <i class="fa fa-cc-paypal"></i> <b>Paypal</b> (<i class="fa fa-lock"></i>) <a id="depositVenmoMethod" class="pull-right"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <i class="fa fa-vimeo"></i> <b>Venmo</b> (<i class="fa fa-lock"></i>) <a id="depositPaypalMethod" class="pull-right"></a>
+                    </li>
+                    <li class="list-group-item">
+                      <i class="fa fa-cc-visa"></i> <b>Chase Quick Pay</b> (<i class="fa fa-lock"></i>) <a id="depositChaseQuickPayMethod" class="pull-right"></a>
+                    </li>
+                  </ul>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
             </div><!-- /.col -->
@@ -301,9 +325,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputImgUrl" class="col-sm-2 control-label">Profile Picture Url</label>
+                        <label for="inputImgUrl" class="col-sm-2 control-label">Profile Picture</label>
                         <div class="col-sm-10">
-                          <textarea class="form-control" id="inputImgUrl" placeholder="Image Url (Eg: http://amazon.com/cool_image.jpg)"></textarea>
+                          <input class="form-control" id="inputImgUrl" placeholder="Image Url (Eg: http://amazon.com/cool_image.jpg)"></input>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputLinkedInUrl" class="col-sm-2 control-label">LinkedIn</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputLinkedInUrl" placeholder="LinkedIn Url (Eg: www.linkedin.com/example)">
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="form-group tutorDisplayOnly">
+                        <label for="inputVenmo" class="col-sm-2 control-label">Venmo</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputVenmo" placeholder="Venmo Deposit Email (Eg: example@gmail.com)">
+                        </div>
+                      </div>
+                      <div class="form-group tutorDisplayOnly">
+                        <label for="inputPaypal" class="col-sm-2 control-label">Paypal</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputPaypal" placeholder="Paypal Deposit Email (Eg: example@gmail.com)">
+                        </div>
+                      </div>
+                      <div class="form-group tutorDisplayOnly">
+                        <label for="inputChaseQuickPay" class="col-sm-2 control-label">Chase QuickPay</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputChaseQuickPay" placeholder="Chase QuickPay Deposit Email (Eg: example@gmail.com)">
                         </div>
                       </div>
                       <div class="form-group">
@@ -562,7 +611,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
               initProfile(snapshot);
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
-              if(snapshot.val().userType == "tutor") $(".tutorRemoveItems").remove();
+              if(snapshot.val().userType == "tutor"){
+                $(".tutorRemoveItems").remove();
+                $("#depositVenmoMethod").text(snapshot.val().venmo);
+                $("#depositPaypalMethod").text(snapshot.val().paypal);
+                $("#depositChaseQuickPayMethod").text(snapshot.val().chasequickpay);
+              } else {
+                $(".tutorDisplayOnly").remove();
+              }
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });
@@ -586,6 +642,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
         $("#joinDate").text(moment(snapshot.val().creationDate).format("MMMM Do, YYYY"));
         $("#email").text(snapshot.val().email);
+        $("#linkedinUrl").text(snapshot.val().linkedinUrl);
         $("#phoneNumber").text(snapshot.val().phoneNumber);
         $("#currentStatus").text(snapshot.val().userType.charAt(0).toUpperCase() + snapshot.val().userType.slice(1));
         $("#education").text(snapshot.val().education);
@@ -639,6 +696,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var courses = $("#inputCourseExpertise").val();
         var bio = $("#inputBiography").val();
         var img = $("#inputImgUrl").val();
+        var lnkd = $("#inputLinkedInUrl").val();
+        var venmo = $("#inputVenmo").val();
+        var paypal = $("#inputPaypal").val();
+        var chase = $("#inputChaseQuickPay").val();
         if(name)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/displayName")).set(name);
         if(phone)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/phoneNumber")).set(phone);
         if(email)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/email")).set(email);
@@ -647,6 +708,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         if(courses)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/courseExpertise")).set(courses);
         if(bio)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/biography")).set(bio);
         if(img)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/imgUrl")).set(img);
+        if(lnkd)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/linkedinUrl")).set(lnkd);
+        if(venmo)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/venmo")).set(venmo);
+        if(paypal)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/paypal")).set(paypal);
+        if(chase)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/chasequickpay")).set(chase);
       }
 
     </script>
