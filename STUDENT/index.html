@@ -504,6 +504,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
               console.log("User " + authData.uid + " is logged in with " + authData.provider);
             } else {
               console.log("User is logged out");
+              window.location = '../index.html'
             }
           }
           $("#duration").on('change',function(){

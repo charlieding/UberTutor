@@ -292,6 +292,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
+              if(snapshot.val().userType == "tutor") window.location = 'mybookings.html';
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });
@@ -303,6 +304,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               console.log("User " + authData.uid + " is logged in with " + authData.provider);
             } else {
               console.log("User is logged out");
+              window.location = '../index.html'
             }
           }
       });

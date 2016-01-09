@@ -661,7 +661,6 @@
 
     <script>
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
-        var authenticatedIosRedirectFlag = false;
         $( document ).ready(function() {
             // Register the callback to be fired every time auth state changes
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
@@ -672,10 +671,11 @@
         function authDataCallback(authData) {
           if (authData) {
             console.log("User " + authData.uid + " is logged in with " + authData.provider);
-            authenticatedIosRedirectFlag = true;
+            if(authData.provider = "facebook"){
+                checkIfUserExistsRegister(authData.uid, authData);
+            }
           } else {
             console.log("User is logged out");
-            authenticatedIosRedirectFlag = false;
           }
         }
 
@@ -699,8 +699,11 @@
         // Create a callback to handle the result of the authentication
         function loginAuthHandler(error, authData) {
           if (error) {
-            if(error.code = "TRANSPORT_UNAVAILABLE"){
+            if(error.code == "TRANSPORT_UNAVAILABLE"){
                 (new Firebase("https://ubertutoralpha.firebaseio.com")).authWithOAuthRedirect("facebook",fbLoginRetryWithOutPopUpsAuthHandler);
+            } else{
+                alert(error);
+                $(".overlay").hide();
             }
           } else {
             checkIfUserExistsLogin(authData.uid, authData);
@@ -711,11 +714,6 @@
               alert(errorRetry);
               $(".overlay").hide();
             } else {
-                //Hack for IOS Mobile View - TODO, DEBUG & FIX
-                if(authenticatedIosRedirectFlag){
-                    alert("This Device is not supported. Please use Desktop for best Experience.")
-                    window.location = 'STUDENT/index.html';
-                }
                 checkIfUserExistsLogin(authDataRetry.uid, authDataRetry);
             }
           }
@@ -769,20 +767,17 @@
             }
           } else if (error == "Error: The specified user does not exist."){
             persistNewUserDB("traditionalEmailPassword");
-          } else if (error) {
-            if(error.code=="TRANSPORT_UNAVAILABLE")
+          } else {
+            if(error.code=="TRANSPORT_UNAVAILABLE"){
                 (new Firebase("https://ubertutoralpha.firebaseio.com")).authWithOAuthRedirect("facebook", fbRegisterRetryAuthHandler);
-          }else {
-            console.log(error, authData);
+            } else {
+                alert(error);
+                $(".overlay").hide();
+            }
           }
           function fbRegisterRetryAuthHandler(errorRetry, authDataRetry){
 
             if (authDataRetry){
-                //Hack for IOS Mobile View
-                if(authenticatedIosRedirectFlag){
-                    alert("This Device is not supported. Please use Desktop for best Experience.")
-                    window.location = 'STUDENT/index.html';
-                }
               if(authDataRetry.provider = "facebook"){
                   checkIfUserExistsRegister(authDataRetry.uid, authDataRetry);
               }else{
@@ -831,11 +826,13 @@
             usersRef.child(userId).once('value', function(snapshot) {
             var exists = (snapshot.val() !== null);
             if(exists == true){
-                console.log("User: "+getName(authData)+" already exists", authData);
-                var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
-                ref.unauth();
-                alert("User: "+getName(authData)+" already exists.");
-                $(".overlay").hide();
+                //Just Log in the user for them...
+                updateLoginLatLng(authData.uid);
+                // console.log("User already exists! Please login instead.", authData);
+                // var ref = new Firebase('https://ubertutoralpha.firebaseio.com');
+                // ref.unauth();
+                // alert("User already exists. Please login instead.");
+                // $(".overlay").hide();
             }else{
                 persistNewUserDB(authData);
             }
@@ -869,6 +866,8 @@
         }
 
         function updateLoginLatLng(uid){
+            $('#login').modal('show')  
+            $(".overlay").show();
             
             console.log("login avigator.geolocation----------"+uid);
                     if (navigator.geolocation) {
@@ -970,7 +969,11 @@
                     numOfReviews: "0",
                     skills: "",
                     courseExpertise: "",
-                    costHourly:"Not Set"
+                    costHourly:"Not Set",
+                    linkedinUrl:"Not Specified",
+                    paypal:"Not Specified",
+                    venmo:"Not Specified",
+                    chasequickpay:"Not Specified"
 
 
                     //todo add more fields
@@ -1063,7 +1066,11 @@
                 numOfReviews: "0",
                 skills: "",
                 courseExpertise: "",
-                costHourly:"Not Set"
+                costHourly:"Not Set",
+                linkedinUrl:"Not Specified",
+                paypal:"Not Specified",
+                venmo:"Not Specified",
+                chasequickpay:"Not Specified"
                 //add more fields here
             });
 
@@ -1072,6 +1079,17 @@
           }
         }
     </script>
+       <!-- GOOGLE ANALYTICS -->
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-72205238-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </body>
 
