@@ -350,7 +350,8 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
                   <div class="box-body box-profile">
                     <img id="tutorImageModal" class="profile-user-img img-responsive img-circle userImage" src="dist/img/l.gif" alt="User profile picture">
                     <h3 id="tutorNameModal" class="profile-username text-center userName"></h3>
-                    <p id="currentStatusModal" class="text-muted text-center"> since <span id="joinDateModal"></span></p>
+                    <p id="currentStatusModal" class="text-muted text-center"></p>
+                    <p id="starsModal" class="text-muted text-center"></p>
                   </div><!-- /.box-body -->
                 </div><!-- /.box -->
               </div>
@@ -489,6 +490,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
               $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserLatLng = snapshot.val().latlng;
               updateCoursesSkillsSelection();
+              if(snapshot.val().userType == "tutor") window.location = 'mybookings.html';
 
               startGMap(loggedInUserLatLng);
             }, function (errorObject) {
@@ -969,15 +971,15 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
         $("#tutorImageModal").attr("src",tutorObj.imgUrl);
         $("#tutorNameModal").text(tutorObj.displayName);
         $("#memberSinceDateProfileModal").text("Member since "+ moment(tutorObj.creationDate).format("MMM. YYYY"));
-        $("#joinDateModal").text(moment(tutorObj.creationDate).format("MMMM Do, YYYY"));
         $("#emailModal").text("Request");//(tutorObj.email);
         $("#phoneNumberModal").text("Request");//(tutorObj.phoneNumber);
-        $("#currentStatusModal").text(tutorObj.userType.charAt(0).toUpperCase() + tutorObj.userType.slice(1) + " since " );
+        $("#currentStatusModal").text(tutorObj.userType.charAt(0).toUpperCase() + tutorObj.userType.slice(1) + " since " + moment(tutorObj.creationDate).format("MMMM Do, YYYY"));
         $("#educationModal").text(tutorObj.education);
         $("#locationModal").text(tutorObj.city+", "+tutorObj.state);
         $("#biographyModal").text(tutorObj.biography);
         $("#courseExpertiseModal").empty();
         $("#skillsModal").empty();
+        $("#starsModal").text("("+tutorObj.reviewAvgStars + ") Average Stars out of " + tutorObj.numOfReviews + " reviews.");
 
         $("#emailModal").click(function(){alert("Coming Soon...");});
         $("#phoneNumberModal").click(function(){alert("Coming Soon...");});
