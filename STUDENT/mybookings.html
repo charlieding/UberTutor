@@ -788,7 +788,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       var imgUrl = imgUrlSnapshot.val();
 totalChats++;
 //alert("Initialized, Total Chats:" + totalChats);
-setTimeout(function(){
+//setTimeout(function(){
 
                       //Initialize Chat Room Unread Messages for everyone - HACK FIX -- For Chat to Show up
                       var mainchatuid=fireChatBox.AddChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
@@ -831,7 +831,7 @@ setTimeout(function(){
             "</div>"+
           "</div>");
 
-}, totalChats*waitTime-waitTime);
+//}, totalChats*waitTime-waitTime);
                     }, function (err) {
                       // code to handle read error
                       console.log(err);
@@ -843,14 +843,14 @@ setTimeout(function(){
                   } else if(upcomingPastOrNow == "#upcomingBookings"){
                     totalChats++;
                     //aalert("Initialized, Total Chats:" + totalChats);
-                    setTimeout(function(){
+                    //setTimeout(function(){
 
                     //Initialize Chat Room Unread Messages for everyone - HACK FIX Messages dont show the first time...
                     var upcomingchatuid=fireChatBox.AddChatRoom(appointmentSnapshot.val().tutorID,appointmentSnapshot.val().studentID,currUserSnapshot.key());
                     fireChatBox.FireChatRooms(null);
 
                     $(upcomingPastOrNow).prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span chatuid='"+upcomingchatuid+"' currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn-primary label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span>"+"<span data-toggle='tooltip' title='' class='badge bg-yellow'></span>"+"</div></td><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
-                  }, totalChats*waitTime-waitTime);
+                  //}, totalChats*waitTime-waitTime);
                   } else if(upcomingPastOrNow == "#pastBookings"){
                     $(upcomingPastOrNow).prepend("<tr><td>"+appointmentDisplayName.split(" ")[0]+"</td><td><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("MMM D, h:mm a")+"</span></td><td>"+appointmentSnapshot.val().latlngAddress.split(",")[0]+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentDisplayStatus+"</span></td><td>"+durationPriceDisplay+"</td><td>"+actionItem+"</td></tr>");
                   }
