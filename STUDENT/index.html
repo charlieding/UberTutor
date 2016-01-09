@@ -748,7 +748,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
           starsHtml = "No Reviews";
         }
 
-        $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj)+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+" ) - $"+price+"/hr </p> </div></a></li>");
+        $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj).replace(/["]/g,"&#34;").replace(/[']/g,"&#39;")+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+" ) - $"+price+"/hr </p> </div></a></li>");
       }
       //Fix Window OnResize Bug for Right Side Bar LOL
       var rightsidebaraside = 70;
