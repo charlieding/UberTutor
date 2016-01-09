@@ -70,13 +70,10 @@ function GenChatBoxInfo(){
           if(ret.sortedUidArr.length==0) return alert("ret.sortedUidArr null");
           return ret.sortedUidArr[MsgSnderIdIndx];
         };
-     };/////////////
+};/////////////
 
 
 var ChatBoxFireManager=function(){
-
-      //var chatboxInfo=new GenChatBoxInfo();
-
       var chatRef = new Firebase("https://ubertutoralpha.firebaseio.com/chat/"); 
       var usersObj=null;//global
 
@@ -117,7 +114,6 @@ var ChatBoxFireManager=function(){
       };
       function once_users(){
         if(null==usersObj) return alert("usersObj is null");
-        //chatboxInfo.UpdateInfo();
         $.each(chatRooms,function(chatuid,room){
             room.Info.setUsersObj(usersObj);
             FireChatRoom(chatuid);
@@ -129,7 +125,7 @@ var ChatBoxFireManager=function(){
         }
 
         if(chatMsgAddRefs[chatuid]){
-              if(options.currentChatUid===chatUid){
+              if(options.currentChatUid===chatuid){
                   chatRef.child(chatuid).child("utc").once("value",on_child_value_msg);
               }                         
             return;
@@ -139,12 +135,7 @@ var ChatBoxFireManager=function(){
         var chatBind = chatRef.child(chatuid).child("utc").on("child_added",on_child_added_msg);
         chatMsgAddRefs[chatuid]=chatBind;
 
-        //stats 
-        var chatboxInfo=chatRooms[chatuid].Info;
-        var ownerIdIndx=""+chatboxInfo.data().ownerIdIndx;
-        var spath="./"+chatuid+"/"+chatStats+"/"+ownerIdIndx;
-        console.log(spath);
-
+        //stats fires
         chatNofiyChangeRefs[chatuid]=chatRef.child(chatuid).child(chatStats).on("child_changed",child_changed_msg_stats);
         chatNofiyAddRefs   [chatuid]=chatRef.child(chatuid).child(chatStats).on("child_added",child_changed_msg_stats);        
       }
@@ -191,7 +182,6 @@ var ChatBoxFireManager=function(){
                   return;
               }          
         }
-
 
         var chatboxInfo=chatRooms[chatUid].Info;
 
