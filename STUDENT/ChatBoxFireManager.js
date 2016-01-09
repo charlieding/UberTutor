@@ -124,11 +124,16 @@ var ChatBoxFireManager=function(){
           return alert(chatuid+" is not added into rooms yet");
         }
 
+        if(options.currentChatUid===chatuid){
+          if( options.initChatBoxFunc ){
+              options.initChatBoxFunc(chatuid);
+          }                  
+        };           
         if(chatMsgAddRefs[chatuid]){
-              if(options.currentChatUid===chatuid){
-                  chatRef.child(chatuid).child("utc").once("value",on_child_value_msg);
+              if(options.currentChatUid===chatuid){              
+                chatRef.child(chatuid).child("utc").once("value",on_child_value_msg);
               }                         
-            return;
+              return;
         };
 
         //load messages via child added
@@ -173,15 +178,6 @@ var ChatBoxFireManager=function(){
       };
       function msgAdded2page(chatUid, utc, msgObj, bScroolToView){
         console.log("key="+utc,msgObj, options);
-
-        if(options){
-              if( options.initChatBoxFunc ){
-                  options.initChatBoxFunc=options.initChatBoxFunc(chatUid);
-              }
-              if(options.currentChatUid!=chatUid){
-                  return;
-              }          
-        }
 
         var chatboxInfo=chatRooms[chatUid].Info;
 
