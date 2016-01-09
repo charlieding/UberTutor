@@ -49,6 +49,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
           left:50px;
         }
     }
+.schedule-rows td {
+  width: 80px;
+  height: 30px;
+  margin: 3px;
+  padding: 5px;
+  background-color: #3498DB;
+  cursor: pointer;
+  border: 1px solid white;
+}
+
+.schedule-rows td:first-child {
+  background-color: transparent;
+  text-align: right;
+  position: relative;
+  top: -12px;
+}
+
+.schedule-rows td[data-selected],
+.schedule-rows td[data-selecting] { background-color: #E74C3C; }
+
+.schedule-rows td[data-disabled] { opacity: 0.55; }
+
   </style>
   </head>
   <!--
@@ -199,6 +221,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <i class="fa fa-linkedin-square"></i><b> LinkedIn</b> <a id="linkedinUrl" class="pull-right"></a>
                     </li>
                     <li class="list-group-item">
+                      <b>Hourly Rate</b><a id="hourlyRate" class="pull-right"></a>
+                    </li>
+                    <li class="list-group-item">
                       <b>Phone Number</b> (<i class="fa fa-lock"></i> Only You Can See) <a id="phoneNumber" class="pull-right"></a>
                     </li>
                     <li class="list-group-item">
@@ -281,7 +306,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </ul>
                 <div class="tab-content">
                   <div class="active tab-pane" id="settings">
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" onsubmit="return saveProfile();">
                       <div class="form-group">
                         <label for="inputName" class="col-sm-2 control-label">Name</label>
                         <div class="col-sm-10">
@@ -355,6 +380,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <input type="text" class="form-control" id="inputChaseQuickPay" placeholder="Chase QuickPay Deposit Email (Eg: example@gmail.com)">
                         </div>
                       </div>
+                      <div class="form-group tutorDisplayOnly">
+                        <label class="col-sm-2 control-label"> Hourly Rate</label>
+                        <div class="col-sm-10">
+                          <input type="number" class="form-control" id="inputHourlyRate" placeholder="Enter how much you want to charge per hour (Eg: 20)">
+                        </div>
+                      </div>
+                      <div class="form-group tutorDisplayOnly" style="text-align:center;">
+                        <label class="col-md-2 control-label"> <i class="fa fa-calendar"></i> Free Schedule  <i class="fa fa-calendar"></i></label>
+                        <div class="col-md-10" id="weekly-schedule"></div>
+                      </div>
                       <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                           <div class="checkbox">
@@ -366,7 +401,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </div>
                       <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" onclick="saveProfile();" class="btn btn-danger">Submit</button>
+                          <button type="submit" class="btn btn-danger">Submit</button>
                         </div>
                       </div>
                     </form>
@@ -573,6 +608,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="dist/js/demo.js"></script>
     <!--Moment Time-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+    <!-- Scheduler Plugin -->
+    <script src="dist/js/scheduler.js"></script>   
+
     <script>
       $(function () {
         /* BOOTSTRAP SLIDER */
@@ -582,6 +620,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
         /*Initialize Select2 Elements */
         $(".select2").select2();
+        /*Initialize Time Free selector*/
+        $("#weekly-schedule").dayScheduleSelector({
+          // Sun - Sat
+          days        : [0, 1, 2, 3, 4, 5, 6],  
+
+          // HH:mm format
+          startTime   : '00:00',         
+
+          // HH:mm format       
+          endTime     : '24:00',
+
+          // minutes                
+          interval    : 60,    
+
+          stringDays  : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+
+          // Custom template                 
+          template    : '<div class="day-schedule-selector">'         +
+                          '<table class="schedule-table">'            +
+                            '<thead class="schedule-header"></thead>' +
+                            '<tbody class="schedule-rows"></tbody>'   +
+                          '</table>'                                  +
+                        '<div>'
+        });
+
       });
 
       $( document ).ready(function() {
@@ -651,6 +714,104 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $("#biography").text(snapshot.val().biography);
         $("#courseExpertise").empty();
         $("#skills").empty();
+        $("#hourlyRate").text("$"+snapshot.val().costHourly + "/hr");
+
+        //Fetch Schedule and Display It
+        var mon = [];
+        var tues = [];
+        var wed = [];
+        var thu = [];
+        var fri = [];
+        var sat = [];
+        var sund = [];
+        $.each(snapshot.val().freeSchedule.monday.freehours.split(","), function(index, value){
+          var time = parseInt(value);
+          var timePlusOne = time+1;
+          if(time <10){
+            time = "0"+time;
+          }
+          if(timePlusOne < 10){
+            timePlusOne= "0"+timePlusOne;
+          }
+          mon.push([time+":00",timePlusOne+":00"]);
+        });
+        $.each(snapshot.val().freeSchedule.tuesday.freehours.split(","), function(index, value){
+          var time = parseInt(value);
+          var timePlusOne = time+1;
+          if(time <10){
+            time = "0"+time;
+          }
+          if(timePlusOne < 10){
+            timePlusOne= "0"+timePlusOne;
+          }
+          tues.push([time+":00",timePlusOne+":00"]);
+        });
+        $.each(snapshot.val().freeSchedule.wednesday.freehours.split(","), function(index, value){
+          var time = parseInt(value);
+          var timePlusOne = time+1;
+          if(time <10){
+            time = "0"+time;
+          }
+          if(timePlusOne < 10){
+            timePlusOne= "0"+timePlusOne;
+          }
+          wed.push([time+":00",timePlusOne+":00"]);
+        });
+        $.each(snapshot.val().freeSchedule.thursday.freehours.split(","), function(index, value){
+          var time = parseInt(value);
+          var timePlusOne = time+1;
+          if(time <10){
+            time = "0"+time;
+          }
+          if(timePlusOne < 10){
+            timePlusOne= "0"+timePlusOne;
+          }
+          thu.push([time+":00",timePlusOne+":00"]);
+        });
+        $.each(snapshot.val().freeSchedule.friday.freehours.split(","), function(index, value){
+          var time = parseInt(value);
+          var timePlusOne = time+1;
+          if(time <10){
+            time = "0"+time;
+          }
+          if(timePlusOne < 10){
+            timePlusOne= "0"+timePlusOne;
+          }
+          fri.push([time+":00",timePlusOne+":00"]);
+        });
+        $.each(snapshot.val().freeSchedule.saturday.freehours.split(","), function(index, value){
+          var time = parseInt(value);
+          var timePlusOne = time+1;
+          if(time <10){
+            time = "0"+time;
+          }
+          if(timePlusOne < 10){
+            timePlusOne= "0"+timePlusOne;
+          }
+          sat.push([time+":00",timePlusOne+":00"]);
+        });
+        $.each(snapshot.val().freeSchedule.sunday.freehours.split(","), function(index, value){
+          var time = parseInt(value);
+          var timePlusOne = time+1;
+          if(time <10){
+            time = "0"+time;
+          }
+          if(timePlusOne < 10){
+            timePlusOne= "0"+timePlusOne;
+          }
+          sund.push([time+":00",timePlusOne+":00"]);
+        });
+
+
+        $("#weekly-schedule").data('artsy.dayScheduleSelector').deserialize({
+          '1': mon,
+          '2': tues,
+          '3': wed,
+          '4': thu,
+          '5': fri,
+          '6': sat,
+          '0': sund,
+        });
     
         var skillsArray = snapshot.val().skills.split(",");
         var courseExpertiseArray = snapshot.val().courseExpertise.split(",");
@@ -701,6 +862,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var venmo = $("#inputVenmo").val();
         var paypal = $("#inputPaypal").val();
         var chase = $("#inputChaseQuickPay").val();
+        var costHourly = $("#inputHourlyRate").val();
+        if(costHourly)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/costHourly")).set(costHourly);
         if(name)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/displayName")).set(name);
         if(phone)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/phoneNumber")).set(phone);
         if(email)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/email")).set(email);
@@ -713,6 +876,105 @@ scratch. This page gets rid of all links and provides the needed markup only.
         if(venmo)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/venmo")).set(venmo);
         if(paypal)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/paypal")).set(paypal);
         if(chase)(new Firebase("https://ubertutoralpha.firebaseio.com/users/"+loggedInUserID+"/chasequickpay")).set(chase);
+        updateFreeSchedule();
+        alert("Success, Profile Saved!");
+      }
+      function updateFreeSchedule(){
+        if( !$("#weekly-schedule").data('artsy.dayScheduleSelector') ) return;
+        var cal = $("#weekly-schedule").data('artsy.dayScheduleSelector').serialize();
+        var mon = "";
+        var tue = "";
+        var wed = "";
+        var thu = "";
+        var fri = "";
+        var sat = "";
+        var sund = "";
+
+        $.each(cal, function(dayIndex, dayIndexVal){
+          $.each(dayIndexVal, function(index, value){
+            var startHour = value[0].split(':')[0];
+            var endHour = value[1].split(':')[0];
+            for(var a = parseInt(startHour); a<parseInt(endHour); a++){
+              if(dayIndex == 1){
+                //monday
+                if(mon){
+                  mon = mon + "," + a;
+                } else { 
+                  mon = "" + a;
+                }
+              }
+              if(dayIndex == 2){
+                if(tue){
+                  tue = tue + "," + a;
+                } else { 
+                  tue = "" + a;
+                }
+              }
+              if(dayIndex == 3){
+                if(wed){
+                  wed = wed + "," + a;
+                } else { 
+                  wed = "" + a;
+                }
+              }
+              if(dayIndex == 4){
+                if(thu){
+                  thu = thu + "," + a;
+                } else { 
+                  thu = "" + a;
+                }
+              }
+              if(dayIndex == 5){
+                if(fri){
+                  fri = fri + "," + a;
+                } else { 
+                  fri = "" + a;
+                }
+              }
+              if(dayIndex == 6){
+                if(sat){
+                  sat = sat + "," + a;
+                } else { 
+                  sat = "" + a;
+                }
+              }
+              if(dayIndex == 0){
+                if(sund){
+                  sund = sund + "," + a;
+                } else { 
+                  sund = "" + a;
+                }
+              }
+            }
+          });
+        });
+
+        var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
+        var authData = ref.getAuth();
+        //Todo, build hours free for tutors scheduling system.
+        ref.child("users").child(authData.uid).child("freeSchedule").set({
+          monday: {
+            freehours: mon
+          },
+          tuesday: {
+            freehours: tue
+          },
+          wednesday: {
+            freehours: wed
+          },
+          thursday: {
+            freehours: thu
+          },
+          friday: {
+            freehours: fri
+          },
+          saturday: {
+            freehours: sat
+          },
+          sunday: {
+            freehours: sund
+          }
+        });
       }
 
     </script>
