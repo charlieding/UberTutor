@@ -63,7 +63,7 @@ function GenChatBoxInfo(){
         this.getTargetName=function(){
           if(ret.sortedUidArr.length===0) return alert("ret.sortedUidArr null");
           var uid=ret.sortedUidArr[ret.targetIdIndx];
-          if(!usrsObj) return alert("usrsObj not readu yet");
+          if(!usrsObj || !usrsObj[uid]) return alert("Something went wrong. Please refresh and try again."); //usrsObj not readu yet
           return usrsObj[uid].displayName;
         };
         this.getUid=function(MsgSnderIdIndx){
