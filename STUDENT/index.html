@@ -3,6 +3,8 @@
 SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
 
 aws s3 rm s3://asaptutor.us --recursive
+
+aws s3 cp . s3://asaptutor.us/test1 --recursive
 -->
 <html>
   <head>
@@ -247,7 +249,7 @@ aws s3 rm s3://asaptutor.us --recursive
                       </div>
                     </div>
                     <div style="float:right; width:35%; text-align:center;">
-                      <input id="durationSlider" type="text" data-slider-min="1" data-slider-id="purple" data-slider-tooltip="hide" data-slider-max="10" data-slider-step="1" data-slider-value="2"/>
+                      <input id="durationSlider" type="text" data-slider-min="1" data-slider-id="red" data-slider-tooltip="hide" data-slider-max="10" data-slider-step="1" data-slider-value="2"/>
                       <span class="text-black" style="font-weight: bold;">Meet <span id="duration">1</span> Hour(s)</span>
                     </div>
                   </div><!-- /.box-body -->
@@ -886,15 +888,19 @@ aws s3 rm s3://asaptutor.us --recursive
             //Add Opacity hover effect
             $('#tutorProfileName').hover(function() {
               $(this).stop().animate({ opacity: 0.6 }, "fast"); //on mouse hover
+              $('#tutorProfileImageHeader').stop().animate({ opacity: 0.6 }, "fast");
             },
             function() {
               $(this).stop().animate({ opacity: 1.0 }, "fast"); //on mouse out
+              $('#tutorProfileImageHeader').stop().animate({ opacity: 1.0 }, "fast");
             });
             $('#tutorProfileImageHeader').hover(function() {
               $(this).stop().animate({ opacity: 0.6 }, "fast"); //on mouse hover
+              $('#tutorProfileName').stop().animate({ opacity: 0.6 }, "fast");
             },
             function() {
               $(this).stop().animate({ opacity: 1.0 }, "fast"); //on mouse out
+              $('#tutorProfileName').stop().animate({ opacity: 1.0 }, "fast");
             });
 
 
