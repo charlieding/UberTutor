@@ -757,10 +757,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   statusStyle = "label-success";
                   if(appointmentSnapshot.val().feedbackLeft == "true"){
                     actionItem = "Feedback Left <i class='fa fa-check-circle'></i>";
+                    if(isLoggedInUserTutor) actionItem = "None <i class='fa fa-check-circle'></i>";
                   } else {
-                    if(!isLoggedInUserTutor){
-                      actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-pencil-square-o'> Leave Feedback</i></span>";
-                    }
+                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-pencil-square-o'> Leave Feedback</i></span>";
+                    if(isLoggedInUserTutor) actionItem = "None <i class='fa fa-check-circle'></i>";
                   }
                   if(isLoggedInUserTutor && "False"==appointmentSnapshot.val().isTutorPaid){ 
                     appointmentDisplayStatus = "Processing";
