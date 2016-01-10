@@ -308,9 +308,13 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
                     <p style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
                       $<span id="bookingCostTotal" >_</span> for <span id="bookingDuration" >_</span> Hour(s) @ $<span id="bookingHourlyCost">_</span>/hr 
                     </p>
-                    <h4 class="control-sidebar-subheading">Biography</h4>
-                    <p id="tutorBiography"  style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
-                      None
+                    <h4 class="control-sidebar-subheading"><i class="fa fa-pencil"></i> Skills</h4>
+                    <p id="skillsPane">
+                      <span class="label label-danger">None</span>
+                    </p>
+                    <h4 class="control-sidebar-subheading"><i class="fa fa-book"></i> Courses Expertise</h4>
+                    <p id="courseExpertisePane">
+                      <span class="label label-danger">None</span>
                     </p>
                   </div>
           </div><!-- /.tab-pane -->
@@ -874,8 +878,21 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
             $("#tutorProfileName").text(usrObj.displayName);
             $("#tutorProfileNumOfReviews").text(" ("+numOfReviews+")");
             $("#tutorProfileMembership").text("Tutor since " + joinDate);
-            $("#tutorBiography").text(usrObj.biography);
+            //$("#tutorBiography").text(usrObj.biography);
             $("#tutorProfileStar1").text("");
+
+            if(usrObj.skills) $("#skillsPane").empty();
+            if(usrObj.courseExpertise) $("#courseExpertisePane").empty();
+            var skillsArray = usrObj.skills.split(",");
+            var courseExpertiseArray = usrObj.courseExpertise.split(",");
+            console.log(skillsArray);
+            console.log(courseExpertiseArray);
+            $.each(skillsArray, function(index, value){
+              $("#skillsPane").prepend(getRandomSpan(value));
+            });
+            $.each(courseExpertiseArray, function(index, value){
+              $("#courseExpertisePane").prepend(getRandomSpan(value));
+            });
 
             //Add Listeners to view Profile Modal
             $(document).attr("tutorObj",JSON.stringify(usrObj));
@@ -1035,7 +1052,7 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
         $.each(courseExpertiseArray, function(index, value){
           $("#courseExpertiseModal").prepend(getRandomSpan(value));
         });
-
+      }
         function getRandomSpan(text){
           //Generate Random Number between 1 and 5 inclusive
           var randomNum = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
@@ -1052,7 +1069,6 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
                   return " <span class='label label-primary'>"+text+"</span> ";
           }         
         }
-      }
 
       function requestAppointment(){ 
         //get Time, Day, latlng, duration, course, questionTopic
@@ -1064,6 +1080,11 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
         var courses = $("#select2ClassSelection").select2('val')+"";
         var questionTopic = "Disabled For Now";//$("#topicQuestion").val();
         var cost = parseFloat(duration) * parseInt($("#bookingHourlyCost").text());
+
+
+        //Run some basic Checks Before Creating Appointments
+        //1) Any Outstanding Balances? TODO
+        //2) At least 1 Course Matches up TODO
         
         //set status=AwaitingResponse, cost=null, declineMessage=null
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com");

@@ -29,7 +29,7 @@
         /*Initialize Select2 Elements */
         $(".select2").select2();
         //Timepicker
-        $("#tutorTime").val(moment().format("hh:mm A"));
+        $("#tutorTime").val(moment().add(10, 'minutes').format("hh:mm A"));
         $(".timepicker").timepicker({
           showInputs: false,
           timePickerIncrement: 5,
@@ -45,7 +45,7 @@
         }, 
         function(start, end, label) {
           var years = moment().diff(start, 'years');
-          alert("You are " + years + " years old.");
+          //alert("You are " + years + " years old.");
         });
       });
 
