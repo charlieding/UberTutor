@@ -248,7 +248,7 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
                         <span style="cursor:pointer" id="cursorChange" class="input-group-addon"><i class="fa fa-map-pin"></i></span>
                       </div>
                     </div>
-                    <div style="float:right; width:35%; text-align:center;">
+                    <div id="durationDiv" style="float:right; width:35%; text-align:center;">
                       <input id="durationSlider" type="text" data-slider-min="1" data-slider-id="red" data-slider-tooltip="hide" data-slider-max="10" data-slider-step="1" data-slider-value="2"/>
                       <span class="text-black" style="font-weight: bold;">Meet <span id="duration">1</span> Hour(s)</span>
                     </div>
@@ -317,7 +317,7 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
         </div>
         <div id="tutorPageDecals" style="text-align:center; border-top: 1px solid white;" >
           <h4 class="control-sidebar-subheading">Start Time Flexiblity</h4>
-          <div style="text-align:center; padding-left:30px; padding-right:30px;">
+          <div id="flexibilitySliderDiv" style="text-align:center; padding-left:30px; padding-right:30px;">
             <input id="flexibilitySlider" data-slider-id="blue" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="125" data-slider-step="5" data-slider-value="0"/>
             <p><span id="flexibility">0</span> Minutes(s)</p>
           </div>

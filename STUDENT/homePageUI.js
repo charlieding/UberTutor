@@ -3,10 +3,13 @@
       });
       $(function () {
         /* BOOTSTRAP SLIDER */
-        $("#durationSlider").slider();
+        var durationSlider = $("#durationSlider").slider();
         $("#durationSlider").on("slide", function(slideEvt) {
           $("#duration").text(parseInt(slideEvt.value)*.5).trigger('change');
           console.log(slideEvt.value);
+        });
+        $( "#durationDiv" ).click(function() {
+          $("#duration").text(parseInt($("#durationSlider").slider('getValue'))*.5).trigger('change');
         });
         
         $("#flexibilitySlider").slider();
@@ -15,6 +18,14 @@
             $("#flexibility").text(parseInt(slideEvt.value)-5);
           }
         });
+        $( "#flexibilitySliderDiv" ).click(function() {
+          var value = parseInt($("#flexibilitySlider").slider('getValue'));
+          if(value < 5){
+            value = 5;
+          }
+          $("#flexibility").text(value-5);
+        });
+
         /*Initialize Select2 Elements */
         $(".select2").select2();
         //Timepicker
