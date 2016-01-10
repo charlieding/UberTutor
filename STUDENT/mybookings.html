@@ -698,13 +698,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 var durationPriceDisplay = appointmentSnapshot.val().duration+"hr(s) @ $"+appointmentSnapshot.val().costHourly+"/hr";
                 if (isLoggedInUserTutor){
                   appointmentDisplayName = appointmentSnapshot.val().studentDisplayName;
-                  if(appointmentSnapshot.val().status == "Finished" || appointmentSnapshot.val().status == "Declined" || appointmentSnapshot.val().status == "Cancelled"){
-                    durationPriceDisplay = "$"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost));
-                  }
-                  $("#tutorPastPriceDisplay").text("Amount");
                   //alert(appointmentDisplayName);
                   //Edge Case Bug, If Tutor somehow books appointment, then everything is screwed up :P
                 }
+                if(appointmentSnapshot.val().status == "Finished" || appointmentSnapshot.val().status == "Declined" || appointmentSnapshot.val().status == "Cancelled"){
+                  durationPriceDisplay = "$"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost));
+                }
+                $("#tutorPastPriceDisplay").text("Amount");
 
                 if(appointmentSnapshot.val().status == "Awaiting Response"){
                   upcomingPastOrNow = "#upcomingBookings";
@@ -756,9 +756,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   upcomingPastOrNow = "#pastBookings";
                   statusStyle = "label-success";
                   if(appointmentSnapshot.val().feedbackLeft == "true"){
-                    actionItem = "Feedback Left";
+                    actionItem = "Feedback Left <i class='fa fa-check-circle'></i>";
                   } else {
-                    actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Leave Feedback</i></span>";
+                    if(!isLoggedInUserTutor){
+                      actionItem = "<span appointmentId='"+appointmentSnapshot.key()+"' tutorId='"+appointmentSnapshot.val().tutorID+"' tutorDisplayName='"+appointmentDisplayName+"' onclick='leaveFeedback(this);' class='btn btn-sm btn btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-pencil-square-o'> Leave Feedback</i></span>";
+                    }
                   }
                   if(isLoggedInUserTutor && "False"==appointmentSnapshot.val().isTutorPaid){ 
                     appointmentDisplayStatus = "Processing";

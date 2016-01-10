@@ -448,7 +448,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         "<td><span class='label label-warning'>Pending Payment</span></td>"+
                         "<td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+"</div></td>"+
                         "<td>"+appointmentSnapshot.val().duration+" hour(s)</td>"+
-                        "<td>$"+appointmentSnapshot.val().cost+"</td>"+
+                        "<td>$"+round_nearest_tenth(parseFloat(appointmentSnapshot.val().cost))+"</td>"+
                       "</tr>");
                     paymentUidToCostMap[uid] = appointmentSnapshot.val().cost;
                     updateTotalPricesCheckout(paymentUidToCostMap);
@@ -496,6 +496,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             console.log(key, value);
             total = total + parseFloat(value);  
           });
+          total = round_nearest_tenth(parseFloat(total));
           $(".total_price").text(total);
           $('#button_checkout').prop('disabled', false);
           $("#button_checkout").attr("value", "Pay $"+total+" Now");
@@ -514,6 +515,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $.post( "http://52.23.157.36/api/v1/token",{customerId: uid})
           .done(function( data ) {
             console.log( "Data Loaded: ", data );
+            if(!data && !data.client_token) alert("Something went wrong. Please reload page and try again.");
             var clientToken = data.client_token;
             //Hard coded Hack to allow this button to be clickable only after Braintree is loaded
             setTimeout(function(){$('#button_checkout').prop('disabled', false);}, 1300);
@@ -538,15 +540,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       alert("Thanks for your payment. Feel free to now leave your tutor a review!");
                       window.location = 'mybookings.html';
                     } else {
-                      alert("Something went wrong... Please try again or contact us at 678-577-0937");
+                      alert("Something went wrong. Please refresh your page and try again.");
                     }
                   });
+              },
+              onError: function (err) {
+                alert("Something went wrong. Please refresh your page and try again.");
+                console.log(err);
               }
             });
 
 
           });
       }
+    function round_nearest_tenth(num) {
+      return Math.round(num * 100) / 100;
+    }
     </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
