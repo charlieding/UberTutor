@@ -5,12 +5,15 @@
         /* BOOTSTRAP SLIDER */
         $("#durationSlider").slider();
         $("#durationSlider").on("slide", function(slideEvt) {
-          $("#duration").text(slideEvt.value).trigger('change');
+          $("#duration").text(parseInt(slideEvt.value)*.5).trigger('change');
+          console.log(slideEvt.value);
         });
         
         $("#flexibilitySlider").slider();
         $("#flexibilitySlider").on("slide", function(slideEvt) {
-          $("#flexibility").text(slideEvt.value);
+          if(parseInt(slideEvt.value)){
+            $("#flexibility").text(parseInt(slideEvt.value)-5);
+          }
         });
         /*Initialize Select2 Elements */
         $(".select2").select2();

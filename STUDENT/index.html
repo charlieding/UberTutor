@@ -247,7 +247,7 @@ aws s3 rm s3://asaptutor.us --recursive
                       </div>
                     </div>
                     <div style="float:right; width:35%; text-align:center;">
-                      <input id="durationSlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="5" data-slider-step="1" data-slider-value="1"/>
+                      <input id="durationSlider" type="text" data-slider-min="1" data-slider-id="purple" data-slider-tooltip="hide" data-slider-max="10" data-slider-step="1" data-slider-value="2"/>
                       <span class="text-black" style="font-weight: bold;">Meet <span id="duration">1</span> Hour(s)</span>
                     </div>
                   </div><!-- /.box-body -->
@@ -316,7 +316,7 @@ aws s3 rm s3://asaptutor.us --recursive
         <div id="tutorPageDecals" style="text-align:center; border-top: 1px solid white;" >
           <h4 class="control-sidebar-subheading">Start Time Flexiblity</h4>
           <div style="text-align:center; padding-left:30px; padding-right:30px;">
-            <input id="flexibilitySlider" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="120" data-slider-step="1" data-slider-value="0"/>
+            <input id="flexibilitySlider" data-slider-id="blue" type="text" data-slider-min="0" data-slider-tooltip="hide" data-slider-max="125" data-slider-step="5" data-slider-value="0"/>
             <p><span id="flexibility">0</span> Minutes(s)</p>
           </div>
           <div class="box-footer mainbox-footer">
@@ -513,7 +513,7 @@ aws s3 rm s3://asaptutor.us --recursive
                //Manual Listener to change spans to match - Angular woulda helped here. Bug ,this is called way too many times
                $("#bookingDuration").text($("#duration").text());
                var hourly = parseInt($("#bookingHourlyCost").text());
-               var duration = parseInt($("#duration").text());
+               var duration = parseFloat($("#duration").text());
                if(hourly && duration){
                   var finalCost = hourly * duration;
                   if(finalCost){
@@ -867,7 +867,7 @@ aws s3 rm s3://asaptutor.us --recursive
             //Update Tutor Profile
             $("#bookingDuration").text($("#duration").text());
             $("#bookingHourlyCost").text(usrObj.costHourly || "Not Set");
-            $("#bookingCostTotal").text(parseInt($("#bookingDuration").text())*parseInt($("#bookingHourlyCost").text()));
+            $("#bookingCostTotal").text(parseFloat($("#bookingDuration").text())*parseInt($("#bookingHourlyCost").text()));
             $("#tutorProfileImageHeader").attr("src", usrObj.imgUrl);
             $("#tutorProfileName").text(usrObj.displayName);
             $("#tutorProfileNumOfReviews").text(" ("+numOfReviews+")");
@@ -1057,7 +1057,7 @@ aws s3 rm s3://asaptutor.us --recursive
         var duration = $("#duration").text();
         var courses = $("#select2ClassSelection").select2('val')+"";
         var questionTopic = "Disabled For Now";//$("#topicQuestion").val();
-        var cost = parseInt(duration) * parseInt($("#bookingHourlyCost").text());
+        var cost = parseFloat(duration) * parseInt($("#bookingHourlyCost").text());
         
         //set status=AwaitingResponse, cost=null, declineMessage=null
         var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
