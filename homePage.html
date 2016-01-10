@@ -434,7 +434,6 @@
         </div>
       </div>
     </div>  -->
-
     <!-- Modals
     ===================================================== -->
     <!--Login Modal -->
@@ -443,6 +442,13 @@
         <div class="modal-content">
                 <div class="overlay">
                   <i class="fa fa-refresh fa-spin faOverlay"></i>
+                    <div id="errormessage" style="z-index:200" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i> Taking a Long Time?</h4>
+                    <p>(1) Make sure Geolocation is Enabled. (Used for Map Features)</p>
+                    <p>(2) Whitelist us on your AdBlockers. (No Ads Guranteed)</p> 
+                    <p>(3) If all else fails, try a different browser!</p>
+                  </div>
                 </div>
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -666,6 +672,7 @@
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.onAuth(authDataCallback);
             $(".overlay").hide();
+            $("#errormessage").hide();
         });
         // Create a callback which logs the current auth state
         function authDataCallback(authData) {
@@ -684,6 +691,7 @@
             console.log("Executing FB Login...");
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.authWithOAuthPopup("facebook", loginAuthHandler);
+            return false;
         }
         function login(){
             $(".overlay").show();
@@ -695,6 +703,7 @@
               email    : email,
               password : pass
             }, loginAuthHandler);
+            return false;
         }
         // Create a callback to handle the result of the authentication
         function loginAuthHandler(error, authData) {
@@ -866,8 +875,9 @@
         }
 
         function updateLoginLatLng(uid){
-            $('#login').modal('show')  
+            $('#login').modal('show');
             $(".overlay").show();
+            setTimeout(function(){ $("#errormessage").show(); $('#errormodal').modal('show')  ; }, 7000);
             
             console.log("login avigator.geolocation----------"+uid);
                     if (navigator.geolocation) {
