@@ -56,6 +56,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
           height:calc(100vh - 215px);
         }
     }
+  .msgUploads{
+    font-weight: bold;
+  }
+  /* unvisited link */
+  .msgUploads:link {
+      color: #fffbce;
+  }
+
+  /* visited link */
+  .msgUploads:visited {
+      color: green;
+  }
+
+  /* mouse over link */
+  .msgUploads:hover {
+      color: #ce6700;
+  }
+
+  /* selected link */
+  .msgUploads:active {
+      color: #c33000;
+  }
+  .hoverOpaque:hover {
+      opacity: 0.7;
+      filter: alpha(opacity=70); /* For IE8 and earlier */
+  }
+
+  #file-chooser {
+    display: block;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
   </style>
   </head>
   <!--
@@ -401,6 +434,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                       <!-- Contacts are loaded here -->
                       <div class="direct-chat-contacts">
+
+
+<div id="status"></div>
+<ul id="objects"></ul>
                         <ul class="contacts-list">
                           <li>
                             <a href="#">
@@ -482,9 +519,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="input-group">
                           <input type="text" name="message" placeholder="Type Message ..." class="form-control" id="msg" onkeydown="msgkeydwn(event);">
                           <span class="input-group-btn">
-                            <button type="button" class="btn btn-warning btn-flat" onclick="sendMsg();">Send</button>
+                            <button type="button" class="btn btn-warning btn-flat" onclick="sendMsg();"><i class="fa fa-send"></i></button>
                           </span>
                         </div>
+                        <input type="file" onchange="uploadTrigger()" id="file-chooser"/>
+                        <div class="pull-right" style="color:black;">
+                          &nbsp;<a><i class="fa fa-camera uploadClick"></i></a>&nbsp;
+                          <a><i class="fa fa-paperclip uploadClick"></i></a>&nbsp;
+                        </div>
+                          <div class="progress xs" style="width:140px; background-color:#FFD9D9;position:absolute; bottom:-5px; left:10px;">
+                            <div id="uploadProgressBar" class="progress-bar progress-bar-yellow" style="width: 0%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">80% Complete</span>
+                            </div><div id="results"></div>
+                          </div>
                       </form>
                     </div><!-- /.box-footer-->
                   </div><!--/.direct-chat -->
@@ -556,6 +603,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <script src="ChatBoxFireManager.js" type="text/javascript"></script>
 
+    <!-- AWS!!-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.28.min.js"></script>
+    <script type="text/javascript">
+      // See the Configuring section to configure credentials in the SDK
+      //AWS.config.credentials = new AWS.Credentials('AKIAJ3LLAJ64NQGWA3IA', 'fnZES6FVWmuToD/e4xzckkjyDbeq1jr/BJM5FByj');
+      AWS.config.update({accessKeyId: 'AKIAJ2MWV4MLXEZNKWWQ', secretAccessKey: 'qCotF8dTiZhTlv+bGngoRstk6gaHr9iMLnjOBARK'});
+
+      // Configure your region
+      AWS.config.region = 'us-east-1';
+    </script>
+
+
+<script type="text/javascript">
+  // var bucket = new AWS.S3({params: {Bucket: 'asaptutor.us'}});
+  // bucket.listObjects(function (err, data) {
+  //   if (err) {
+  //     document.getElementById('status').innerHTML =
+  //       'Could not load objects from S3';
+  //   } else {
+  //     document.getElementById('status').innerHTML =
+  //       'Loaded ' + data.Contents.length + ' items from S3';
+  //     for (var i = 0; i < data.Contents.length; i++) {
+  //       document.getElementById('objects').innerHTML +=
+  //         '<li>' + data.Contents[i].Key + '</li>';
+  //     }
+  //   }
+  // });
+</script>
 
     <script>
       $(function () {
@@ -571,7 +646,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
 
       $( document ).ready(function() {
+        $('.uploadClick').click(function(){
+            $('#file-chooser').click();
+        });
       });
+      function uploadTrigger(){
+        /** AWS UPLOAD FILES/IMAGES FOR CHATTING **/
+        var params = {Bucket: 'asaptutor.us/UPLOADFILES/'+loggedInUserID, Expires:3153600000};
+        var bucket = new AWS.S3({params: params});
+
+        var fileChooser = document.getElementById('file-chooser');
+        var results = document.getElementById('results');
+          var file = fileChooser.files[0];
+          if (file) {
+            results.innerHTML = '';
+            //uploadProgressBar
+            var params = {Key: file.name, ContentType: file.type, Body: file};
+            bucket.upload(params).on('httpUploadProgress', function(evt) {
+              console.log("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+              $("#uploadProgressBar").width(parseInt((evt.loaded * 100) / evt.total)+"%");
+              }).send(function(err, data) {
+              results.innerHTML = err ? 'ERROR!' : 'UPLOADED.';
+              console.log(data);
+              console.log(data.Location);
+              console.log(data.key);
+              var isImage = false;
+              if (file.name.match(/\.(jpg|jpeg|png|gif)$/)){
+                //alert('IS an image');
+                isImage = true;
+              }    
+              sendDynamicMsg(data.Location+","+data.key+","+isImage + "," + "uploadedfile1234567890");
+            });
+          }
+      }
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
       var loggedInUserLatLng = null;
       var loggedInUserID = null;
@@ -834,10 +941,11 @@ totalChats++;
 //Bug Hack to display unread messages after status changes
 (new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+mainchatuid+"/stats")).once('value', function (unreadMessagesSnapshot) {
   var leftOrRight = 1; //0 is Left
-  if(appointmentSnapshot.val().tutorID < appointmentSnapshot.val().studentID){
-    if (loggedInUserID == appointmentSnapshot.val().tutorID){
-      leftOrRight = 0;
-    }
+
+  var arr=[appointmentSnapshot.val().tutorID, appointmentSnapshot.val().studentID];
+  arr.sort()
+  if (loggedInUserID == arr[0]){
+    leftOrRight = 0;
   }
   if(unreadMessagesSnapshot.val()) chatBoxNotification(mainchatuid,unreadMessagesSnapshot.val()[leftOrRight]);
 });
@@ -865,10 +973,11 @@ totalChats++;
 //Bug Hack to display unread messages after status changes
 (new Firebase("https://ubertutoralpha.firebaseio.com/chat/"+upcomingchatuid+"/stats")).once('value', function (unreadMessagesSnapshot) {
   var leftOrRight = 1; //0 is Left
-  if(appointmentSnapshot.val().tutorID < appointmentSnapshot.val().studentID){
-    if (loggedInUserID == appointmentSnapshot.val().tutorID){
-      leftOrRight = 0;
-    }
+
+  var arr=[appointmentSnapshot.val().tutorID, appointmentSnapshot.val().studentID];
+  arr.sort()
+  if (loggedInUserID == arr[0]){
+    leftOrRight = 0;
   }
   if(unreadMessagesSnapshot.val()) chatBoxNotification(upcomingchatuid,unreadMessagesSnapshot.val()[leftOrRight]);
 });
@@ -1039,6 +1148,22 @@ totalChats++;
         chatBoxNotification(currChatuid,0);
         $("#msg").val('');
       };
+      //add new message using set
+      function sendDynamicMsg(msg){
+        var currChatuid=$("#boxtitle").attr("chatuid");
+
+        msg=$.trim(msg);
+        if(msg.length===0)return;
+        //var ownerIdIndx=mfcb.chatboxInfo.data.ownerIdIndx;
+        var datetime=moment().format();
+        console.log(datetime);
+        //chatRef.child(datetime).set({msg:msg, ownerIdIndx:ownerIdIndx});
+        fireChatBox.SendMsg(currChatuid, msg);
+        //Clears UI and Server Unread Messages when you send a message
+        fireChatBox.ClearMyStats(currChatuid);
+        chatBoxNotification(currChatuid,0);
+        $("#msg").val('');
+      };
       function msgkeydwn(e){
         //console.log(e);
         if(e.keyCode===13 || e.which===13){
@@ -1062,7 +1187,6 @@ totalChats++;
               fireChatBox.ClearMyStats(chatUid);
               chatBoxNotification(chatUid,0);
             }
-
             ////following is the sample codes.
             var chatMsg='<div class="direct-chat-msg '+boxsides[0]+'">'+
                             '<div class="direct-chat-info clearfix">'+
@@ -1074,6 +1198,51 @@ totalChats++;
                               msg.msg+
                             '</div><!-- /.direct-chat-text -->'+
                         '</div><!-- /.direct-chat-msg -->';
+
+            if (msg.msg.indexOf("uploadedfile1234567890") > -1){
+
+              //message is a uploaded file
+              var arr = msg.msg.split(",");
+              var isImage = arr[2];
+              var key = arr[1];
+              var location = arr[0];
+              if (isImage == "true"){
+                chatMsg = '<div class="direct-chat-msg '+boxsides[0]+'">'+
+                            '<div class="direct-chat-info clearfix">'+
+                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
+                              '<span class="direct-chat-timestamp pull-'+boxsides[1]+'"> '+datetime+'</span>'+
+                            '</div><!-- /.direct-chat-info -->'+
+                            '<img class="direct-chat-img" src="'+snder.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
+                            '<div class="direct-chat-text">'+
+                    "<div class='attachment'>"+
+                      "<h4>Attachments:</h4>"+
+                      "<p class='filename'>"+
+                        '<a href="'+location+'" target="_blank">'+
+                          '<img class="hoverOpaque" src="'+location+'" alt="Download Image" style="width:100%;border:0;">'+
+                        '</a>'+
+                      "</p>"+
+                    "</div>"+
+                            '</div>'+
+                        '</div>';
+              } else {
+                chatMsg = '<div class="direct-chat-msg '+boxsides[0]+'">'+
+                            '<div class="direct-chat-info clearfix">'+
+                              '<span class="direct-chat-name pull-'+boxsides[0]+'">'+snder.displayName+'</span> '+
+                              '<span class="direct-chat-timestamp pull-'+boxsides[1]+'"> '+datetime+'</span>'+
+                            '</div><!-- /.direct-chat-info -->'+
+                            '<img class="direct-chat-img" src="'+snder.imgUrl+'" alt="message user image"><!-- /.direct-chat- img  -->'+
+                            '<div class="direct-chat-text">'+
+                    "<div class='attachment'>"+
+                      "<h4>Attachments:</h4>"+
+                      "<p class='filename'>"+
+                        "<i class='fa fa-file-text-o'></i> "+"<a target='_blank' class='msgUploads' href='"+location+"'>"+key+"</a>"+
+                      "</p>"+
+                    "</div>"+
+                            '</div>'+
+                        '</div>';
+              }
+            }
+
            var ele=$(chatMsg).appendTo("#chatMessages");
            if(bScroolToView){
              ele[0].scrollIntoView();
