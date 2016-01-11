@@ -1122,10 +1122,6 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
           tutorID: selectedTutorID
         });
 
-        //Saves AppointmentUID for Tutor
-        ref.child("users").child(selectedTutorID).child("appointmentIDs").child(appointmentID).set({
-          studentID: loggedInUserID
-        }, onComplete);
         var onComplete = function(error) {
           if (error) {
             alert('Something went wrong. Please refresh page and try again.');
@@ -1134,6 +1130,10 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
             console.log('Synchronization succeeded');
           }
         };
+        //Saves AppointmentUID for Tutor
+        ref.child("users").child(selectedTutorID).child("appointmentIDs").child(appointmentID).set({
+          studentID: loggedInUserID
+        }, onComplete);
 
       }
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
