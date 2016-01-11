@@ -1125,8 +1125,16 @@ aws s3 cp . s3://asaptutor.us/test1 --recursive
         //Saves AppointmentUID for Tutor
         ref.child("users").child(selectedTutorID).child("appointmentIDs").child(appointmentID).set({
           studentID: loggedInUserID
-        });
-        window.location = 'mybookings.html';
+        }, onComplete);
+        var onComplete = function(error) {
+          if (error) {
+            alert('Something went wrong. Please refresh page and try again.');
+          } else {
+            window.location = 'mybookings.html';
+            console.log('Synchronization succeeded');
+          }
+        };
+
       }
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
       //:::                                                                         :::

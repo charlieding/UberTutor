@@ -201,7 +201,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" style="font-family:'Tangerine';" href="#page-top">AsapTutor</a>
+                <a class="navbar-brand page-scroll" style="font-family:'Tangerine'; font-size:27px;" href="#page-top">AsapTutor</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -307,91 +307,61 @@
     <section class="no-padding" id="portfolio">
         <div class="container-fluid">
             <div class="row no-gutter">
-                <div class="col-lg-4 col-sm-6">
+                <div class="col-lg-3 col-sm-6">
                     <a class="portfolio-box">
-                        <img src="img/portfolio/1.jpg" class="img-responsive" alt="">
+                        <img id="firstImage"src="img/portfolio/1.png" class="img-responsive" alt="">
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Calculus Tutors
+                                    Full Map View, Course and Date Time Selection
                                 </div>
                                 <div class="project-name">
-                                    Exams and Homeworks
+                                    Find Tutors Near You
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-4 col-sm-6">
+                <div class="col-lg-3 col-sm-6">
                     <a class="portfolio-box">
-                        <img src="img/portfolio/2.jpg" class="img-responsive" alt="">
+                        <img src="img/portfolio/2.png" class="img-responsive heightBugImages" alt="">
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Computer Science Tutors
+                                    View Profile, Rating, Distance, Price of Tutor
                                 </div>
                                 <div class="project-name">
-                                    Exams and Homeworks
+                                    Requesting Tutor
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-4 col-sm-6">
+                <div class="col-lg-3 col-sm-6">
                     <a class="portfolio-box">
-                        <img src="img/portfolio/3.jpg" class="img-responsive" alt="">
+                        <img src="img/portfolio/4.png" class="img-responsive heightBugImages" alt="">
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Engineering Tutors
+                                    Track Status, Chat, Send Pictures and Documents
                                 </div>
                                 <div class="project-name">
-                                    Exams and Homeworks
+                                    Meeting with Tutor
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-4 col-sm-6">
+                <div class="col-lg-3 col-sm-6">
                     <a class="portfolio-box">
-                        <img src="img/portfolio/4.jpg" class="img-responsive" alt="">
+                        <img src="img/portfolio/6.png" class="img-responsive heightBugImages" alt="">
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Physics  Tutors
+                                    Are you rich and famous? Book Worldwide!
                                 </div>
                                 <div class="project-name">
-                                    Exams and Homeworks
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a class="portfolio-box">
-                        <img src="img/portfolio/5.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Psychology Tutors
-                                </div>
-                                <div class="project-name">
-                                    Exams and Homeworks
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a class="portfolio-box">
-                        <img src="img/portfolio/6.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Business
-                                </div>
-                                <div class="project-name">
-                                    Exams and Homeworks
+                                    Coming Soon
                                 </div>
                             </div>
                         </div>
@@ -777,7 +747,14 @@
 
   ga('create', 'UA-72205238-1', 'auto');
   ga('send', 'pageview');
-
+</script>
+<script>
+$( document ).ready(function() {
+    $(".heightBugImages").height($("#firstImage").height());
+    $( window ).resize(function() {
+      $(".heightBugImages").height($("#firstImage").height());
+    });
+});
 </script>
 
 </body>

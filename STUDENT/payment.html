@@ -515,7 +515,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $.post( "http://52.23.157.36/api/v1/token",{customerId: uid})
           .done(function( data ) {
             console.log( "Data Loaded: ", data );
-            if(!data || !data.client_token) alert("Something went wrong. Please reload page and try again.");
+            if(!data || !data.client_token) {
+              alert("Server Latency Issues. Reloading page...");
+              location.reload();
+            }
             var clientToken = data.client_token;
             //Hard coded Hack to allow this button to be clickable only after Braintree is loaded
             setTimeout(function(){$('#button_checkout').prop('disabled', false);}, 1300);
