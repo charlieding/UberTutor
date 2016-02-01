@@ -4,7 +4,7 @@ SAVE ONTO AWS: aws s3 cp . s3://charlesding.info/Projects/asaptutor --recursive
 
 aws s3 rm s3://asaptutor.us --recursive
 
-aws s3 cp . s3://asaptutor.us/VERSION3 --recursive
+aws s3 cp . s3://asaptutor.us/VERSION6 --recursive
 -->
 <html>
   <head>
@@ -1116,12 +1116,6 @@ aws s3 cp . s3://asaptutor.us/VERSION3 --recursive
           isTutorPaid: "NA"
         });
         var appointmentID = appointment.key();
-
-        //Saves AppointmentUID for Student
-        ref.child("users").child(loggedInUserID).child("appointmentIDs").child(appointmentID).set({
-          tutorID: selectedTutorID
-        });
-
         var onComplete = function(error) {
           if (error) {
             alert('Something went wrong. Please refresh page and try again.');
@@ -1130,10 +1124,22 @@ aws s3 cp . s3://asaptutor.us/VERSION3 --recursive
             console.log('Synchronization succeeded');
           }
         };
+
+        //Saves AppointmentUID for Student
+        ref.child("users").child(loggedInUserID).child("appointmentIDs").child(appointmentID).set({
+          tutorID: selectedTutorID
+        });
         //Saves AppointmentUID for Tutor
         ref.child("users").child(selectedTutorID).child("appointmentIDs").child(appointmentID).set({
           studentID: loggedInUserID
-        }, onComplete);
+        }, function(error) {
+          if (error) {
+            alert('Something went wrong. Please refresh page and try again.');
+          } else {
+            window.location = 'mybookings.html';
+            console.log('Synchronization succeeded');
+          }
+        });
 
       }
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
