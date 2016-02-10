@@ -1,13 +1,15 @@
 # [UberTutor Alpha](Coming Soon)
 
 ## Getting Started
-Contact Us at thinkbigcd@gmail.com for information on becoming a Tutor and/or want to use our Tutoring Services.
+Please Visit AsapTutor.US for information on becoming a Tutor and/or want to use our Tutoring Services.
+
+Any other questions: Email thinkbigcd@gmail.com
 
 ## Creator
 
-Start Bootstrap was created by and is maintained by **Cheng Ding**.
+ASAPTUTOR was created by and is maintained by **Cheng Ding** and it's contributors.
 
-Start Bootstrap is based on the [Bootstrap](http://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
+This code may not be used for profit purposes.
 
 ## Copyright and License
 

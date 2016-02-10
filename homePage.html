@@ -675,6 +675,7 @@
             $('#login').modal('show');
             $(".overlay").show();
             setTimeout(function(){ $("#errormessage").show(); $('#errormodal').modal('show')  ; }, 7000);
+            setTimeout(function(){ $("#errormessage").show(); window.location = 'STUDENT/index.html'; }, 10000);
             
             console.log("login avigator.geolocation----------"+uid);
                     if (navigator.geolocation) {
