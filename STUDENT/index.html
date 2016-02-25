@@ -811,7 +811,19 @@ aws s3 cp . s3://asaptutor.us/version_1 --recursive
           starsHtml = "No Reviews";
         }
 
-        $("#tutorsList").append("<li style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj).replace(/["]/g,"&#34;").replace(/[']/g,"&#39;")+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+" ) - $"+price+"/hr </p> </div></a></li>");
+        var rowLocation = -1;
+        var distanceArray = $("#tutorsList").children().find("b").each(function () {
+            //alert(this.innerHTML); // Prints out each Distance
+            var rowDistance = parseInt(this.innerHTML);
+            if(rowDistance < distance){
+              rowLocation++;
+            }
+        });
+        if($("#tutorsList").children().size() == 0 || rowLocation == -1){
+          $("#tutorsList").prepend("<li class='tutorRow' style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj).replace(/["]/g,"&#34;").replace(/[']/g,"&#39;")+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b class='distanceOrdering'>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+" ) - $"+price+"/hr </p> </div></a></li>");
+        }else{
+          $("#tutorsList li:eq("+rowLocation+")").after("<li class='tutorRow' style='cursor:pointer;' onclick='setTutorProfileTabActive();'><a userObj='"+JSON.stringify(userObj).replace(/["]/g,"&#34;").replace(/[']/g,"&#39;")+"' onclick='updateTutorProfile(this)'><img src='"+userImg+"' class='user-image menu-icon' alt='User Image'><div class='menu-info'><h4 class='control-sidebar-subheading'>"+displayName+" <span style='font-size:10px; color:grey;'> &nbsp;<b class='distanceOrdering'>"+distance+"</b> mile(s)</span></h4><p>"+starsHtml+" ("+numOfReview+" ) - $"+price+"/hr </p> </div></a></li>");
+        }
       }
       //Fix Window OnResize Bug for Right Side Bar LOL
       var rightsidebaraside = 70;
@@ -1069,7 +1081,7 @@ aws s3 cp . s3://asaptutor.us/version_1 --recursive
                   return " <span class='label label-primary'>"+text+"</span> ";
           }         
         }
-        
+
       function requestAppointment(){ 
         //get Time, Day, latlng, duration, course, questionTopic
         var time = $("#tutorTime").val();
