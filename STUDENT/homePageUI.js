@@ -26,8 +26,12 @@
           $("#flexibility").text(value-5);
         });
 
-        /*Initialize Select2 Elements */
+        /*Initialize Select2 Elements - When something is added, refresh tutors*/
         $(".select2").select2();
+        $("#select2ClassSelection").select2().change(function(){
+          findTutors();
+        });
+
         //Timepicker
         $("#tutorTime").val(moment().add(10, 'minutes').format("hh:mm A"));
         $(".timepicker").timepicker({
