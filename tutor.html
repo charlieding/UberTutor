@@ -211,18 +211,11 @@
                         <a class="page-scroll" href="#contact">Join the Revolution</a>
                     </li> -->
                     <li>
-                        <a class="page-scroll" onclick="window.location = 'tutor.html';">Become a Tutor</a>
-                    </li>
-                    <li>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </li>
-                    <li>
                         <a class="page-scroll" data-toggle="modal" href="#login">Login</a>
                     </li>
                     <li>
-                        <a class="page-scroll" data-toggle="modal" href="#register">Sign Up</a>
+                        <a class="page-scroll" data-toggle="modal" href="#registerCodeModal">Have Register Code?</a>
                     </li>
-
                     <!--
                     <li>
                         <a class="page-scroll" href="#about">About</a>
@@ -248,12 +241,12 @@
         <div class="header-content">
             <div class="header-content-inner">
                 <br>
-                <h2 style="font-family: 'Abril Fatface'; font-size:50px;">A Tutor is Only A Click Away</h2>
+                <h2 style="font-family: 'Abril Fatface'; font-size:44px;">Set Your Own Price Tutoring Things You Love</h2>
                 <p style="color:white;"><b>Private On Demand 1:1 Tutoring</b></p>
                 <br>
-                <a class="btn btn-primary btn-xl page-scroll" data-toggle="modal" href="#register">Create an Account!</a>
+                <a class="btn btn-primary btn-xl page-scroll" href="#contact">Get Started!</a>
                 <br><br>
-                <a class="btn btn-primary btn-xl page-scroll" style="color:white;" href="#contact"><b>Suggest a Course/Skill you want to Learn!</b></a>
+                <p style="color:white;"><b>Make Money and Be Your Own Boss!</b></p>
                 
             </div>
         </div>
@@ -266,7 +259,7 @@
                     <h2 class="section-heading">Meet Peer Tutors At School - In Minutes, In Person!</h2>
                     <hr class="light">
                     <p class="text-faded">Who can better understand your struggles with studying other than your peers? Those who aced the subject definitely have some tips and tricks on how to study for that class! AsapTutor provides a platform for students to find a local, qualified peer tutor for any class subjects and at any time when tutors are available. AsapTutor is the perfect solution for bringing together students and tutors in a community. Don't waste countless time and money to find the right tutor - they are only a click away at AsapTutor!</p>
-                    <a class="btn btn-default btn-xl btn-block" href="#contact">Create an Account in Seconds!</a>
+                    <a class="btn btn-default btn-xl btn-block" href="#contact">Sign Up To Be a Tutor Today!</a>
                 </div>
             </div>
         </div>
@@ -434,10 +427,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Let Us Know What You Want to Learn!</h2>
+                    <h2 class="section-heading">Application to be a Tutor.</h2>
                     <hr class="primary">
-                    <p>We have launched our our <b>Alpha</b> for select classes at <b>Emory University and UC Berkeley</b>. <br></p>
-                   Help us help you! Let us know what classes/skills you want us to bring to you, and we'll let you know once we make it happen.
+                    <p>We have launched our <b>Alpha</b> for select classes at <b>Emory University, and UC Berkeley</b>. <br></p>
+                   Help us help you! Let us know what classes/skills you want to teach, and we will make it happen. <br>We will send you a Register Code once everything is ready!
                 </div>
 <!-- Begin MailChimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/classic-081711.css" rel="stylesheet" type="text/css">
@@ -457,15 +450,15 @@
     <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
 </div>
 <div class="mc-field-group">
-    <label for="mce-MMERGE2">Courses/Skills You Want To Learn  <span class="asterisk">*</span>
+    <label for="mce-MMERGE2">Courses/Skills You Want To Teach  <span class="asterisk">*</span>
 </label>
     <input type="text" value="" name="MMERGE2" class="required" id="mce-MMERGE2">
 </div>
 <div class="mc-field-group input-group">
     <strong>You're interested in being a...  <span class="asterisk">*</span>
 </strong>
-    <ul><li><input checked type="radio" value="Student" name="MMERGE3" id="mce-MMERGE3-0"><label for="mce-MMERGE3-0">Student</label></li>
-<li><input type="radio" value="Tutor" name="MMERGE3" id="mce-MMERGE3-1"><label for="mce-MMERGE3-1">Tutor</label></li>
+    <ul><li><input type="radio" value="Student" name="MMERGE3" id="mce-MMERGE3-0"><label for="mce-MMERGE3-0">Student</label></li>
+<li><input checked type="radio" value="Tutor" name="MMERGE3" id="mce-MMERGE3-1"><label for="mce-MMERGE3-1">Tutor</label></li>
 </ul>
 </div>
 <div class="mc-field-group">
@@ -475,7 +468,6 @@
     <option selected="selected" value="Emory University">Emory University</option>
 <option value="Berkeley University">University of California, Berkeley</option>
 <option value="Georgia Tech">Georgia Tech</option>
-<option value="Georgia Tech">University of Washington</option>
 <option value="Other School">Other School</option>
 
     </select>
@@ -571,7 +563,34 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-      
+    <!--Register Code Modal -->
+    <div class="modal fade" id="registerCodeModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+                <div class="overlay">
+                  <i class="fa fa-refresh fa-spin faOverlay"></i>
+                </div>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"><strong style="color: black">Tutor Registration</strong> <small>for <strong style="color: grey">Asap</strong>Tutor</small></h4>
+          </div>
+          <div class="modal-body" style="padding-bottom: 0px;">
+            <form class="form-horizontal" style="padding-left:50px; padding-right:50px;">
+              <div class="form-group">
+                <label for="registerCode"><small style="color:grey;">Register Code</small></label>
+                <input type="text" class="form-control" id="registerCode" placeholder="Enter Register Code (Case Sensitive)">
+              </div>
+            </form>
+          </div>
+          <br>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" onclick="registerCodeCheck();" class="btn btn-primary">Continue</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+              
+    </div><!-- /.modal -->
     <!--Register Modal -->
     <div class="modal fade" id="register">
       <div class="modal-dialog">
@@ -581,7 +600,7 @@
                 </div>
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title"><strong style="color: black">Student Registeration</strong> <small>for <strong style="color: grey">Asap</strong>Tutor</small></h4>
+            <h4 class="modal-title"><strong style="color: black">Register</strong> <small>for <strong style="color: grey">Asap</strong>Tutor</small></h4>
           </div>
           <div class="modal-body" style="padding-bottom: 0px;">
             <br>
@@ -746,6 +765,13 @@
     <!--Moment Time-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
     <script>
+    function registerCodeCheck(){
+        if($("#registerCode").val() != "asaptutor"){
+            alert("Incorrect Register Code.")
+            return;
+        }
+        $('#register').modal('show') 
+    }
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
         $( document ).ready(function() {
             // Register the callback to be fired every time auth state changes
