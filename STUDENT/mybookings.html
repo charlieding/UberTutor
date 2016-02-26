@@ -133,7 +133,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </a>
 
           <!-- Class Selection -->
-          <div id="classSelection" class="form-group tutorRemoveItems" style="position:absolute;">
+          <div id="classSelection" class="form-group tutorRemoveItems" style="position:absolute; visibility: hidden;">
             <select class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
               <option>CS 1001</option>
               <option>Psyc 1001</option>
@@ -302,7 +302,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </tr>
                       </thead>
                       <tbody id="upcomingBookings">
-                        <tr>
+    <!--                     <tr>
                           <td><a href="pages/examples/invoice.html">OR9842</a></td>
                           <td>CS 1001</td>
                           <td><span class="label label-info">In Session</span></td>
@@ -313,7 +313,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <td>Math 3001</td>
                           <td><span class="label label-warning">Pending Payment</span></td>
                           <td><div class="sparkbar" data-color="#f39c12" data-height="20">Brian Oliasko</div></td>
-                        </tr>
+                        </tr> -->
                       </tbody>
                     </table>
                   </div><!-- /.table-responsive -->
@@ -684,6 +684,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
       var loggedInUserID = null;
       var isLoggedInUserTutor = false;
       $( document ).ready(function() {
+
+          $(".sidebar-menu").hide();
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
           ref.onAuth(authDataCallback);
@@ -708,7 +710,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               if(isLoggedInUserTutor) {
                 $(".userTypeOpposite").text("Student");
                 $(".tutorRemoveItems").remove();
+                $(".sidebar-menu").show();
+              }else{
+                $(".sidebar-menu").show();
               }
+              
               loadBookings(snapshot);
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);

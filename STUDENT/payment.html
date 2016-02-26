@@ -92,7 +92,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </a>
 
           <!-- Class Selection -->
-          <div id="classSelection" class="form-group" style="position:absolute;">
+          <div id="classSelection" class="form-group" style="position:absolute;visibility: hidden;">
             <select class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
               <option>CS 1001</option>
               <option>Psyc 1001</option>
@@ -232,7 +232,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div><!-- /.table-responsive -->
                 </div><!-- /.box-body -->
                 <div class="box-footer clearfix">
-                  <span href="index.html" class="pull-right">Total: $<span class="total_price" >312.33</span></span>
+                  <span href="index.html" class="pull-right">Total: $<span class="total_price" >0.00</span></span>
                 </div><!-- /.box-footer --> 
               </div><!-- /.box -->
             </div><!-- /.row -->
@@ -245,7 +245,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div id="payment-form"></div>
                       <!--http://stackoverflow.com/questions/11869079/html-button-to-submit-a-form-elsewhere-on-the-page-->
                   </form>
-                  <div style="margin:auto; width:50%;"><input id="button_checkout" type="submit" style="width:100%;" class="btn btn-lg btn-danger" form="checkout" value="Pay $312.33 Now"></div>
+                  <div style="margin:auto; width:50%;"><input id="button_checkout" type="submit" style="width:100%;" class="btn btn-lg btn-danger" form="checkout" value="Pay $0.00 Now"></div>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
             </div>
@@ -305,6 +305,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       var loggedInUserLatLng = null;
       var loggedInUserID = null;
       $( document ).ready(function() {
+          $('#button_checkout').prop('disabled', true);
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
           ref.onAuth(authDataCallback);
@@ -443,7 +444,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     uids = uids+uid;
                     // $("#bookings").prepend("<tr><td class='col-md-1'><div class='sparkbar' data-color='#00a65a' data-height='20'><span currentUserID='"+currUserSnapshot.key()+"' = tutorID='"+appointmentSnapshot.val().tutorID+"' studentID='"+appointmentSnapshot.val().studentID+"' onclick='initializeChat(this);' class='btn btn-sm btn"+statusStyle.replace("label","")+" label' style='cursor:pointer;'><i class='fa fa-comments-o'> Chat</i></span></div></td><td>"+appointmentSnapshot.val().tutorDisplayName+"</td><td class='col-md-2'><span href="+"TBA-TODO"+">"+moment(appointmentSnapshot.val().creationDate).format("M/D/YY h:mm a")+"</span></td><td class='col-md-3'>"+appointmentSnapshot.val().latlngAddress+"</td><td>"+appointmentSnapshot.val().courses+"</td><td><span class='label "+statusStyle+"'>"+appointmentSnapshot.val().status+"</span></td><td>"+actionItem+"</td></tr>");
                     $("#bookings").prepend("<tr>"+
-                        "<td><a href='pages/examples/invoice.html'>"+uid+"</a></td>"+
+                        "<td><a href='#'>"+uid+"</a></td>"+
                         "<td>"+appointmentSnapshot.val().courses+"</td>"+
                         "<td><span class='label label-warning'>Pending Payment</span></td>"+
                         "<td><div class='sparkbar' data-color='#00a65a' data-height='20'>"+appointmentSnapshot.val().tutorDisplayName+"</div></td>"+
@@ -521,7 +522,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
             var clientToken = data.client_token;
             //Hard coded Hack to allow this button to be clickable only after Braintree is loaded
-            setTimeout(function(){$('#button_checkout').prop('disabled', false);}, 1300);
+            setTimeout(function(){
+              $('#button_checkout').prop('disabled', false);
+              if($("#payment-form").children().size() > 1){
+                $("#payment-form").find('iframe:not(:last)').remove();
+              }
+            }, 1300);
             braintree.setup(clientToken, "dropin", {
               container: "payment-form",
               paypal: {

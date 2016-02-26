@@ -92,7 +92,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </a>
 
           <!-- Class Selection -->
-          <div id="classSelection" class="form-group tutorRemoveItems" style="position:absolute;">
+          <div id="classSelection" class="form-group tutorRemoveItems" style="position:absolute;visibility: hidden;">
             <select class="form-control select2" multiple="multiple" data-placeholder="Select a Course">
               <option>CS 1001</option>
               <option>Psyc 1001</option>
@@ -276,6 +276,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
       var loggedInUserLatLng = null;
       var loggedInUserID = null;
       $( document ).ready(function() {
+          $(".sidebar-menu").hide();
+
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
           ref.onAuth(authDataCallback);
@@ -296,7 +298,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
               $("#memberSinceDateProfile").text("Member since "+ moment(snapshot.val().creationDate).format("MMM. YYYY"));
               loggedInUserID = snapshot.key();
               loggedInUserLatLng = snapshot.val().latlng;
-              if(snapshot.val().userType == "tutor") $(".tutorRemoveItems").remove();
+              if(snapshot.val().userType == "tutor"){ 
+                $(".tutorRemoveItems").remove();
+              }
+              $(".sidebar-menu").show();
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });
