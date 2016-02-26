@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Configure Stack components based on the instance type
+# Copyright 2015 Bitnami.com All Rights Reserved
+#
+
+. /opt/bitnami/scripts/init/functions
+
+APACHE_CONF="/opt/bitnami/apache2/conf/bitnami"
+MYSQL_CONF="/opt/bitnami/mysql/bitnami"
+PHPFPM_CONF="/opt/bitnami/php/etc/bitnami"
+JAVA_CONF="/opt/bitnami/java/bitnami"
+
+run_once_per_instance_type_check "stack_etc"
+if [ $? -eq 0 ]; then
+  MACHINE_SIZE=`get_generic_instance_type`
+
+  if [ -d ${APACHE_CONF} ]; then
+    ln -fTs ${APACHE_CONF}/httpd-${MACHINE_SIZE}.conf ${APACHE_CONF}/httpd.conf
+  fi
+  if [ -d ${MYSQL_CONF} ]; then
+    ln -fTs ${MYSQL_CONF}/my-${MACHINE_SIZE}.cnf ${MYSQL_CONF}/my.cnf
+  fi
+  if [ -d ${PHPFPM_CONF} ]; then
+    ln -fTs ${PHPFPM_CONF}/common-${MACHINE_SIZE}.conf ${PHPFPM_CONF}/common.conf
+  fi
+  if [ -d ${JAVA_CONF} ]; then
+    ln -fTs ${JAVA_CONF}/setenv-${MACHINE_SIZE}.sh ${JAVA_CONF}/setenv.sh
+  fi
+fi
+

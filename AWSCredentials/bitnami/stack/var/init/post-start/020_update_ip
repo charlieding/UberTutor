@@ -1,0 +1,19 @@
+#!/bin/sh
+# 
+# Bitnami Functions
+# Copyright 2015 Bitnami.com All Rights Reserved
+#
+
+. /opt/bitnami/scripts/init/functions
+
+if [ "x$1" != "x" ]; then 
+  IP=$1
+else
+  IP=`get_server_domain`
+fi
+
+if [ $? -eq 0 ] && [ "x$IP" != "x" ] ; then
+  for f in `find /opt/bitnami/apps/ -regex '.*\/\(updateip\|bnconfig\)' -type f -executable` ; do
+    $f --machine_hostname $IP
+  done
+fi

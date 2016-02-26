@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PATH="/opt/bitnami/redis/bin:/opt/bitnami/python/bin:/opt/bitnami/nodejs/bin:/opt/bitnami/git/bin:/opt/bitnami/apache2/bin:/opt/bitnami/common/bin:$PATH"
+BITNAMI_ROOT="/opt/bitnami"
+export BITNAMI_ROOT
+
+exec bash --rcfile "/opt/bitnami/.bitnamirc"
+                    

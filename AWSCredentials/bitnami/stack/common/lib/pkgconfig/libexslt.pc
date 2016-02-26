@@ -1,0 +1,12 @@
+prefix=/bitnami/nodejsstack-linux-x64/output/common
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+
+Name: libexslt
+Version: 0.8.17
+Description: EXSLT Extension library
+Requires: libxml-2.0
+Libs: -L${libdir} -lexslt -lxslt  -L/bitnami/nodejsstack-linux-x64/output/common/lib -lxml2 -lz -liconv -lm -ldl -lm 
+Cflags: -I${includedir}

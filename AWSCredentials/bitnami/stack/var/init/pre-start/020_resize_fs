@@ -1,0 +1,10 @@
+#!/bin/sh
+# 
+# Resize root volume partition
+# Copyright 2015 Bitnami.com All Rights Reserved
+#
+
+. /opt/bitnami/scripts/init/functions
+
+resize_root_fs
+

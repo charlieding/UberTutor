@@ -1,0 +1,11 @@
+prefix=/bitnami/nodejsstack-linux-x64/output/common
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Fontconfig
+Description: Font configuration and customization library
+Version: 2.6.0
+Libs: -L${libdir} -lfontconfig
+Libs.private:  -L/bitnami/nodejsstack-linux-x64/output/common/lib -lfreetype -lz -lbz2
+Cflags: -I${includedir}

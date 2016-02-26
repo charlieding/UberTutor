@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. /opt/bitnami/scripts/setenv.sh
+
+exec /opt/bitnami/git/libexec/git-core/.git-remote-http.bin  "$@"

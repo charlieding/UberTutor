@@ -1,0 +1,26 @@
+#!/bin/sh
+# 
+# Bitnami User Data Script
+# Copyright 2015 Bitnami.com All Rights Reserved
+#
+
+. /opt/bitnami/scripts/init/functions
+
+if cloud_init_check ; then exit 0; fi
+
+if ( run_once_check "run_user_data" ); then 
+  get_userdata
+  if [ $? -eq 0 ]; then 
+    if ( file $USER_DATA | grep -qs 'gzip' ); then 
+      mv $USER_DATA $USER_DATA.gz
+      gunzip $USER_DATA.gz
+    fi
+    if ( head -n 1 $USER_DATA | grep -qs '^#!' ); then 
+      chmod +x $USER_DATA
+      $USER_DATA
+    fi
+    rm -f $USER_DATA
+  fi
+fi
+
+
