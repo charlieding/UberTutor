@@ -77,7 +77,7 @@ aws s3 cp . s3://asaptutor.us --recursive
 
 /*Loading*/
 .overlay {
-    z-index: 100;
+    z-index: 9000;
     background: rgba(255,255,255,0.7);
     border-radius: 3px;
 }
@@ -120,9 +120,9 @@ aws s3 cp . s3://asaptutor.us --recursive
   |---------------------------------------------------------|
   -->
   <body class="hold-transition skin-blue sidebar-mini" style="overflow:hidden">
-                <div id="redirecting" class="overlay">
-                  <i class="fa fa-refresh fa-spin faOverlay"></i>
-                </div>
+    <div id="redirecting" class="overlay">
+      <i class="fa fa-refresh fa-spin faOverlay"></i>
+    </div>
     <div id="globalwrapper" class="wrapper">
 
       <!-- Main Header -->
@@ -488,6 +488,8 @@ aws s3 cp . s3://asaptutor.us --recursive
     <script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
     <!--UI Main Js -->
     <script src="homePageUI.js"></script>
+    <!--Custom SMS Messaging Library that calls Node Js Server -->
+    <script src="smsMessage.js"></script>
     <script>
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
       var isTutorSelected = false;
@@ -1116,6 +1118,7 @@ aws s3 cp . s3://asaptutor.us --recursive
         }
 
       function requestAppointment(){ 
+        $("#redirecting").show();
         //get Time, Day, latlng, duration, course, questionTopic
         var time = $("#tutorTime").val();
         var day = $("#tutorDay").val();
@@ -1170,6 +1173,8 @@ aws s3 cp . s3://asaptutor.us --recursive
           }
         };
 
+        //Sends Text to Tutor Saying they got a request!
+        sendSmsMessage(selectedTutorID, "You got a tutor request for "+duration+"hr on "+day+" @"+time+". Login our website to chat or accept!");
         //Saves AppointmentUID for Student
         ref.child("users").child(loggedInUserID).child("appointmentIDs").child(appointmentID).set({
           tutorID: selectedTutorID
@@ -1181,8 +1186,7 @@ aws s3 cp . s3://asaptutor.us --recursive
           if (error) {
             alert('Something went wrong. Please refresh page and try again.');
           } else {
-            window.location = 'mybookings.html';
-            console.log('Synchronization succeeded');
+            setTimeout(function(){ window.location = 'mybookings.html'; }, 2000);
           }
         });
 
