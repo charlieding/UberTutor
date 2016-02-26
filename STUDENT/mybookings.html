@@ -1028,7 +1028,9 @@ totalChats++;
       window.location ='payment.html';
     }
     function cancelAppointment(_this){
-      //console.log("appointmentId:" + _this.getAttribute("appointmentId"));
+      //Send Message to Tutor and Student Notifying them of the Cancellation
+      notifyAppointmentCancellation(_this.getAttribute("appointmentId"));
+    
       (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+_this.getAttribute("appointmentId")+"/status")).set('Cancelled');
     }
     function leaveFeedback(_this){
@@ -1147,6 +1149,20 @@ totalChats++;
         var msg=$("#msg").val();
         msg=$.trim(msg);
         if(msg.length===0)return;
+
+        // //Figure out who the message is going to and send it as Text Message as well :)
+        var sendDynamicTextTo = "";
+        if(!isLoggedInUserTutor){
+          sendDynamicTextFrom = "Student"
+        }else{
+          sendDynamicTextFrom = "Tutor"
+        }
+        if(currChatuid.split("_")[0] == loggedInUserID){
+          sendSmsMessage(currChatuid.split("_")[0],"You've received a new message from your "+sendDynamicTextFrom+": " + msg);
+        }else{
+          sendSmsMessage(currChatuid.split("_")[1],"You've received a new message from your "+sendDynamicTextFrom+": " + msg);
+        }
+
         //var ownerIdIndx=mfcb.chatboxInfo.data.ownerIdIndx;
         var datetime=moment().format();
         console.log(datetime);
@@ -1163,6 +1179,20 @@ totalChats++;
 
         msg=$.trim(msg);
         if(msg.length===0)return;
+
+        // //Figure out who the message is going to and send it as Text Message as well :)
+        var sendDynamicTextTo = "";
+        if(!isLoggedInUserTutor){
+          sendDynamicTextFrom = "Student"
+        }else{
+          sendDynamicTextFrom = "Tutor"
+        }
+        if(currChatuid.split("_")[0] == loggedInUserID){
+          sendSmsMessage(currChatuid.split("_")[0],"You've received a new file from your "+sendDynamicTextFrom+"! Come view on our website!");
+        }else{
+          sendSmsMessage(currChatuid.split("_")[1],"You've received a new file from your "+sendDynamicTextFrom+"! Come view on our website!");
+        }
+
         //var ownerIdIndx=mfcb.chatboxInfo.data.ownerIdIndx;
         var datetime=moment().format();
         console.log(datetime);
@@ -1273,19 +1303,27 @@ totalChats++;
 function rejectAppointment(_this){
   //console.log("appointmentId:" + _this.getAttribute("appointmentId"));
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+_this.getAttribute("appointmentId")+"/status")).set('Declined');
+  sendSmsMessageToStudent(_this.getAttribute("appointmentId"), 
+    "Your Appointment Request has been REJECTED for AppointmendID: '"+_this.getAttribute("appointmentId")+"'");
 }
 function acceptTutorRequest(_this){
   var appointmentId = _this.getAttribute("appointmentId");
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("Accepted");
+  sendSmsMessageToStudent(_this.getAttribute("appointmentId"), 
+    "Your Appointment Request has been ACCEPTED for AppointmendID: '"+_this.getAttribute("appointmentId")+"'");
 }
 function alertStudentYourOnTheWay(_this){
   var appointmentId = _this.getAttribute("appointmentId");
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("On the Way");
+  sendSmsMessageToStudent(_this.getAttribute("appointmentId"), 
+    "Your Tutor is on the way for AppointmendID: '"+_this.getAttribute("appointmentId")+"'");
 }
 function beginTutorSession(_this){
   var appointmentId = _this.getAttribute("appointmentId");
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/sessionStartTime")).set(moment().format());
   (new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentId+"/status")).set("In Session");
+  sendSmsMessageToStudent(_this.getAttribute("appointmentId"), 
+    "Your Tutor session has begun for AppointmendID: '"+_this.getAttribute("appointmentId")+"'");
 }
 function endTutorSession(_this){
   var appointmentId = _this.getAttribute("appointmentId");
@@ -1308,7 +1346,8 @@ function endTutorSession(_this){
       
     });
   });
-
+  sendSmsMessageToStudent(_this.getAttribute("appointmentId"), 
+    "Your Tutor session has finished! Please login website to pay! Thanks for using AsapTutor!");
 }
 
 

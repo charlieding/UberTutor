@@ -12,5 +12,38 @@ function sendSmsMessage(userId, message){
 		});
   	}
 }
+function notifyAppointmentCancellation(appointmentID){
+	console.log("Attempting to send SMS Message to both Tutor and Student of AppointmentID:"+ appointmentID);
+	if(appointmentID){
+		(new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentID+"/tutorID")).once('value', function (tutorIDSnapShot) {
+			console.log(tutorIDSnapShot.val());
+			sendSmsMessage(tutorIDSnapShot.val(), "Your appointment '"+appointmentID+"'' has been CANCELLED.");
+		});
+		(new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentID+"/studentID")).once('value', function (studentIDSnapShot) {
+			console.log(studentIDSnapShot.val());
+			sendSmsMessage(studentIDSnapShot.val(), "Your appointment '"+appointmentID+"'' has been CANCELLED.");
+		});
+  	}
+}
+function sendSmsMessageToTutor(appointmentID, msg){
+	console.log("Attempting to send SMS Message to both Tutor and Student of AppointmentID:"+ appointmentID);
+	if(appointmentID){
+		(new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentID+"/tutorID")).once('value', function (tutorIDSnapShot) {
+			console.log(tutorIDSnapShot.val());
+			sendSmsMessage(tutorIDSnapShot.val(), msg);
+		});
+  	}
+}
+function sendSmsMessageToStudent(appointmentID, msg){
+	console.log("Attempting to send SMS Message to both Tutor and Student of AppointmentID:"+ appointmentID);
+	if(appointmentID){
+		(new Firebase("https://ubertutoralpha.firebaseio.com/appointments/"+appointmentID+"/studentID")).once('value', function (studentIDSnapShot) {
+			console.log(studentIDSnapShot.val());
+			sendSmsMessage(studentIDSnapShot.val(), msg);
+		});
+  	}
+}
 
 //Charles' User Id facebook:1129363767081285
+
+  
