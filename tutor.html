@@ -214,7 +214,7 @@
                         <a class="page-scroll" data-toggle="modal" href="#login">Login</a>
                     </li>
                     <li>
-                        <a class="page-scroll" data-toggle="modal" href="#registerCodeModal">Have Register Code?</a>
+                        <a class="page-scroll" data-toggle="modal" href="#registerCodeModal">Have Registration Code?</a>
                     </li>
                     <!--
                     <li>
@@ -429,7 +429,7 @@
                     <h2 class="section-heading">Application to be a Tutor.</h2>
                     <hr class="primary">
                     <p>We have launched our <b>Alpha</b> for select classes at <b>Emory University, and UC Berkeley</b>. <br></p>
-                   Help us help you! Let us know what classes/skills you want to teach, and we will make it happen. <br>We will send you a Register Code once everything is ready!
+                   Help us help you! Let us know what classes/skills you want to teach, and we will make it happen. <br>We will send you a Registration Code once everything is ready!
                 </div>
 <!-- Begin MailChimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/classic-081711.css" rel="stylesheet" type="text/css">
@@ -576,8 +576,8 @@
           <div class="modal-body" style="padding-bottom: 0px;">
             <form class="form-horizontal" style="padding-left:50px; padding-right:50px;">
               <div class="form-group">
-                <label for="registerCode"><small style="color:grey;">Register Code</small></label>
-                <input type="text" class="form-control" id="registerCode" placeholder="Enter Register Code (Case Sensitive)">
+                <label for="registerCode"><small style="color:grey;">Registration Code</small></label>
+                <input type="text" class="form-control" id="registerCode" placeholder="Enter Registration Code (Case Sensitive)">
               </div>
             </form>
           </div>
@@ -766,7 +766,7 @@
     <script>
     function registerCodeCheck(){
         if($("#registerCode").val() != "asaptutor"){
-            alert("Incorrect Register Code.")
+            alert("Incorrect Registration Code.")
             return;
         }
         $('#register').modal('show') 
@@ -1077,7 +1077,7 @@
                         freehours: "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
                       }
                     },
-                    userType: "student",
+                    userType: "tutor",
                     biography: "No Biography Yet",
                     email:"Not Specified",
                     joinDate: moment().format(),
@@ -1174,7 +1174,7 @@
                     freehours: ""
                   }
                 },
-                userType: "student",
+                userType: "tutor",
                 biography: "No Biography Yet",
                 email:userObj.email,
                 joinDate: moment().format(),
