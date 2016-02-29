@@ -353,6 +353,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="inputImgUrl" class="col-sm-2 control-label">Profile Picture</label>
                         <div class="col-sm-10">
                           <input class="form-control" id="inputImgUrl" placeholder="Image Url (Eg: http://amazon.com/cool_image.jpg)"></input>
+                          <input type="file" onchange="uploadImage()" id="file-chooser"/>
+                          <div class="progress xs" style="background-color:#FFD9D9;">
+                            <div id="uploadProgressBar" class="progress-bar progress-bar-yellow" style="width: 0%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">80% Complete</span>
+                            </div><div id="results"></div>
+                          </div>
                         </div>
                       </div>
                       <div class="form-group">
@@ -609,7 +615,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!--Moment Time-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
     <!-- Scheduler Plugin -->
-    <script src="dist/js/scheduler.js"></script>   
+    <script src="dist/js/scheduler.js"></script>  
+
+    <!-- AWS!!-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.28.min.js"></script>
+    <script type="text/javascript">
+      // See the Configuring section to configure credentials in the SDK
+      //AWS.config.credentials = new AWS.Credentials('AKIAJ3LLAJ64NQGWA3IA', 'fnZES6FVWmuToD/e4xzckkjyDbeq1jr/BJM5FByj');
+      AWS.config.update({accessKeyId: 'AKIAJ2MWV4MLXEZNKWWQ', secretAccessKey: 'qCotF8dTiZhTlv+bGngoRstk6gaHr9iMLnjOBARK'});
+
+      // Configure your region
+      AWS.config.region = 'us-east-1';
+    </script>
 
     <script>
       $(function () {
@@ -649,6 +666,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       $( document ).ready(function() {
       });
+
+      function uploadImage(){
+        /** AWS UPLOAD FILES/IMAGES FOR CHATTING **/
+        var params = {Bucket: 'asaptutor.us/UPLOADFILES/'+loggedInUserID, Expires:3153600000};
+        var bucket = new AWS.S3({params: params});
+
+        var fileChooser = document.getElementById('file-chooser');
+        var results = document.getElementById('results');
+          var file = fileChooser.files[0];
+          if (file) {
+            results.innerHTML = '';
+            //uploadProgressBar
+            var params = {Key: file.name, ContentType: file.type, Body: file};
+            bucket.upload(params).on('httpUploadProgress', function(evt) {
+              console.log("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+              $("#uploadProgressBar").width(parseInt((evt.loaded * 100) / evt.total)+"%");
+              }).send(function(err, data) {
+              results.innerHTML = err ? 'ERROR!' : 'UPLOADED.';
+              console.log(data);
+              console.log(data.Location);
+              console.log(data.key);
+              var isImage = false;
+              if (file.name.match(/\.(jpg|jpeg|png|gif)$/)){
+                //alert('IS an image');
+                isImage = true;
+              }    
+              $("#inputImgUrl").val(data.Location);
+            });
+          }
+      }
 
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
       var loggedInUserLatLng = null;
