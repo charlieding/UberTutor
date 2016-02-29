@@ -1158,9 +1158,9 @@ totalChats++;
           sendDynamicTextFrom = "Tutor"
         }
         if(currChatuid.split("_")[0] == loggedInUserID){
-          sendSmsMessage(currChatuid.split("_")[0],"You've received a new message from your "+sendDynamicTextFrom+": " + msg);
-        }else{
           sendSmsMessage(currChatuid.split("_")[1],"You've received a new message from your "+sendDynamicTextFrom+": " + msg);
+        }else{
+          sendSmsMessage(currChatuid.split("_")[0],"You've received a new message from your "+sendDynamicTextFrom+": " + msg);
         }
 
         //var ownerIdIndx=mfcb.chatboxInfo.data.ownerIdIndx;
@@ -1188,9 +1188,9 @@ totalChats++;
           sendDynamicTextFrom = "Tutor"
         }
         if(currChatuid.split("_")[0] == loggedInUserID){
-          sendSmsMessage(currChatuid.split("_")[0],"You've received a new file from your "+sendDynamicTextFrom+"! Come view on our website!");
-        }else{
           sendSmsMessage(currChatuid.split("_")[1],"You've received a new file from your "+sendDynamicTextFrom+"! Come view on our website!");
+        }else{
+          sendSmsMessage(currChatuid.split("_")[0],"You've received a new file from your "+sendDynamicTextFrom+"! Come view on our website!");
         }
 
         //var ownerIdIndx=mfcb.chatboxInfo.data.ownerIdIndx;
