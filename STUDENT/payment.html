@@ -203,7 +203,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <section class="content">
           <!-- Your Page Content Here -->
           <div class="row">
-            <div class="col-md-12">
+            <div id="alertAddRow" class="col-md-12">
               <!-- TABLE: LATEST ORDERS -->
               <div class="box box-info">
                 <div class="box-header with-border">
@@ -549,8 +549,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         sendSmsMessageToTutor(key,"Student has paid, and your payment is now processing!");
                       });
                       isBookingsEmpty();
-                      alert("Thanks for your payment. Feel free to now leave your tutor a review under My Bookings' Past Tutor Sessions!");
-                      //window.location = 'mybookings.html';
+
+                      //Added Alert with Timer to Redirect
+                      $("#alertAddRow").prepend(" "+
+                        "<div class='alert alert-success alert-dismissable'>"+
+                          "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"+
+                          "<h4>  <i class='icon fa fa-check'></i> Success! Thanks for your payment.</h4>"+
+                          "Feel free to now leave your tutor a review under My Bookings' Past Tutor Sessions! Redirecting in <a id='secondCountDown'></a> Seconds!"+
+                        "</div>");
+                      $("#secondCountDown").text("10");
+                      setInterval(function(){ 
+                        var second = parseInt($("#secondCountDown").text());
+                        $("#secondCountDown").text(second-1+""); 
+                        if(second == 0){
+                          window.location = 'mybookings.html';
+                        }
+                      }, 1000);
                     } else {
                       alert("Something went wrong. Please refresh your page and try again.");
                     }
