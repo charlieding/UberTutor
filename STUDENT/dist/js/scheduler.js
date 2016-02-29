@@ -258,6 +258,8 @@
     var hours = date.getHours()
       , minutes = date.getMinutes()
       , ampm = hours >= 12 ? 'pm' : 'am';
+    if(hours > 12) hours = hours -12;
+    if(hours == 0 && minutes == 0) hours = 12;
     return hours + ':' + ('0' + minutes).slice(-2) + ampm;
   }
 
