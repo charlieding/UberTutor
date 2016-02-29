@@ -547,7 +547,7 @@
             </div>
             <br>
                <!-- form start -->
-                <form class="form-horizontal" style="padding-left:50px; padding-right:50px;">
+                <form id="loginModalForm" class="form-horizontal" style="padding-left:50px; padding-right:50px;">
                   <div class="box-body">
                     <div class="form-group">
                       <label for="inputEmailLogin"><small style="color:grey;">Email Address</small></label>
@@ -564,7 +564,7 @@
           <div class="modal-footer">
             <a id="forgotPassword" style="cursor:pointer;" onclick="resetPassword();">Forgot Password?</a>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" onclick="login();" class="btn btn-primary">Login</button>
+            <button type="submit" form="loginModalForm" class="btn btn-primary">Login</button>
             <div id="result">
             </div>
           </div>
@@ -594,7 +594,7 @@
                 <span><i>or</i></span>
             </div>
             <br>
-            <form class="form-horizontal" style="padding-left:50px; padding-right:50px;">
+            <form id="registerModalForm" class="form-horizontal" style="padding-left:50px; padding-right:50px;">
               <div class="form-group">
                 <label for="inputName"><small style="color:grey;">Full Name</small></label>
                 <input type="text" class="form-control" id="fullname" placeholder="Enter Your First and Last Name">
@@ -613,7 +613,7 @@
           <br>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" onclick="register();" class="btn btn-primary">Register</button>
+            <button  type="submit" form="registerModalForm" class="btn btn-primary">Register</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -724,7 +724,7 @@
     <!-- FOOTER -->
     <footer>
         <p class="pull-right"><a>Back to top</a></p>
-        <p>&copy; <meta itemprop="DatePublished" content="2015-03-14"><span onclick="window.location='homePage.html';">2018 AsapTutor, Inc.</span> &middot; <a data-toggle="modal" href="#privacy">Privacy</a> &middot; <a data-toggle="modal" href="#toa">Terms of Agreement</a></p>
+        <p>&copy; <meta itemprop="DatePublished" content="2015-03-14"><span>2018 AsapTutor, Inc.</span> &middot; <a data-toggle="modal" href="#privacy">Privacy</a> &middot; <a data-toggle="modal" href="#toa">Terms of Agreement</a></p>
     </footer>
 
     <!-- jQuery -->
@@ -748,6 +748,15 @@
     <script>
     /******* FIREBASE CODE - MOVE TO JS FILE *******/
         $( document ).ready(function() {
+            //Prevent Login/Submit from Refreshing Page - Causes Bugs
+            $('#loginModalForm').submit(function () {
+             login();
+             return false;
+            });
+            $('#registerModalForm').submit(function () {
+             register();
+             return false;
+            });
             // Register the callback to be fired every time auth state changes
             var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
             ref.onAuth(authDataCallback);
