@@ -12,6 +12,17 @@ function sendSmsMessage(userId, message){
 		});
   	}
 }
+function sendSmsMessagePhoneNumber(phoneNumber, message){
+	console.log("Attempting to send SMS Message to "+ phoneNumber);
+	if(phoneNumber){
+			var toPhoneNumber = phoneNumber.replace(/[^0-9.]/g, "");
+			$.post( "http://52.23.157.36/api/v1/SMSMessage", {to: toPhoneNumber,from: "...", message: "AsapTutor: "+message })
+		      .done(function( data ) {
+		        console.log( "Data Loaded: ", data );
+		        console.log(data.success);
+		      });
+  	}
+}
 function notifyAppointmentCancellation(appointmentID){
 	console.log("Attempting to send SMS Message to both Tutor and Student of AppointmentID:"+ appointmentID);
 	if(appointmentID){
