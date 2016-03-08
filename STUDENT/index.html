@@ -502,6 +502,14 @@ aws s3 cp . s3://asaptutor.us --recursive
           emptyTutorLogic();
           $(".hideTutorProfileWhenNoTutorSelected").hide();
 
+          //Bind Date/Time Changes to Update Map and Tutors
+          $( "#tutorDay" ).change(function() {
+            findTutors();
+          });
+          $( "#tutorTime" ).change(function() {
+            findTutors();
+          });
+
           // Register the callback to be fired every time auth state changes
           var ref = new Firebase("https://ubertutoralpha.firebaseio.com");
           ref.onAuth(authDataCallback);
