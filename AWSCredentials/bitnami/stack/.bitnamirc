@@ -1,5 +1,0 @@
-
-if [[ -s "/opt/bitnami/git/scripts/git-completion.bash" ]]; then  
-   source "/opt/bitnami/git/scripts/git-completion.bash" 
-fi
-GIT_PS1_SHOWDIRTYSTATE=true

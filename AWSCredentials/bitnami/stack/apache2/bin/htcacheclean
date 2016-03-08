@@ -1,3 +1,0 @@
-#!/bin/sh
-. /opt/bitnami/apache2/bin/envvars
-exec /opt/bitnami/apache2/bin/htcacheclean.bin "$@"

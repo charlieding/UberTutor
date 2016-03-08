@@ -1,0 +1,92 @@
+Action[log in tutor account]
+Here on the tutors home page, we see a list of upcoming and past tutor sessions. You can view your profile, edit your profile and free schedule to anything you like. 
+
+Action[log in student account]
+On the student home page, we will see a map of where you are and the tutors around you. 
+
+Action[Change Date and Time]
+Let's go ahead and select a Date and Time.
+
+Action[Click on Find Tutors!]
+This finds all tutors that are available at that time.
+
+Action[Type Web Development]
+Let's say I only want to learn some Web Development.
+Here we see Charles Ding is a tutor near us that's 0.02 miles away. 
+Let's go ahead and select him.
+
+Action[Click on Tutor Image]
+Every single piece of information you see is in real-time. The location, price, distance, reviews, skills, and profile
+Action[Click on profile picture]
+To demonstrate this, let's go over to the tutor's perspective and update some fields.
+Action[change tutor user price, name, and image]
+Now's let's switch back to the Student's perspective.
+The moment the tutor profile was saved, the student's page gets updated immediately. No refresh needed.
+
+Now let's go ahead and schedule a traditional appointment.
+Action[Select Meeting location, then drag it]
+Action[Select 5 hours]
+Action[Select Start Time Flexibility]
+This essentially tells the tutor how late he can be without getting a mad customer.
+Action[create appointment]
+
+Now once the appointment is booked, both the student and tutor will be able to see the request immediately under "My Bookings". 
+No page refresh required.
+
+[Once Text arrives, show the phone]
+Here you see that the tutor receiving a text notification in real-time.
+And every time a major event happens, a notification will be sent real time.
+
+Action[Be on Tutor's Home Page]
+Here we see the request from the student that's currently awaiting response.
+Action[Accept Appointment]
+I will go ahead and accept the appointment which will update the student's view as well as send him/her a text.
+Action[Show the Student page and show phone]
+See that the status is now Accepted
+
+The student can send the tutor messages, documents, and pictures, all of which are stored on S3.
+Action[Send Message "Thanks for accepting", Picture, File]
+
+Action[Go to Tutor Page, Click on Image, and reply "No problem!"]
+Here we have received those file and we can download them.
+
+Action[Click I'm Enroute]
+
+Price Estimate based on price and duration.
+Once the tutor arrives, they can go ahead and begin the tutoring session.
+Action[Begin Tutoring]
+
+Once they finish, they can click Finish Tutoring.
+Action[Finish Tutoring]
+
+Now it's pending payment by the student.
+Action[Go to Student View]
+
+Let's go ahead and pay now.
+Action[Click on Pay Now Button]
+This will take us to the payment/checkout page. They can checkout with Credit Card or Paypal
+Action[Pay]
+Success, we have completed our payment. It will automatically redirected to the past tutor sessions where we can leave feedback
+
+Action[Leave Feedback]
+I think the tutor did a fantastic job, so I'll give him 5 stars.
+
+Action[Go to the Map Screen]
+Now we see that the tutor now has one more review than before.
+
+
+-Emergency “ASAP” Button
+Imagine you are a college student and you just found out midterms are tomorrow. You haven't studied for it at all.
+Or if you were at home and your toilet pipes started leaking and you needed to fix it right away.
+
+That's where we imagine the ASAP button to come in.
+
+As the name suggests this Emergency button will find you the closest, cheapest, immediately available service.
+Action[Click ASAP Tutor]
+Coming soon.
+
+That concludes the demo of the platform.
+
+Action[Go back to Powerpoint]
+
+
