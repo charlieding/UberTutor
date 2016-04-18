@@ -725,7 +725,8 @@ aws s3 cp . s3://asaptutor.us --recursive
                 //Show all tutors, as no courses are selected
                 isTutorFree = true;
               }
-              isTutorFree = isTutorAvailableOnFreeSchedule(isTutorFree, userObj);
+              isTutorFree = true;//isTutorAvailableOnFreeSchedule(isTutorFree, userObj);
+              
               // var freeHoursArr = userObj.freeSchedule[day].freehours.split(",");
               // for(var a = 0; a<duration; a++){
               //   if(hour+a<24 && $.inArray(hour+a+"", freeHoursArr) == -1){ //-1 if doesn't exist, returns the index otherwise
