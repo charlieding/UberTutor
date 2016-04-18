@@ -334,6 +334,16 @@ aws s3 cp . s3://asaptutor.us --recursive
                     <p style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
                       $<span id="bookingCostTotal" >_</span> for <span id="bookingDuration" >_</span> Hour(s) @ $<span id="bookingHourlyCost">_</span>/hr 
                     </p>
+                    <h4 class="control-sidebar-subheading">Availability - 24hr</h4>
+                    <p style="padding-left:10px; padding-right:10px; margin-top:-10px;"> 
+                      <p id="freeSchedule1" >Mon:</p>
+                      <p id="freeSchedule2" >Tue:</p>
+                      <p id="freeSchedule3" >Wed:</p>
+                      <p id="freeSchedule4" >Th:</p>
+                      <p id="freeSchedule5" >Fri:</p>
+                      <p id="freeSchedule6" >Sat:</p>
+                      <p id="freeSchedule7" >Sun:</p>
+                    </p>
                     <h4 class="control-sidebar-subheading"><i class="fa fa-pencil"></i> Skills</h4>
                     <p id="skillsPane">
                       <span class="label label-danger">None</span>
@@ -541,6 +551,7 @@ aws s3 cp . s3://asaptutor.us --recursive
               }else{
                 $("#redirecting").hide();
                 $(".sidebar-menu").show();
+                findTutors();
               }
 
               startGMap(loggedInUserLatLng);
@@ -620,6 +631,14 @@ aws s3 cp . s3://asaptutor.us --recursive
         window.location = '../index.html';
       }
       var onFindTutorChange = null;
+
+      function tutorFreeSchedule(dayOfWeek, userObj){
+        var freeScheduleString = "";
+        freeScheduleString += userObj.freeSchedule[dayOfWeek].freehours.split(",");
+
+        return freeScheduleString.replace(/,/g ,", ");;
+      }
+
       function isTutorAvailableOnFreeSchedule(isTutorFree, userObj){
         var duration = $("#duration").text();
         var hour = parseInt(moment($("#tutorDay").val()+" "+$("#tutorTime").val()).format("H"));
@@ -949,6 +968,39 @@ aws s3 cp . s3://asaptutor.us --recursive
             $.each(courseExpertiseArray, function(index, value){
               $("#courseExpertisePane").prepend(getRandomSpan(value));
             });
+
+            //Free Schedule
+              $("#freeSchedule1").show();
+              $("#freeSchedule2").show();
+              $("#freeSchedule3").show();
+              $("#freeSchedule4").show();
+              $("#freeSchedule5").show();
+              $("#freeSchedule6").show();
+              $("#freeSchedule7").show();
+
+              var monFreeScheduleString = tutorFreeSchedule("monday",tutorObj);
+              var tueFreeScheduleString = tutorFreeSchedule("tuesday",tutorObj);
+              var wedFreeScheduleString = tutorFreeSchedule("wednesday",tutorObj);
+              var thuFreeScheduleString = tutorFreeSchedule("thursday",tutorObj);
+              var friFreeScheduleString = tutorFreeSchedule("friday",tutorObj);
+              var satFreeScheduleString = tutorFreeSchedule("saturday",tutorObj);
+              var sunFreeScheduleString = tutorFreeSchedule("sunday",tutorObj);
+
+              if( !monFreeScheduleString)  $("#freeSchedule1").hide();
+              if( !tueFreeScheduleString)  $("#freeSchedule2").hide();
+              if( !wedFreeScheduleString)  $("#freeSchedule3").hide();
+              if( !thuFreeScheduleString)  $("#freeSchedule4").hide();
+              if( !friFreeScheduleString)  $("#freeSchedule5").hide();
+              if( !satFreeScheduleString)  $("#freeSchedule6").hide();
+              if( !sunFreeScheduleString)  $("#freeSchedule7").hide();
+
+              $("#freeSchedule1").text("Mon: "+ monFreeScheduleString);
+              $("#freeSchedule2").text("Tue: "+ tueFreeScheduleString);
+              $("#freeSchedule3").text("Wed: "+ wedFreeScheduleString);
+              $("#freeSchedule4").text("Thu: "+ thuFreeScheduleString);
+              $("#freeSchedule5").text("Fri: "+ friFreeScheduleString);
+              $("#freeSchedule6").text("Sat: "+ satFreeScheduleString);
+              $("#freeSchedule7").text("Sun: "+ sunFreeScheduleString);
 
             //Add Listeners to view Profile Modal
             $(document).attr("tutorObj",JSON.stringify(usrObj));
