@@ -634,9 +634,30 @@ aws s3 cp . s3://asaptutor.us --recursive
 
       function tutorFreeSchedule(dayOfWeek, userObj){
         var freeScheduleString = "";
-        freeScheduleString += userObj.freeSchedule[dayOfWeek].freehours.split(",");
+        //freeScheduleString += userObj.freeSchedule[dayOfWeek].freehours.split(",");
 
-        return freeScheduleString.replace(/,/g ,", ");;
+        var start = -1;
+        var end = -1;
+        $.each(userObj.freeSchedule[dayOfWeek].freehours.split(","),function(){
+          if(start === -1){
+            start = this;
+          }else if(end === -1){
+            end = this;
+          }else if(this === (end+1)){
+            end = this;
+          } else if((end-start) > 0){
+            //Add continuity
+            freeScheduleString += ", "+start +"-" + end;
+            start = -1;
+            end = -1;
+          }else {
+            //Add Single Digits
+            freeScheduleString += ", "+start+", "+end;
+            start = -1;
+            end = -1;
+          }
+        });
+        return freeScheduleString.substring(1);//freeScheduleString.replace(/,/g ,", ");;
       }
 
       function isTutorAvailableOnFreeSchedule(isTutorFree, userObj){
@@ -744,7 +765,7 @@ aws s3 cp . s3://asaptutor.us --recursive
                 //Show all tutors, as no courses are selected
                 isTutorFree = true;
               }
-              isTutorFree = true;//isTutorAvailableOnFreeSchedule(isTutorFree, userObj);
+              //isTutorFree = true;//isTutorAvailableOnFreeSchedule(isTutorFree, userObj);
               
               // var freeHoursArr = userObj.freeSchedule[day].freehours.split(",");
               // for(var a = 0; a<duration; a++){

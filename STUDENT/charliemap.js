@@ -34,7 +34,7 @@ var MyMapUti={
               //infowindow.setPosition(ev.latLng);
               //infowindow.open(map);
               if(this.userObj){
-                findTutors();
+                //findTutors();
                 updateTutorProfileByObject(this.userObj);
               }
               
@@ -192,7 +192,7 @@ function FbaseUserMarkImgs(map){
       /*CHARLIE's CODE --- HARDCODED TO ONLY SHOW TUTORS THAT ARE SELECTED IN THE TOP NEED HELP*/
       console.log("isTutor: "+(userObj.userType == "tutor")+" isSelected: "+ isSelectedInCourses(userObj)+"FINAL STATUS: "+((userObj.userType == "tutor") && isSelectedInCourses(userObj)));
       if((userObj.userType == "tutor") && isSelectedInCourses(userObj)){
-        return isTutorAvailableOnFreeSchedule(true, userObj);
+        return true;//isTutorAvailableOnFreeSchedule(true, userObj);
       } else {
         return false;
       }
